@@ -7,13 +7,13 @@ class Main {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
         for (int i = 9; i >= 0; i--) {
             int binary = (n / (1 << i)) % 2;
-            buf.append(binary);
+            builder.append(binary);
         }
 
-        System.out.println(buf.toString());
+        System.out.println(builder.toString());
 
         sc.close();
     }
