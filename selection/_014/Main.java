@@ -14,41 +14,33 @@ public class Main {
         sc.close();
 
         long result = 1L << 60;
+
+        // 見える建物を列挙する
         for (int i = 0; i < 1 << n; i++) {
-            long current = 0;
-            long[] b = a.clone();
+            // k個以上の建物が見れるかを確認
+            int sum = 0;
             for (int j = 0; j < n; j++) {
                 if ((i >> j) % 2 == 1) {
-                    int curIndex = j;
-                    // 今見てる建物の高さよりも大きい手前の建物の中で一番高いものを探す
-                    for (int l = curIndex - 1; l >= 0; l--) {
-                        if (b[l] >= b[curIndex]) {
-                            curIndex = l;
-                        }
-                    }
-                    // あったらbとcurrentを更新する
-                    if (curIndex != j) {
-                        current += (b[curIndex] + 1) - b[j];
-                        b[j] = b[curIndex] + 1;
-                    }
-                }
-            }
-            // 建物の高さが仕様を満たすかを確認する
-            int sum = 1;
-            int head = 0, tail = 1;
-            while (tail < n) {
-                if (b[head] < b[tail]) {
-                    head = tail;
-                    tail++;
                     sum++;
-                } else {
-                    tail++;
                 }
             }
 
-            if (sum >= k) {
-                result = Math.min(result, current);
+            if (sum < k) {
+                continue;
             }
+
+            long totalCost = 0;
+            long maxHight = a[0];
+            // 建物の高さを増やすコストを計算
+            for (int j = 1; j < n; j++) {
+                if ((i >> j) % 2 == 1 && maxHight >= a[j]) {
+                    totalCost += (maxHight + 1) - a[j];
+                    maxHight++;
+                }
+                maxHight = Math.max(maxHight, a[j]);
+            }
+
+            result = Math.min(result, totalCost);
         }
 
         System.out.println(result);
