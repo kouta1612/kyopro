@@ -62,4 +62,27 @@ public class Main {
         return l;
     }
 
+    // 高度の上限xでシミュレーションして全ての風船を割ることができるか
+    static boolean check(long x, long[] h, long[] s) {
+        // 各風船を何秒以内に割る必要があるかを前計算する
+        long[] limit = new long[h.length];
+        boolean ok = true;
+        for (int i = 0; i < limit.length; i++) {
+            limit[i] = (x - h[i]) / s[i];
+            // そもそも初期の高度が上限よりも高かったらダメ（ここの条件忘れてた）
+            if (h[i] > x) {
+                ok = false;
+            }
+        }
+
+        Arrays.sort(limit);
+
+        for (int i = 0; i < limit.length; i++) {
+            if (limit[i] < i) {
+                ok = false;
+            }
+        }
+
+        return ok;
+    }
 }
