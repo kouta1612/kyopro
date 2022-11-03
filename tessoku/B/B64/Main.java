@@ -8,10 +8,11 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Main {
-    public static <T> void main(String[] args) {
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m = sc.nextInt();
+        @SuppressWarnings("unchecked")
         ArrayList<Vertex>[] graph = new ArrayList[n + 1];
         for (int i = 1; i <= n; i++) {
             graph[i] = new ArrayList<>();

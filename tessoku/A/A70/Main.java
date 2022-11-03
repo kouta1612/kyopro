@@ -24,6 +24,7 @@ public class Main {
         }
         sc.close();
 
+        @SuppressWarnings("unchecked")
         ArrayList<Integer>[] g = new ArrayList[1 << n];
         for (int i = 0; i < 1 << n; i++) {
             g[i] = new ArrayList<>();
