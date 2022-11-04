@@ -28,8 +28,10 @@ public class Main {
             g.add(new ArrayList<>());
         }
         for (int i = 0; i < n - 1; i++) {
-            List<Integer> list = g.get(a[i]);
-            list.add(b[i]);
+            List<Integer> list1 = g.get(a[i]);
+            List<Integer> list2 = g.get(b[i]);
+            list1.add(b[i]);
+            list2.add(a[i]);
         }
 
         int[] count = new int[n + 1];
@@ -37,8 +39,7 @@ public class Main {
             count[p[i]] += x[i];
         }
 
-        boolean[] visited = new boolean[n + 1];
-        dfs(1, count, visited, g);
+        dfs(1, -1, count, g);
 
         StringBuilder builder = new StringBuilder();
         for (int i = 1; i <= n; i++) {
@@ -48,16 +49,16 @@ public class Main {
         System.out.println(builder.toString().trim());
     }
 
-    static void dfs(int u, int[] count, boolean[] visited, List<List<Integer>> g) {
-        visited[u] = true;
-
+    static void dfs(int u, int p, int[] count, List<List<Integer>> g) {
+        // pを持つことで親から子にしか移動しないようにしている
+        // そのためvisitedで訪れたかどうかのフラグは不要であることに注意
         for (int i = 0; i < g.get(u).size(); i++) {
             int v = g.get(u).get(i);
-            if (visited[v]) {
+            if (v == p) {
                 continue;
             }
             count[v] += count[u];
-            dfs(v, count, visited, g);
+            dfs(v, u, count, g);
         }
     }
 }
