@@ -3,6 +3,7 @@ package selection._027;
 import java.util.Scanner;
 
 public class Main {
+    static int result = 0;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int y = sc.nextInt();
@@ -15,26 +16,24 @@ public class Main {
         }
         sc.close();
 
-        int result = 0;
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 if (a[i][j] == 0) {
                     continue;
                 }
-                int cur = dfs(i, j, 1, a, x, y);
-                result = Math.max(result, cur);
+                dfs(i, j, 1, a, x, y);
             }
         }
 
         System.out.println(result);
     }
 
-    static int dfs(int x, int y, int count, int[][] a, int maxX, int maxY) {
+    static void dfs(int x, int y, int count, int[][] a, int maxX, int maxY) {
         a[x][y] = 0;
         int[] dx = new int[]{-1,0,1,0};
         int[] dy = new int[]{0,1,0,-1};
+        result = Math.max(result, count);
 
-        int result = 0;
         for (int i = 0; i < 4; i++) {
             int nx = x + dx[i];
             int ny = y + dy[i];
@@ -44,11 +43,8 @@ public class Main {
             if (a[nx][ny] == 0) {
                 continue;
             }
-            int cur = dfs(nx, ny, count + 1, a, maxX, maxY);
-            result = Math.max(result, cur);
+            dfs(nx, ny, count + 1, a, maxX, maxY);
         }
         a[x][y] = 1;
-
-        return Math.max(count, result);
     }
 }
