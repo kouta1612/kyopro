@@ -1,6 +1,5 @@
 package selection._027;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -23,10 +22,8 @@ public class Main {
                 if (a[i][j] == 0) {
                     continue;
                 }
-                for (int k = 0; k < x; k++) {
-                    Arrays.fill(visited[k], false);
-                }
-                result = Math.max(result, dfs(i, j, 1, visited, a, x, y));
+                int cur = dfs(i, j, 1, visited, a, x, y);
+                result = Math.max(result, cur);
             }
         }
 
@@ -37,6 +34,7 @@ public class Main {
         visited[x][y] = true;
         int[] dx = new int[]{-1,0,1,0};
         int[] dy = new int[]{0,1,0,-1};
+
         int result = 0;
         for (int i = 0; i < 4; i++) {
             int nx = x + dx[i];
@@ -47,10 +45,11 @@ public class Main {
             if (a[nx][ny] == 0 || visited[nx][ny]) {
                 continue;
             }
-            result = Math.max(result, dfs(nx, ny, count + 1, visited, a, maxX, maxY));
-            return result;
+            int cur = dfs(nx, ny, count + 1, visited, a, maxX, maxY);
+            result = Math.max(result, cur);
         }
+        visited[x][y] = false;
 
-        return count;
+        return Math.max(count, result);
     }
 }
