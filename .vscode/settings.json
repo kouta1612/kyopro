@@ -1,0 +1,4 @@
+{
+    // javaのデバッグでstatic変数の値を確認できるようにする
+    "java.debug.settings.showStaticVariables": true,
+}
