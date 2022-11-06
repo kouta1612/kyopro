@@ -1,6 +1,7 @@
 package A69;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -45,22 +46,21 @@ class Edge {
 class MaximumFlow {
     int size;
     boolean[] visited;
-    ArrayList<Edge>[] g;
+    List<List<Edge>> g = new ArrayList<>();
 
     MaximumFlow(int n) {
         size = n;
         visited = new boolean[n + 1];
-        g = new ArrayList[n + 1];
-        for (int i = 1; i <= n; i++) {
-            g[i] = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            g.add(new ArrayList<>());
         }
     }
 
     void addEdge(int from, int to, int cap) {
-        int curA = g[from].size();
-        int curB = g[to].size();
-        g[from].add(new Edge(to, cap, curB));
-        g[to].add(new Edge(from, 0, curA));
+        int curA = g.get(from).size();
+        int curB = g.get(to).size();
+        g.get(from).add(new Edge(to, cap, curB));
+        g.get(to).add(new Edge(from, 0, curA));
     }
 
     int dfs(int pos, int goal, int curFlow) {
@@ -70,8 +70,8 @@ class MaximumFlow {
 
         visited[pos] = true;
 
-        for (int i = 0; i < g[pos].size(); i++) {
-            Edge e = g[pos].get(i);
+        for (int i = 0; i < g.get(pos).size(); i++) {
+            Edge e = g.get(pos).get(i);
             if (visited[e.to]) {
                 continue;
             }
@@ -82,7 +82,7 @@ class MaximumFlow {
             int minFlow = dfs(e.to, goal, Math.min(curFlow, e.cap));
             if (minFlow >= 1) {
                 e.cap -= minFlow;
-                g[e.to].get(e.rev).cap += minFlow;
+                g.get(e.to).get(e.rev).cap += minFlow;
                 return minFlow;
             }
         }

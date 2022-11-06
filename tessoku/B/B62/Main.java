@@ -7,7 +7,6 @@ import java.util.Scanner;
 public class Main {
     static ArrayDeque<Integer> path;
     static boolean[] visited;
-    static ArrayList<Integer>[] g;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -23,7 +22,8 @@ public class Main {
 
         path = new ArrayDeque<>();
         visited = new boolean[n + 1];
-        g = new ArrayList[n + 1];
+        @SuppressWarnings("unchecked")
+        ArrayList<Integer>[] g = new ArrayList[n + 1];
         for (int i = 1; i <= n; i++) {
             g[i] = new ArrayList<>();
         }
@@ -31,7 +31,7 @@ public class Main {
             g[a[i]].add(b[i]);
             g[b[i]].add(a[i]);
         }
-        dfs(1, n);
+        dfs(1, n, g);
 
         StringBuilder builder = new StringBuilder();
         for (int p : path) {
@@ -41,13 +41,13 @@ public class Main {
         System.out.println(builder.toString().trim());
     }
 
-    static void dfs(int st, int n) {
+    static void dfs(int st, int n, ArrayList<Integer>[] g) {
         visited[st] = true;
         path.addLast(st);
         for (int i = 0; i < g[st].size(); i++) {
             int next = g[st].get(i);
             if (!visited[next]) {
-                dfs(next, n);
+                dfs(next, n, g);
             }
         }
         if (path.getLast() != n) {

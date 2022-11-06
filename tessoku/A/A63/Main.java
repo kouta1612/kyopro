@@ -8,7 +8,6 @@ import java.util.Queue;
 import java.util.Scanner;
 
 public class Main {
-    static ArrayList<Integer>[] g;
     static Queue<Integer> q;
     static int[] dist;
 
@@ -16,9 +15,10 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m = sc.nextInt();
+        @SuppressWarnings("unchecked")
+        ArrayList<Integer>[] g = new ArrayList[n + 1];
 
         q = new ArrayDeque<Integer>();
-        g = new ArrayList[n + 1];
         dist = new int[n + 1];
         Arrays.fill(dist, -1);
 

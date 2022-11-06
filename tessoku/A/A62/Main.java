@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class Main {
     static boolean[] found;
-    static ArrayList<Integer>[] g;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -21,7 +20,8 @@ public class Main {
 
         found = new boolean[n + 1];
 
-        g = new ArrayList[n + 1];
+        @SuppressWarnings("unchecked")
+        ArrayList<Integer>[] g = new ArrayList[n + 1];
         for (int i = 1; i <= n; i++) {
             g[i] = new ArrayList<>();
         }
@@ -30,7 +30,7 @@ public class Main {
             g[b[i]].add(a[i]);
         }
 
-        dfs(1);
+        dfs(1, g);
 
         boolean result = true;
         for (int i = 1; i <= n; i++) {
@@ -46,12 +46,12 @@ public class Main {
         }
     }
 
-    static void dfs(int st) {
+    static void dfs(int st, ArrayList<Integer>[] g) {
         found[st] = true;
         for (int i = 0; i < g[st].size(); i++) {
             int next = g[st].get(i);
             if (found[next] == false) {
-                dfs(next);
+                dfs(next, g);
             }
         }
         return;

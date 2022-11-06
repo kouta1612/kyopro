@@ -2,6 +2,7 @@ package A68;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -25,23 +26,22 @@ public class Main {
 class MaximumFlow {
     int size;
     boolean[] visited;
-    ArrayList<Edge>[] g;
+    List<List<Edge>> g = new ArrayList<>();
 
     MaximumFlow(int n) {
         size = n;
         visited = new boolean[n + 1];
-        g = new ArrayList[n + 1];
-        for (int i = 1; i <= n; i++) {
-            g[i] = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            g.add(new ArrayList<>());
         }
     }
 
     void addEdge(int a, int b, int c) {
         // Edgeコンストラクタに直接サイズを渡すとバグるから注意
-        int currentA = g[a].size();
-        int currentB = g[b].size();
-        g[a].add(new Edge(b, c, currentB));
-        g[b].add(new Edge(a, 0, currentA));
+        int currentA = g.get(a).size();
+        int currentB = g.get(b).size();
+        g.get(a).add(new Edge(b, c, currentB));
+        g.get(b).add(new Edge(a, 0, currentA));
     }
 
     // スタートからposを経由してgoalまで流すことのできる経路における最小流動
@@ -51,8 +51,8 @@ class MaximumFlow {
         }
         visited[pos] = true;
 
-        for (int i = 0; i < g[pos].size(); i++) {
-            Edge e = g[pos].get(i);
+        for (int i = 0; i < g.get(pos).size(); i++) {
+            Edge e = g.get(pos).get(i);
             if (e.cap == 0) {
                 continue;
             }
@@ -64,7 +64,7 @@ class MaximumFlow {
 
             if (f >= 1) {
                 e.cap -= f;
-                g[e.to].get(e.rev).cap += f;
+                g.get(e.to).get(e.rev).cap += f;
                 return f;
             }
         }

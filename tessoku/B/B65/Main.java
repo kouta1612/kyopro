@@ -6,13 +6,13 @@ import java.util.Scanner;
 public class Main {
     static int[] result;
     static boolean[] visited;
-    static ArrayList<Integer>[] employs;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int t = sc.nextInt();
-        employs = new ArrayList[n + 1];
+        @SuppressWarnings("unchecked")
+        ArrayList<Integer>[] employs = new ArrayList[n + 1];
         for (int i = 1; i <= n; i++) {
             employs[i] = new ArrayList<>();
         }
@@ -27,7 +27,7 @@ public class Main {
         result = new int[n + 1];
         visited = new boolean[n + 1];
 
-        dfs(t);
+        dfs(t, employs);
 
         StringBuilder builder = new StringBuilder();
         for (int i = 1; i <= n; i++) {
@@ -38,12 +38,12 @@ public class Main {
     }
 
     // 社員番号がposの階級
-    static int dfs(int pos) {
+    static int dfs(int pos, ArrayList<Integer>[] employs) {
         visited[pos] = true;
         for (int i = 0; i < employs[pos].size(); i++) {
             int member = employs[pos].get(i);
             if (!visited[member]) {
-                int memberClass = dfs(member);
+                int memberClass = dfs(member, employs);
                 result[pos] = Math.max(result[pos], memberClass + 1);
             }
         }
