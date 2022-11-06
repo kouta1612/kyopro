@@ -23,6 +23,8 @@ public class Main {
         }
         dist[0][0] = 0;
 
+        // 経路復元用のデータも記録
+        Point[][] rev = new Point[h][w];
         Deque<Point> queue = new ArrayDeque<>();
         queue.add(new Point(0, 0));
         while (!queue.isEmpty()) {
@@ -42,6 +44,7 @@ public class Main {
                     continue;
                 }
                 dist[nx][ny] = dist[p.x][p.y] + 1;
+                rev[nx][ny] = new Point(p.x, p.y);
                 queue.add(new Point(nx, ny));
             }
         }
@@ -51,16 +54,28 @@ public class Main {
             return;
         }
 
-        int result = 0;
+        // すべての通れる点
+        int allPoint = 0;
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
-                if (s[i][j].equals(".")) {
-                    result++;
+                if (s[i][j].equals("#")) {
+                    continue;
                 }
+                allPoint++;
             }
         }
 
-        System.out.println(result - (dist[h - 1][w - 1] + 1));
+        // 実際に通った点
+        int walkPoint = 1;
+        int x = h - 1, y = w - 1;
+        while (!(x == 0 && y == 0)) {
+            Point p = rev[x][y];
+            x = p.x;
+            y = p.y;
+            walkPoint++;
+        }
+
+        System.out.println(allPoint - walkPoint);
     }
 }
 
