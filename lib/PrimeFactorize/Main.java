@@ -1,22 +1,17 @@
-package selection._068;
+package lib.PrimeFactorize;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        sc.close();
+        int n = 1000;
         List<Integer> primes = primeFactorize(n);
-        StringBuilder builder = new StringBuilder();
-        builder.append(n).append(": ");
+        System.out.print(n + ": ");
         for (Integer prime : primes) {
-            builder.append(prime).append(" ");
+            System.out.print(prime + " ");
         }
-
-        System.out.println(builder.toString().trim());
+        System.out.println();
     }
 
     static List<Integer> primeFactorize(int x) {
