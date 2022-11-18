@@ -22,15 +22,15 @@ public class Main {
             }
         }
 
-        // l: 区間の取りうる長さ
+        // 区間の取りうる長さ
         for (int l = 2; l <= n; l++) {
             // 区間の左端
-            for (int i = 1; i <= n; i++) {
+            for (int i = 1; i <= 2 * n - l + 1; i++) {
                 // 区間の右端
                 int j = i + l - 1;
 
                 // JOIの番
-                if ((n % 2 == 0 && l % 2 == 0) || (n % 2 == 1 && l % 2 == 1)) {
+                if (n % 2 == l % 2) {
                     dp[i][j] = Math.max(dp[i + 1][j] + a[i], dp[i][j - 1] + a[j]);
                 } else {
                     if (a[i] > a[j]) {
