@@ -60,13 +60,14 @@ public class Main {
                     Result next = dp[i | (1 << e.to)][e.to];
 
                     // 過去に記録した到着点の最短距離と現在の出発点の最短距離から辿れる到着点の合計が同じであれば経路を加算する
+                    // ACしたけど正直、最短経路の数を求める箇所が正確に理解できていない
                     if (next.dist == current.dist + e.dist) {
-                        dp[i + (1 << e.to)][e.to] = new Result(next.dist, next.num + 1);
+                        dp[i + (1 << e.to)][e.to] = new Result(next.dist, next.num + current.num);
                     }
 
                     // 過去に記録した最短距離よりも小さかったら新しく更新する
                     if (next.dist > current.dist + e.dist) {
-                        dp[i + (1 << e.to)][e.to] = new Result(current.dist + e.dist, 1);
+                        dp[i + (1 << e.to)][e.to] = new Result(current.dist + e.dist, current.num);
                     }
                 }
             }
