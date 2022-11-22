@@ -51,16 +51,24 @@ public class Main {
                         continue;
                     }
 
-                    // 最短でなければスキップ
-                    if (i + (1 << e.v) >= (1 << n)) {
-                        continue;
-                    }
-                    Result next = dp[i + (1 << e.v)][e.v];
-                    if (next.dist <= current.dist) {
+                    // 既に通っていたらスキップ
+                    if ((i & (1<<e.to)) > 0) {
                         continue;
                     }
 
-                    dp[i + (1 << e.v)][e.v] = new Result(current.dist + e.dist, current.num + 1);
+                    // 到着点に記録した状態を復元
+                    Result next = dp[i | (1 << e.to)][e.to];
+
+                    // 過去に記録した到着点の最短距離と現在の出発点の最短距離から辿れる到着点の合計が同じであれば経路を加算する
+                    // ACしたけど正直、最短経路の数を求める箇所が正確に理解できていない
+                    if (next.dist == current.dist + e.dist) {
+                        dp[i + (1 << e.to)][e.to] = new Result(next.dist, next.num + current.num);
+                    }
+
+                    // 過去に記録した最短距離よりも小さかったら新しく更新する
+                    if (next.dist > current.dist + e.dist) {
+                        dp[i + (1 << e.to)][e.to] = new Result(current.dist + e.dist, current.num);
+                    }
                 }
             }
         }
@@ -75,11 +83,11 @@ public class Main {
 }
 
 class Edge {
-    int v;
+    int to;
     long dist, limit;
 
-    Edge(int v, long dist, long limit) {
-        this.v = v;
+    Edge(int to, long dist, long limit) {
+        this.to = to;
         this.dist = dist;
         this.limit = limit;
     }
