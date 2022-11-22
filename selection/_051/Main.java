@@ -1,6 +1,5 @@
 package selection._051;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -21,8 +20,13 @@ public class Main {
         map.put('I', 4);
 
         // 事前準備
-        dp[1][map.get(s.charAt(0))] = 1;
+        for (int i = 1; i <= 7; i++) {
+            if ((i & 1) > 0 && (i & map.get(s.charAt(0))) > 0) {
+                dp[1][i] = 1;
+            }
+        }
 
+        // i日目
         for (int i = 1; i < n; i++) {
             // i日目の部員の集合
             for (int j = 1; j <= 7; j++) {
@@ -51,6 +55,11 @@ public class Main {
             }
         }
 
-        System.out.println(Arrays.deepToString(dp));
+        int result = 0;
+        for (int i = 1; i <= 7; i++) {
+            result = (result + dp[n][i]) % 10007;
+        }
+
+        System.out.println(result);
     }
 }
