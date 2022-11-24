@@ -12,7 +12,9 @@ public class Main {
         }
         sc.close();
 
+        // dp[i]: i番目までの部分列の中で最後の要素がa[i - 1]のうちで、最長の部分列の長さ
         int[] dp = new int[n + 1];
+        // len[i]: 長さiの部分文字列のうち最後の要素の値が最小のもの
         int[] len = new int[n + 1];
         for (int i = 0; i <= n; i++) {
             dp[i] = len[i] = 1 << 30;
@@ -22,11 +24,19 @@ public class Main {
 
         for (int i = 1; i <= n; i++) {
             int pos = upper_bound(len, a[i - 1]);
-            dp[i] = Math.min(dp[i], pos + 1);
+            if (pos == -1) {
+                dp[i] = 1;
+            } else {
+                dp[i] = Math.min(dp[i], pos + 1);
+            }
             len[dp[i]] = a[i - 1];
         }
 
-        System.out.println(dp[n]);
+        int result = 0;
+        for (int i = 0; i <= n; i++) {
+            result = Math.max(result, dp[i]);
+        }
+        System.out.println(result);
     }
 
     /**
