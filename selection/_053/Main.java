@@ -12,30 +12,28 @@ public class Main {
         }
         sc.close();
 
-        // dp[i]: i番目までの部分列の中で最後の要素がa[i - 1]のうちで、最長の部分列の長さ
+        // dp[i]: 最後の要素がa[i]である部分列のうちで考えられる部分列の最長の長さ
         int[] dp = new int[n + 1];
-        // len[i]: 長さiの部分文字列のうち最後の要素の値が最小のもの
+        // len[i]: 長さがiの部分列の最後の要素として考えられる要素の最小値
         int[] len = new int[n + 1];
         for (int i = 0; i <= n; i++) {
-            dp[i] = len[i] = 1 << 30;
+            len[i] = 1<<30;
         }
-        dp[0] = 0;
-        len[0] = 0;
+        dp[1] = 1;
+        len[0] = -1<<30;
 
         for (int i = 1; i <= n; i++) {
+            // len[0] = -1<<30なのでpos >= 0であることが保証される
             int pos = upper_bound(len, a[i - 1]);
-            if (pos == -1) {
-                dp[i] = 1;
-            } else {
-                dp[i] = Math.min(dp[i], pos + 1);
-            }
+            dp[i] = pos + 1;
             len[dp[i]] = a[i - 1];
         }
 
         int result = 0;
-        for (int i = 0; i <= n; i++) {
+        for (int i = 1; i <= n; i++) {
             result = Math.max(result, dp[i]);
         }
+
         System.out.println(result);
     }
 
