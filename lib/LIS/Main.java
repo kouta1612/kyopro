@@ -1,21 +1,49 @@
-package selection._053;
-
-import java.util.Scanner;
+package lib.LIS;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int[] a = new int[n];
-        for (int i = 0; i < n; i++) {
-            a[i] = sc.nextInt();
-        }
-        sc.close();
+        LIS lis = new LIS(new int[]{1,2,3});
+        System.out.println(lis.getLIS());
+    }
+}
 
+/**
+ * LIS(Longest Increasing Subsequence)(最長増加部分列)を構築
+ */
+class LIS {
+    int[] a;
+    int[] dp;
+    int[] len;
+
+    LIS(int[] a) {
+        this.a = a;
+    }
+
+    /**
+     * 最長増加部分列の長さを取得
+     *
+     * @return
+     */
+    int getLIS() {
+        build();
+
+        int result = 0;
+        for (int i = 1; i <= a.length; i++) {
+            result = Math.max(result, dp[i]);
+        }
+
+        return result;
+    }
+
+    /**
+     * 最長増加部分列を構築
+     */
+    void build() {
+        int n = a.length;
         // dp[i]: 最後の要素がa[i]である部分列のうちで考えられる部分列の最長の長さ
-        int[] dp = new int[n + 1];
+        dp = new int[n + 1];
         // len[i]: 長さがiの部分列の最後の要素として考えられる要素の最小値
-        int[] len = new int[n + 1];
+        len = new int[n + 1];
         for (int i = 0; i <= n; i++) {
             len[i] = 1<<30;
         }
@@ -28,13 +56,6 @@ public class Main {
             dp[i] = pos + 1;
             len[dp[i]] = a[i - 1];
         }
-
-        int result = 0;
-        for (int i = 1; i <= n; i++) {
-            result = Math.max(result, dp[i]);
-        }
-
-        System.out.println(result);
     }
 
     /**
@@ -44,7 +65,7 @@ public class Main {
      * @param key
      * @return
      */
-    static int upper_bound(int[] a, int key) {
+    int upper_bound(int[] a, int key) {
         int l = -1, r = a.length;
         while (r - l > 1) {
             int mid = (l + r) / 2;
