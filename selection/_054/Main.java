@@ -13,29 +13,7 @@ public class Main {
         sc.close();
 
         LIS lis = new LIS(a);
-
         System.out.println(n - lis.getLIS());
-    }
-
-    /**
-     * ある条件(a[i] < x)を満たす最大のiを求める
-     *
-     * @param a
-     * @param key
-     * @return
-     */
-    static int upper_bound(int[] a, int key) {
-        int l = -1, r = a.length;
-        while (r - l > 1) {
-            int mid = (l + r) / 2;
-            if (a[mid] < key) {
-                l = mid;
-            } else {
-                r = mid;
-            }
-        }
-
-        return l;
     }
 }
 
