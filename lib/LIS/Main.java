@@ -1,8 +1,10 @@
 package lib.LIS;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
-        LIS lis = new LIS(new int[]{1,2,3});
+        LIS lis = new LIS(new int[] { 10, 100, 1000 });
         System.out.println(lis.getLIS());
     }
 }
@@ -12,8 +14,6 @@ public class Main {
  */
 class LIS {
     int[] a;
-    int[] dp;
-    int[] len;
 
     LIS(int[] a) {
         this.a = a;
@@ -25,57 +25,56 @@ class LIS {
      * @return
      */
     int getLIS() {
-        build();
+        int[] lis = build();
 
-        int result = 0;
-        for (int i = 1; i <= a.length; i++) {
-            result = Math.max(result, dp[i]);
-        }
-
-        return result;
+        // 「a[i] >= INFとなる最小のi」に対して「i - 1」が答え
+        return lower_bound(lis, 1 << 30) - 1;
     }
 
     /**
      * 最長増加部分列を構築
      */
-    void build() {
+    int[] build() {
         int n = a.length;
-        // dp[i]: 最後の要素がa[i]である部分列のうちで考えられる部分列の最長の長さ
-        dp = new int[n + 1];
-        // len[i]: 長さがiの部分列の最後の要素として考えられる要素の最小値
-        len = new int[n + 1];
-        for (int i = 0; i <= n; i++) {
-            len[i] = 1<<30;
-        }
-        dp[1] = 1;
-        len[0] = -1<<30;
 
-        for (int i = 1; i <= n; i++) {
-            // len[0] = -1<<30なのでpos >= 0であることが保証される
-            int pos = upper_bound(len, a[i - 1]);
-            dp[i] = pos + 1;
-            len[dp[i]] = a[i - 1];
+        // dp[i]: 長さがiの単調増加な部分列における最終要素の最小値
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, 1 << 30);
+        // a[i]が非常に小さい場合を考慮
+        dp[0] = 0;
+
+        // dp[j] >= a[i]となる最小のj(pos)を取得して、dp[pos]をa[i]で更新
+        for (int i = 0; i < n; i++) {
+            int pos = lower_bound(dp, a[i]);
+            dp[pos] = a[i];
         }
+
+        return dp;
     }
 
     /**
-     * ある条件(a[i] < x)を満たす最大のiを求める
+     * a[index] >= key という条件を満たす最小の index を求める
      *
      * @param a
      * @param key
      * @return
      */
-    int upper_bound(int[] a, int key) {
-        int l = -1, r = a.length;
-        while (r - l > 1) {
-            int mid = (l + r) / 2;
-            if (a[mid] < key) {
-                l = mid;
+    static int lower_bound(int[] a, int key) {
+        int left = -1; // 「index = 0」が条件を満たすこともあるので、初期値は -1
+        int right = a.length; // 「index = a.length-1」が条件を満たさないこともあるので、初期値は a.length
+
+        // left は「常に」条件を満たさず、right は「常に」条件を満たすよう更新
+        while (right - left > 1) {
+            int mid = (left + right) / 2;
+
+            if (a[mid] >= key) {
+                right = mid;
             } else {
-                r = mid;
+                left = mid;
             }
         }
 
-        return l;
+        // left は条件を満たさない最大の値、right は条件を満たす最小の値になっている
+        return right;
     }
 }
