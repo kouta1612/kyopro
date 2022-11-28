@@ -20,26 +20,81 @@ public class Main {
         long p = sc.nextLong();
         long q = sc.nextLong();
         boolean[] zombi = new boolean[n];
-        boolean[] danger = new boolean[n];
         for (int i = 0; i < k; i++) {
             int c = sc.nextInt() - 1;
             zombi[c] = true;
         }
 
-        Deque<Integer> queue = new ArrayDeque<>();
-        queue.addLast(0);
-
-
         List<Edge> edges = new ArrayList<>();
         for (int i = 0; i < m; i++) {
             int a = sc.nextInt() - 1;
             int b = sc.nextInt() - 1;
-            // 移動先が危険な街かどうかでコストを出す
+            edges.add(new Edge(a, b, 1));
+            edges.add(new Edge(b, a, 1));
         }
+        sc.close();
+
+        Graph graph = new Graph(n, edges);
+        long[] dist = bfs(n, zombi, graph);
+
+        boolean[] danger = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (0 <= dist[i] && dist[i] <= s) {
+                danger[i] = true;
+            }
+        }
+
+        List<Edge> newEdges = new ArrayList<>();
+        for (Edge edge : edges) {
+            // ゾンビの道は通ることができないのでスキップ
+            if (zombi[edge.dest]) {
+                continue;
+            }
+
+            // 最後の宿にはhすく泊する必要がないのでコストはゼロ
+            if (edge.dest == n - 1) {
+                newEdges.add(new Edge(edge.source, edge.dest, 0));
+            }
+
+            // 危険な道かそうでないかでコストを算出
+            if (danger[edge.dest]) {
+                newEdges.add(new Edge(edge.source, edge.dest, q));
+            } else {
+                newEdges.add(new Edge(edge.source, edge.dest, p));
+            }
+        }
+
+        Dijkstra dijkstra = new Dijkstra(n, newEdges);
+        long[] cur = dijkstra.build(0);
+
+        System.out.println(cur[n - 1]);
     }
 
-    static void bfs(boolean[] zombi, boolean[] danger, Deque<Integer> queue) {
+    static long[] bfs(int n, boolean[] zombi, Graph graph) {
+        long[] dist = new long[n];
+        Deque<Integer> queue = new ArrayDeque<>();
 
+        Arrays.fill(dist, -1);
+        for (int i = 0; i < n; i++) {
+            if (zombi[i]) {
+                queue.addLast(i);
+                dist[i] = 0;
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            int pos = queue.pollFirst();
+            for (Edge edge : graph.edgeList.get(pos)) {
+                if (dist[edge.dest] >= 0) {
+                    continue;
+                }
+
+                dist[edge.dest] = dist[pos] + 1;
+                queue.add(edge.dest);
+            }
+        }
+
+        return dist;
     }
 }
 
