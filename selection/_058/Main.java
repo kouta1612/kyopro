@@ -51,7 +51,7 @@ public class Main {
                 continue;
             }
 
-            // 最後の宿にはhすく泊する必要がないのでコストはゼロ
+            // 最後の宿には泊まる必要がないのでコストはゼロ
             if (edge.dest == n - 1) {
                 newEdges.add(new Edge(edge.source, edge.dest, 0));
             }
