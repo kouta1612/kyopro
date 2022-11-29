@@ -23,36 +23,51 @@ public class Main {
         }
 
         List<Edge> edges = new ArrayList<>();
+        boolean[][] connected = new boolean[n][n];
         for (int i = 0; i < m; i++) {
             int u = sc.nextInt() - 1;
             int v = sc.nextInt() - 1;
-            edges.add(new Edge(u, v, cost[u]));
-            edges.add(new Edge(v, u, cost[v]));
+            edges.add(new Edge(u, v, 1));
+            edges.add(new Edge(v, u, 1));
+            connected[u][v] = connected[v][u] = true;
         }
 
         sc.close();
 
         for (int i = 0; i < n; i++) {
             long[] dist = bfs(i, n, edges);
-            for (int j = i + 1; j < n; j++) {
+            for (int j = 0; j < n; j++) {
+                // 同じ頂点はスキップ
+                if (i == j) {
+                    continue;
+                }
+
+                // タクシーで移動可能でなければスキップ
                 if (!(1 <= dist[j] && dist[j] <= limitPath[i])) {
                     continue;
                 }
 
-                Edge newEdge = new Edge(i, j, cost[i]);
-                boolean isExists = false;
-                for (Edge edge : edges) {
-                    if (edge.source == newEdge.source && edge.dest == newEdge.dest) {
-                        isExists = true;
-                    }
+                // 連結済みであればスキップ
+                if (connected[i][j]) {
+                    continue;
                 }
-                if (!isExists) {
-                    edges.add(newEdge);
-                }
+
+                connected[i][j] = true;
             }
         }
 
-        Dijkstra dijkstra = new Dijkstra(n, edges);
+        List<Edge> newEdges = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (!connected[i][j]) {
+                    continue;
+                }
+
+                newEdges.add(new Edge(i, j, cost[i]));
+            }
+        }
+
+        Dijkstra dijkstra = new Dijkstra(n, newEdges);
         long[] dist = dijkstra.build(0);
 
         System.out.println(dist[n - 1]);
@@ -161,9 +176,11 @@ class Node {
 }
 
 class Graph {
-    static List<List<Edge>> graph = new ArrayList<>();
+    static List<List<Edge>> graph = null;
 
     static List<List<Edge>> build(int n, List<Edge> edges) {
+        graph = new ArrayList<>();
+
         for (int i = 0; i < n; i++) {
             graph.add(new ArrayList<>());
         }
