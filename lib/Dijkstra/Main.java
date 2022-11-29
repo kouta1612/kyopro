@@ -98,9 +98,11 @@ class Node {
 }
 
 class Graph {
-    static List<List<Edge>> graph = new ArrayList<>();
+    static List<List<Edge>> graph = null;
 
     static List<List<Edge>> build(int n, List<Edge> edges) {
+        graph = new ArrayList<>();
+
         for (int i = 0; i < n; i++) {
             graph.add(new ArrayList<>());
         }
