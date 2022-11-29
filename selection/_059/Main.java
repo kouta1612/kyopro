@@ -1,21 +1,84 @@
-package lib.Dijkstra;
+package selection._059;
 
+import java.util.Scanner;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Main {
     public static void main(String[] args) {
-        List<Edge> edges = new ArrayList<>();
-        edges.add(new Edge(0, 1, 3));
-        edges.add(new Edge(1, 2, 2));
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        long[] cost = new long[n];
+        int[] limitPath = new int[n];
+        for (int i = 0; i < n; i++) {
+            cost[i] = sc.nextLong();
+            limitPath[i] = sc.nextInt();
+        }
 
-        Dijkstra dijkstra = new Dijkstra(3, edges);
+        List<Edge> edges = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            int u = sc.nextInt() - 1;
+            int v = sc.nextInt() - 1;
+            edges.add(new Edge(u, v, cost[u]));
+            edges.add(new Edge(v, u, cost[v]));
+        }
+
+        sc.close();
+
+        for (int i = 0; i < n; i++) {
+            long[] dist = bfs(i, n, edges);
+            for (int j = i + 1; j < n; j++) {
+                if (!(1 <= dist[j] && dist[j] <= limitPath[i])) {
+                    continue;
+                }
+
+                Edge newEdge = new Edge(i, j, cost[i]);
+                boolean isExists = false;
+                for (Edge edge : edges) {
+                    if (edge.source == newEdge.source && edge.dest == newEdge.dest) {
+                        isExists = true;
+                    }
+                }
+                if (!isExists) {
+                    edges.add(newEdge);
+                }
+            }
+        }
+
+        Dijkstra dijkstra = new Dijkstra(n, edges);
         long[] dist = dijkstra.build(0);
-        System.out.println(Arrays.toString(dist));
+
+        System.out.println(dist[n - 1]);
+    }
+
+    static long[] bfs(int s, int n, List<Edge> edges) {
+        long[] dist = new long[n];
+        Deque<Integer> queue = new ArrayDeque<>();
+        List<List<Edge>> graph = Graph.build(n, edges);
+
+        Arrays.fill(dist, -1);
+        dist[s] = 0;
+        queue.addLast(s);
+        while (!queue.isEmpty()) {
+            int pos = queue.pollFirst();
+            for (Edge edge : graph.get(pos)) {
+                if (dist[edge.dest] >= 0) {
+                    continue;
+                }
+
+                dist[edge.dest] = dist[pos] + 1;
+                queue.add(edge.dest);
+            }
+        }
+
+        return dist;
     }
 }
 
