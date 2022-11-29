@@ -19,14 +19,14 @@ public class Main {
     static long[] bfs(int s, int n, List<Edge> edges) {
         long[] dist = new long[n];
         Deque<Integer> queue = new ArrayDeque<>();
-        Graph graph = new Graph(n, edges);
+        List<List<Edge>> graph = Graph.build(n, edges);
 
         Arrays.fill(dist, -1);
         dist[s] = 0;
         queue.addLast(s);
         while (!queue.isEmpty()) {
             int pos = queue.pollFirst();
-            for (Edge edge : graph.edgeList.get(pos)) {
+            for (Edge edge : graph.get(pos)) {
                 if (dist[edge.dest] >= 0) {
                     continue;
                 }
@@ -52,14 +52,17 @@ class Edge {
 }
 
 class Graph {
-    List<List<Edge>> edgeList = new ArrayList<>();
+    static List<List<Edge>> graph = new ArrayList<>();
 
-    Graph(int n, List<Edge> edges) {
+    static List<List<Edge>> build(int n, List<Edge> edges) {
         for (int i = 0; i < n; i++) {
-            edgeList.add(new ArrayList<>());
+            graph.add(new ArrayList<>());
         }
+
         for (Edge edge : edges) {
-            edgeList.get(edge.source).add(edge);
+            graph.get(edge.source).add(edge);
         }
+
+        return graph;
     }
 }

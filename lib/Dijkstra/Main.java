@@ -26,14 +26,14 @@ public class Main {
 class Dijkstra {
     private long[] current;
     private boolean[] isDone;
-    private Graph g;
+    private List<List<Edge>> graph;
     private Queue<Node> pq;
 
     Dijkstra(int n, List<Edge> edges) {
         current = new long[n];
         Arrays.fill(current, 1L << 60);
         isDone = new boolean[n];
-        g = new Graph(n, edges);
+        graph = Graph.build(n, edges);
         pq = new PriorityQueue<>(new DijkstraComparator());
     }
 
@@ -51,7 +51,7 @@ class Dijkstra {
             isDone[node.vertex] = true;
 
             // 隣接する未確定ノードのうち最短距離となる経路があれば更新
-            for (Edge edge : g.edgeList.get(node.vertex)) {
+            for (Edge edge : graph.get(node.vertex)) {
                 int next = edge.dest;
                 long cost = current[node.vertex] + edge.weight;
 
@@ -98,14 +98,17 @@ class Node {
 }
 
 class Graph {
-    List<List<Edge>> edgeList = new ArrayList<>();
+    static List<List<Edge>> graph = new ArrayList<>();
 
-    Graph(int n, List<Edge> edges) {
+    static List<List<Edge>> build(int n, List<Edge> edges) {
         for (int i = 0; i < n; i++) {
-            edgeList.add(new ArrayList<>());
+            graph.add(new ArrayList<>());
         }
+
         for (Edge edge : edges) {
-            edgeList.get(edge.source).add(edge);
+            graph.get(edge.source).add(edge);
         }
+
+        return graph;
     }
 }
