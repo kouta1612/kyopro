@@ -24,8 +24,8 @@ public class Main {
 
         List<Edge> edges = new ArrayList<>();
         for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
+            int u = sc.nextInt() - 1;
+            int v = sc.nextInt() - 1;
             edges.add(new Edge(u, v, cost[u]));
             edges.add(new Edge(v, u, cost[v]));
         }
@@ -33,9 +33,29 @@ public class Main {
         sc.close();
 
         for (int i = 0; i < n; i++) {
-            long[] dist = bfs(i, n - 1, edges);
-            
+            long[] dist = bfs(i, n, edges);
+            for (int j = i + 1; j < n; j++) {
+                if (!(1 <= dist[j] && dist[j] <= limitPath[i])) {
+                    continue;
+                }
+
+                Edge newEdge = new Edge(i, j, cost[i]);
+                boolean isExists = false;
+                for (Edge edge : edges) {
+                    if (edge.source == newEdge.source && edge.dest == newEdge.dest) {
+                        isExists = true;
+                    }
+                }
+                if (!isExists) {
+                    edges.add(newEdge);
+                }
+            }
         }
+
+        Dijkstra dijkstra = new Dijkstra(n, edges);
+        long[] dist = dijkstra.build(0);
+
+        System.out.println(dist[n - 1]);
     }
 
     static long[] bfs(int s, int n, List<Edge> edges) {
