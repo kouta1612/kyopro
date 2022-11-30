@@ -34,6 +34,8 @@ public class Main {
 
         sc.close();
 
+        // TODO: 要パフォーマンス改善
+        // 頂点数が比較的少ないので隣接リストではなく隣接行列を使ったほうが良いかも
         for (int i = 0; i < n; i++) {
             long[] dist = bfs(i, n, edges);
             for (int j = 0; j < n; j++) {
