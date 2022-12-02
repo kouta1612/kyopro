@@ -35,104 +35,66 @@ public class Main {
         sc.close();
 
         int[] dist = new int[n];
-        Node[][] nodes = new Node[n][];
+        int[][] edgeNodes = new int[n][];
+        int[][] edgeCosts = new int[n][];
         Deque<Integer> q = new ArrayDeque<>();
+        // 出発地点を全探索
         for (int i = 0; i < n; i++) {
             Arrays.fill(dist, -1);
             dist[i] = 0;
             q.add(i);
             while (q.size() > 0) {
                 int u = q.poll();
-                for (Integer integer : graph.get(u)) {
-
+                for (int v : graph.get(u)) {
+                    if (dist[v] >= 0) {
+                        continue;
+                    }
+                    dist[v] = dist[u] + 1;
+                    q.add(v);
                 }
             }
-        }
 
-        List<Edge> newEdges = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+            int size = 0;
+            // 到着地点を全探索
             for (int j = 0; j < n; j++) {
-                newEdges.add(new Edge(i, j, cost[i]));
-            }
-        }
-
-        Dijkstra dijkstra = new Dijkstra(n, newEdges);
-        dist = dijkstra.build(0);
-
-        System.out.println(dist[n - 1]);
-    }
-
-    static int[] bfs(int s, int n, List<Edge> edges) {
-        int[] dist = new int[n];
-        Deque<Integer> queue = new ArrayDeque<>();
-        List<List<Edge>> graph = Graph.build(n, edges);
-
-        Arrays.fill(dist, -1);
-        dist[s] = 0;
-        queue.addLast(s);
-        while (!queue.isEmpty()) {
-            int pos = queue.pollFirst();
-            for (Edge edge : graph.get(pos)) {
-                if (dist[edge.dest] >= 0) {
+                if (i == j || dist[j] > limit[i]) {
                     continue;
                 }
+                size++;
+            }
 
-                dist[edge.dest] = dist[pos] + 1;
-                queue.add(edge.dest);
+            edgeNodes[i] = new int[size];
+            edgeCosts[i] = new int[size];
+            for (int j = 0; j < n; j++) {
+                if (i == j || dist[j] > limit[i]) {
+                    continue;
+                }
+                size--;
+                edgeNodes[i][size] = j;
+                edgeCosts[i][size] = cost[i];
             }
         }
 
-        return dist;
-    }
-}
-
-/**
- * ダイクストラ法
- * (辺の重みが非負数の場合の単一始点最短経路問題を解くための最良優先探索によるアルゴリズム)
- */
-class Dijkstra {
-    private int[] current;
-    private boolean[] isDone;
-    private List<List<Edge>> graph;
-    private Queue<Node> pq;
-
-    Dijkstra(int n, List<Edge> edges) {
-        current = new int[n];
-        Arrays.fill(current, 1 << 30);
-        isDone = new boolean[n];
-        graph = Graph.build(n, edges);
-        pq = new PriorityQueue<>(new DijkstraComparator());
-    }
-
-    int[] build(int s) {
-        current[s] = 0;
-        pq.add(new Node(s, 0));
-        while (!pq.isEmpty()) {
+        Queue<Node> pq = new PriorityQueue<>(new DijkstraComparator());
+        pq.add(new Node(0, 0));
+        int[] costs = new int[n];
+        Arrays.fill(costs, 1 << 30);
+        costs[0] = 0;
+        while (pq.size() > 0) {
             Node node = pq.poll();
-            // 既に確定済みならスキップ
-            if (isDone[node.vertex]) {
+            if (costs[node.vertex] < node.weight) {
                 continue;
             }
-
-            // 確定済みに更新
-            isDone[node.vertex] = true;
-
-            // 隣接する未確定ノードのうち最短距離となる経路があれば更新
-            for (Edge edge : graph.get(node.vertex)) {
-                int next = edge.dest;
-                int cost = current[node.vertex] + edge.weight;
-
-                // 最短でなければスキップ
-                if (current[next] <= cost) {
-                    continue;
+            for (int i = 0; i < edgeNodes[node.vertex].length; i++) {
+                int to = edgeNodes[node.vertex][i];
+                if (costs[to] > node.weight + edgeCosts[node.vertex][i]) {
+                    costs[to] = node.weight + edgeCosts[node.vertex][i];
+                    pq.add(new Node(to, costs[to]));
                 }
-
-                current[next] = cost;
-                pq.add(new Node(next, current[next]));
             }
         }
 
-        return current;
+        System.out.println(costs[n - 1]);
     }
 }
 
@@ -161,23 +123,5 @@ class Node {
     Node(int vertex, int weight) {
         this.vertex = vertex;
         this.weight = weight;
-    }
-}
-
-class Graph {
-    static List<List<Edge>> graph = null;
-
-    static List<List<Edge>> build(int n, List<Edge> edges) {
-        graph = new ArrayList<>();
-
-        for (int i = 0; i < n; i++) {
-            graph.add(new ArrayList<>());
-        }
-
-        for (Edge edge : edges) {
-            graph.get(edge.source).add(edge);
-        }
-
-        return graph;
     }
 }
