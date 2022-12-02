@@ -38,6 +38,10 @@ public class Main {
         }
 
         int[] dist = new int[n];
+        // edgeNodesとedgeCostsをまとめてNodeクラスにするとMLEになるのでここでは分解している
+        // edgeNodes[i][j]: 頂点iからたどることができるj番目の頂点
+        // edgeCosts[i][j]: 頂点iからたどることができるj番目の頂点に行くまでのコスト
+        // int[][] edgeNodes = new int[n][]とすることでi番目の頂点からたどることができる頂点の数の分だけ動的に確保できる
         int[][] edgeNodes = new int[n][];
         int[][] edgeCosts = new int[n][];
         Deque<Integer> q = new ArrayDeque<>();
