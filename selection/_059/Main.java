@@ -1,6 +1,7 @@
 package selection._059;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,15 +12,17 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
+    public static void main(String[] args) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] line = reader.readLine().split(" ");
+        int n = Integer.valueOf(line[0]);
+        int m = Integer.valueOf(line[1]);
         int[] cost = new int[n];
         int[] limit = new int[n];
         for (int i = 0; i < n; i++) {
-            cost[i] = sc.nextInt();
-            limit[i] = sc.nextInt();
+            line = reader.readLine().split(" ");
+            cost[i] = Integer.valueOf(line[0]);
+            limit[i] = Integer.valueOf(line[1]);
         }
 
         List<List<Integer>> graph = new ArrayList<>();
@@ -27,12 +30,12 @@ public class Main {
             graph.add(new ArrayList<>());
         }
         for (int i = 0; i < m; i++) {
-            int u = sc.nextInt() - 1;
-            int v = sc.nextInt() - 1;
+            line = reader.readLine().split(" ");
+            int u = Integer.valueOf(line[0]) - 1;
+            int v = Integer.valueOf(line[1]) - 1;
             graph.get(u).add(v);
             graph.get(v).add(u);
         }
-        sc.close();
 
         int[] dist = new int[n];
         int[][] edgeNodes = new int[n][];
