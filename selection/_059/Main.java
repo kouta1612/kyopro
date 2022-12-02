@@ -15,68 +15,55 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m = sc.nextInt();
-        long[] cost = new long[n];
-        int[] limitPath = new int[n];
+        int[] cost = new int[n];
+        int[] limit = new int[n];
         for (int i = 0; i < n; i++) {
-            cost[i] = sc.nextLong();
-            limitPath[i] = sc.nextInt();
+            cost[i] = sc.nextInt();
+            limit[i] = sc.nextInt();
         }
 
-        List<Edge> edges = new ArrayList<>();
-        boolean[][] connected = new boolean[n][n];
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
         for (int i = 0; i < m; i++) {
             int u = sc.nextInt() - 1;
             int v = sc.nextInt() - 1;
-            edges.add(new Edge(u, v, 1));
-            edges.add(new Edge(v, u, 1));
-            connected[u][v] = connected[v][u] = true;
+            graph.get(u).add(v);
+            graph.get(v).add(u);
         }
-
         sc.close();
 
-        // TODO: 要パフォーマンス改善
-        // 頂点数が比較的少ないので隣接リストではなく隣接行列を使ったほうが良いかも
+        int[] dist = new int[n];
+        Node[][] nodes = new Node[n][];
+        Deque<Integer> q = new ArrayDeque<>();
         for (int i = 0; i < n; i++) {
-            long[] dist = bfs(i, n, edges);
-            for (int j = 0; j < n; j++) {
-                // 同じ頂点はスキップ
-                if (i == j) {
-                    continue;
-                }
+            Arrays.fill(dist, -1);
+            dist[i] = 0;
+            q.add(i);
+            while (q.size() > 0) {
+                int u = q.poll();
+                for (Integer integer : graph.get(u)) {
 
-                // タクシーで移動可能でなければスキップ
-                if (!(1 <= dist[j] && dist[j] <= limitPath[i])) {
-                    continue;
                 }
-
-                // 連結済みであればスキップ
-                if (connected[i][j]) {
-                    continue;
-                }
-
-                connected[i][j] = true;
             }
         }
 
         List<Edge> newEdges = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (!connected[i][j]) {
-                    continue;
-                }
-
                 newEdges.add(new Edge(i, j, cost[i]));
             }
         }
 
         Dijkstra dijkstra = new Dijkstra(n, newEdges);
-        long[] dist = dijkstra.build(0);
+        dist = dijkstra.build(0);
 
         System.out.println(dist[n - 1]);
     }
 
-    static long[] bfs(int s, int n, List<Edge> edges) {
-        long[] dist = new long[n];
+    static int[] bfs(int s, int n, List<Edge> edges) {
+        int[] dist = new int[n];
         Deque<Integer> queue = new ArrayDeque<>();
         List<List<Edge>> graph = Graph.build(n, edges);
 
@@ -104,20 +91,20 @@ public class Main {
  * (辺の重みが非負数の場合の単一始点最短経路問題を解くための最良優先探索によるアルゴリズム)
  */
 class Dijkstra {
-    private long[] current;
+    private int[] current;
     private boolean[] isDone;
     private List<List<Edge>> graph;
     private Queue<Node> pq;
 
     Dijkstra(int n, List<Edge> edges) {
-        current = new long[n];
-        Arrays.fill(current, 1L << 60);
+        current = new int[n];
+        Arrays.fill(current, 1 << 30);
         isDone = new boolean[n];
         graph = Graph.build(n, edges);
         pq = new PriorityQueue<>(new DijkstraComparator());
     }
 
-    long[] build(int s) {
+    int[] build(int s) {
         current[s] = 0;
         pq.add(new Node(s, 0));
         while (!pq.isEmpty()) {
@@ -133,7 +120,7 @@ class Dijkstra {
             // 隣接する未確定ノードのうち最短距離となる経路があれば更新
             for (Edge edge : graph.get(node.vertex)) {
                 int next = edge.dest;
-                long cost = current[node.vertex] + edge.weight;
+                int cost = current[node.vertex] + edge.weight;
 
                 // 最短でなければスキップ
                 if (current[next] <= cost) {
@@ -158,9 +145,9 @@ class DijkstraComparator implements Comparator<Node> {
 
 class Edge {
     int source, dest;
-    long weight;
+    int weight;
 
-    Edge(int source, int dest, long weight) {
+    Edge(int source, int dest, int weight) {
         this.source = source;
         this.dest = dest;
         this.weight = weight;
@@ -169,9 +156,9 @@ class Edge {
 
 class Node {
     int vertex;
-    long weight;
+    int weight;
 
-    Node(int vertex, long weight) {
+    Node(int vertex, int weight) {
         this.vertex = vertex;
         this.weight = weight;
     }
