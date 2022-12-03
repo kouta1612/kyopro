@@ -1,4 +1,3 @@
-package selection._060;
 
 import java.io.PrintWriter;
 import java.util.Scanner;
