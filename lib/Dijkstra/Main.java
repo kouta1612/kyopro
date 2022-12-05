@@ -2,7 +2,6 @@ package lib.Dijkstra;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -34,7 +33,7 @@ class Dijkstra {
         Arrays.fill(current, 1L << 60);
         isDone = new boolean[n];
         graph = Graph.build(n, edges);
-        pq = new PriorityQueue<>(new DijkstraComparator());
+        pq = new PriorityQueue<>();
     }
 
     long[] build(int s) {
@@ -69,13 +68,6 @@ class Dijkstra {
     }
 }
 
-class DijkstraComparator implements Comparator<Node> {
-    @Override
-    public int compare(Node o1, Node o2) {
-        return o1.weight > o2.weight ? 1 : -1;
-    }
-}
-
 class Edge {
     int source, dest;
     long weight;
@@ -87,13 +79,18 @@ class Edge {
     }
 }
 
-class Node {
+class Node implements Comparable<Node> {
     int vertex;
     long weight;
 
     Node(int vertex, long weight) {
         this.vertex = vertex;
         this.weight = weight;
+    }
+
+    @Override
+    public int compareTo(Node node) {
+        return (int) (this.weight - node.weight);
     }
 }
 
