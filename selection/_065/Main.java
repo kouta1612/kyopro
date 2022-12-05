@@ -1,4 +1,4 @@
-package selection._064;
+package selection._065;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,12 +11,13 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m = sc.nextInt();
+        int k = sc.nextInt();
         List<Edge> edges = new ArrayList<>();
         for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
+            int a = sc.nextInt() - 1;
+            int b = sc.nextInt() - 1;
             int c = sc.nextInt();
-            edges.add(new Edge(u, v, c));
+            edges.add(new Edge(a, b, c));
         }
         sc.close();
 
@@ -27,14 +28,18 @@ public class Main {
             }
         });
 
-        UnionFind uf = new UnionFind(n);
         int result = 0;
+        int remain = m;
+        UnionFind uf = new UnionFind(n);
         for (Edge edge : edges) {
-            if (uf.same(edge.source, edge.dest)) {
-                continue;
+            if (remain == k) {
+                break;
             }
-            result += edge.weight;
-            uf.unite(edge.source, edge.dest);
+            if (!uf.same(edge.source, edge.dest)) {
+                uf.unite(edge.source, edge.dest);
+                result += edge.weight;
+            }
+            remain--;
         }
 
         System.out.println(result);

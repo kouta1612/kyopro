@@ -1,9 +1,6 @@
-package selection._064;
+package selection._087;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Main {
@@ -11,68 +8,57 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m = sc.nextInt();
-        List<Edge> edges = new ArrayList<>();
+        int[] a = new int[m];
+        int[] b = new int[m];
         for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            int c = sc.nextInt();
-            edges.add(new Edge(u, v, c));
+            a[i] = sc.nextInt() - 1;
+            b[i] = sc.nextInt() - 1;
         }
         sc.close();
 
-        Collections.sort(edges, new Comparator<Edge>() {
-            @Override
-            public int compare(Edge o1, Edge o2) {
-                return o1.weight < o2.weight ? -1 : 1;
-            }
-        });
-
+        long[] result = new long[m];
+        result[m - 1] = (long)n * (long)(n - 1) / 2L;
         UnionFind uf = new UnionFind(n);
-        int result = 0;
-        for (Edge edge : edges) {
-            if (uf.same(edge.source, edge.dest)) {
+        for (int i = m - 1; i >= 1; i--) {
+            if (uf.same(a[i], b[i])) {
+                result[i - 1] = result[i];
                 continue;
             }
-            result += edge.weight;
-            uf.unite(edge.source, edge.dest);
+            result[i - 1] = result[i] - uf.size(a[i]) * uf.size(b[i]);
+            uf.unite(a[i], b[i]);
         }
 
-        System.out.println(result);
-    }
-}
+        PrintWriter out = new PrintWriter(System.out);
+        for (int i = 0; i < m; i++) {
+            out.println(result[i]);
+        }
 
-class Edge {
-    int source, dest;
-    long weight;
-
-    Edge(int source, int dest, long weight) {
-        this.source = source;
-        this.dest = dest;
-        this.weight = weight;
+        out.flush();
     }
 }
 
 class UnionFind {
     // par[i] : 頂点iの親に該当する頂点番号
-    // size[i]: 頂点iを根とする木の頂点数
-    int[] par, size;
+    // size[i]: 頂点iを根とする集合の要素の数
+    int[] par;
+    long[] size;
 
     UnionFind(int n) {
         par = new int[n];
-        size = new int[n];
+        size = new long[n];
         for (int i = 0; i < n; i++) {
             par[i] = -1;
             size[i] = 1;
         }
     }
 
-    public boolean unite(int u, int v) {
+    public void unite(int u, int v) {
         int rootU = root(u);
         int rootV = root(v);
 
         // uとvが同じグループの場合は結合処理を行わない
         if (rootU == rootV) {
-            return false;
+            return;
         }
 
         // UnionBySize
@@ -83,8 +69,6 @@ class UnionFind {
             par[rootV] = rootU;
             size[rootU] += size[rootV];
         }
-
-        return true;
     }
 
     public boolean same(int u, int v) {
