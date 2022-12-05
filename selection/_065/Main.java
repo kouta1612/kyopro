@@ -16,30 +16,37 @@ public class Main {
         for (int i = 0; i < m; i++) {
             int a = sc.nextInt() - 1;
             int b = sc.nextInt() - 1;
-            int c = sc.nextInt();
+            long c = sc.nextLong();
             edges.add(new Edge(a, b, c));
         }
         sc.close();
 
+        // Comparatorを正しく実装しないとバグるから注意
+        // 修正前はo1.weight == o2.weightのときに1を返していた
         Collections.sort(edges, new Comparator<Edge>() {
             @Override
             public int compare(Edge o1, Edge o2) {
-                return o1.weight < o2.weight ? -1 : 1;
+                if (o1.weight < o2.weight) {
+                    return -1;
+                } else if (o1.weight == o2.weight) {
+                    return 0;
+                } else {
+                    return 1;
+                }
             }
         });
 
-        int result = 0;
-        int remain = m;
+        long result = 0;
+        int remain = n;
         UnionFind uf = new UnionFind(n);
         for (Edge edge : edges) {
             if (remain == k) {
                 break;
             }
-            if (!uf.same(edge.source, edge.dest)) {
-                uf.unite(edge.source, edge.dest);
+            if (uf.unite(edge.source, edge.dest)) {
                 result += edge.weight;
+                remain--;
             }
-            remain--;
         }
 
         System.out.println(result);
