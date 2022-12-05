@@ -2,7 +2,6 @@ package selection._065;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,20 +20,7 @@ public class Main {
         }
         sc.close();
 
-        // Comparatorを正しく実装しないとバグるから注意
-        // 修正前はo1.weight == o2.weightのときに1を返していた
-        Collections.sort(edges, new Comparator<Edge>() {
-            @Override
-            public int compare(Edge o1, Edge o2) {
-                if (o1.weight < o2.weight) {
-                    return -1;
-                } else if (o1.weight == o2.weight) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            }
-        });
+        Collections.sort(edges);
 
         long result = 0;
         int remain = n;
@@ -53,7 +39,7 @@ public class Main {
     }
 }
 
-class Edge {
+class Edge implements Comparable<Edge> {
     int source, dest;
     long weight;
 
@@ -61,6 +47,11 @@ class Edge {
         this.source = source;
         this.dest = dest;
         this.weight = weight;
+    }
+
+    @Override
+    public int compareTo(Edge edge) {
+        return (int) (this.weight - edge.weight);
     }
 }
 
