@@ -25,13 +25,13 @@ class UnionFind {
         }
     }
 
-    public void unite(int u, int v) {
+    public boolean unite(int u, int v) {
         int rootU = root(u);
         int rootV = root(v);
 
         // uとvが同じグループの場合は結合処理を行わない
         if (rootU == rootV) {
-            return;
+            return false;
         }
 
         // UnionBySize
@@ -42,10 +42,17 @@ class UnionFind {
             par[rootV] = rootU;
             size[rootU] += size[rootV];
         }
+
+        return true;
     }
 
     public boolean same(int u, int v) {
         return root(u) == root(v);
+    }
+
+    public long size(int x) {
+        int rootX = root(x);
+        return size[rootX];
     }
 
     private int root(int x) {
