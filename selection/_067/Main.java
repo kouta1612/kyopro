@@ -1,7 +1,6 @@
 package selection._067;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -35,10 +34,22 @@ public class Main {
             Point yPoint2 = yPoints.get(i + 1);
             edges.add(new Edge(yPoint1.num, yPoint2.num, Math.abs(yPoint1.point - yPoint2.point)));
         }
+
+        Collections.sort(edges);
+
+        UnionFind uf = new UnionFind(n);
+        long result = 0;
+        for (Edge edge : edges) {
+            if (uf.unite(edge.source, edge.dest)) {
+                result += edge.weight;
+            }
+        }
+
+        System.out.println(result);
     }
 }
 
-class Edge {
+class Edge implements Comparable<Edge> {
     int source, dest;
     long weight;
 
@@ -46,6 +57,11 @@ class Edge {
         this.source = source;
         this.dest = dest;
         this.weight = weight;
+    }
+
+    @Override
+    public int compareTo(Edge o) {
+        return (int) (weight - o.weight);
     }
 }
 
@@ -62,7 +78,6 @@ class Point implements Comparable<Point> {
     public int compareTo(Point o) {
         return (int) (point - o.point);
     }
-
 }
 
 class UnionFind {
