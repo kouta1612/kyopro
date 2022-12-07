@@ -10,8 +10,6 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
-        // Edgeに書き直してみる
-        // xPointsとyPointsをPointsにまとめる
         List<Point> xPoints = new ArrayList<>();
         List<Point> yPoints = new ArrayList<>();
         for (int i = 0; i < n; i++) {
@@ -25,25 +23,29 @@ public class Main {
         Collections.sort(xPoints);
         Collections.sort(yPoints);
 
-        UnionFind uf = new UnionFind(n);
-        long result = 0;
+        List<Edge> edges = new ArrayList<>();
         for (int i = 0; i < n - 1; i++) {
             Point xPoint1 = xPoints.get(i);
             Point xPoint2 = xPoints.get(i + 1);
-            if (uf.unite(xPoint1.num, xPoint2.num)) {
-                result += Math.abs(xPoint1.point - xPoint2.point);
-            }
+            edges.add(new Edge(xPoint1.num, xPoint2.num, Math.abs(xPoint1.point - xPoint2.point)));
         }
 
         for (int i = 0; i < n - 1; i++) {
             Point yPoint1 = yPoints.get(i);
             Point yPoint2 = yPoints.get(i + 1);
-            if (uf.unite(yPoint1.num, yPoint2.num)) {
-                result += Math.abs(yPoint1.point - yPoint2.point);
-            }
+            edges.add(new Edge(yPoint1.num, yPoint2.num, Math.abs(yPoint1.point - yPoint2.point)));
         }
+    }
+}
 
-        System.out.println(result);
+class Edge {
+    int source, dest;
+    long weight;
+
+    Edge(int source, int dest, long weight) {
+        this.source = source;
+        this.dest = dest;
+        this.weight = weight;
     }
 }
 
