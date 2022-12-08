@@ -11,13 +11,11 @@ public class Main {
         int h = sc.nextInt();
         sc.close();
 
-        // factorial[i]: i!(mod p)で事前に求める
-        // factorial[w + h - 2] / (factorial[w - 1] * factorial[h - 1])を求める
-        // 上記の割り算ではmodを使えないので逆元を利用する
         long[] factorials = getFactorials();
-        System.out.println(factorials[w + h - 2] * modInv(factorials[w - 1] * factorials[h - 1] % MOD) % MOD);
+        System.out.println(factorials[w + h - 2] * modInv(factorials[w - 1] * factorials[h - 1] % MOD, MOD) % MOD);
     }
 
+    // 各階乗の値を求める
     static long[] getFactorials() {
         long[] result = new long[250001];
         result[0] = result[1] = 1;
@@ -28,11 +26,11 @@ public class Main {
         return result;
     }
 
-    // aの逆元をmod 1000000007 のもとで求める
-    static long modInv(long a) {
+    // aの逆元をmod p のもとで求める
+    static long modInv(long a, long p) {
         // a^(p-1) ≡ 1 (mod p) → a * a^(p-2) ≡ 1 (mod p)
         // 上記よりaの逆元はa^(p-2)に等しい事がわかる
-        return modPow(a, MOD - 2, MOD);
+        return modPow(a, p - 2, p);
     }
 
     static long modPow(long a, long n, long p) {
