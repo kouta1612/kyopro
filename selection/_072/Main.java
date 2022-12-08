@@ -8,5 +8,9 @@ public class Main {
         long w = sc.nextLong();
         long h = sc.nextLong();
         sc.close();
+
+        // factorial[i]: i!(mod p)で事前に求める
+        // factorial[w + h - 2] / (factorial[w - 1] * factorial[h - 1])を求める
+        // 上記の割り算ではmodを使えないので逆元を利用する
     }
 }
