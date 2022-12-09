@@ -6,8 +6,8 @@ public class Main {
     static final long MOD = 1000000007;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        long x = sc.nextLong();
-        long y = sc.nextLong();
+        int x = sc.nextInt();
+        int y = sc.nextInt();
         sc.close();
 
         if ((x + y) % 3 != 0) {
@@ -15,19 +15,30 @@ public class Main {
             return;
         }
 
-        // n + 2m = x
-        // 2n + m = y
-        // mを固定して n + 2 * (y - 2n) = x => x + 3n = 2y => 3n = 2y - x
-        // nを求める
-        long[] factorials = getFactorials();
+        // operations[i]: i=0の時はx, i=1の時はyの操作回数
+        int[] operations = getOperations(x, y);
+        if (!(operations[0] >= 0 && operations[1] >= 0)) {
+            System.out.println(0);
+            return;
+        }
 
+        long[] factorials = getFactorials();
+        System.out.println(factorials[operations[0] + operations[1]] * modInv(factorials[operations[0]] * factorials[operations[1]] % MOD, MOD) % MOD);
+    }
+
+    static int[] getOperations(int x, int y) {
+        int[] result = new int[2];
+        result[0] = (2 * y - x) / 3;
+        result[1] = y - 2 * result[0];
+
+        return result;
     }
 
     // 各階乗の値を求める
     static long[] getFactorials() {
-        long[] result = new long[250001];
+        long[] result = new long[1000001];
         result[0] = result[1] = 1;
-        for (int i = 2; i <= 250000; i++) {
+        for (int i = 2; i <= 1000000; i++) {
             result[i] = result[i - 1] * i % MOD;
         }
 
