@@ -11,22 +11,26 @@ public class Main {
         int n = sc.nextInt();
         int k = sc.nextInt();
 
-        String[][] s = new String[m][n];
+        // Stringからcharに変えるだけでパフォーマンス&メモリ改善
+        char[][] s = new char[m][n];
         for (int i = 0; i < m; i++) {
-            s[i] = sc.next().split("");
+            String line = sc.next();
+            for (int j = 0; j < n; j++) {
+                s[i][j] = line.charAt(j);
+            }
         }
 
-        // 累積和（頂点(1,1)から頂点(m,n)までの領域に含まれる個数）
-        int[][] jungleSum = new int[m + 2][n + 2];
-        int[][] oceanSum = new int[m + 2][n + 2];
-        int[][] iceSum = new int[m + 2][n + 2];
-        for (int i = 2; i <= m + 1; i++) {
-            for (int j = 2; j <= n + 1; j++) {
-                if (s[i - 2][j - 2].equals("J")) {
+        // 累積和（頂点(0,0)から頂点(m-1,n-1)までの領域に含まれる個数）
+        int[][] jungleSum = new int[m + 1][n + 1];
+        int[][] oceanSum = new int[m + 1][n + 1];
+        int[][] iceSum = new int[m + 1][n + 1];
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s[i - 1][j - 1] == 'J') {
                     jungleSum[i][j] = jungleSum[i][j - 1] + jungleSum[i - 1][j] - jungleSum[i - 1][j - 1] + 1;
                     oceanSum[i][j] = oceanSum[i][j - 1] + oceanSum[i - 1][j] - oceanSum[i - 1][j - 1];
                     iceSum[i][j] = iceSum[i][j - 1] + iceSum[i - 1][j] - iceSum[i - 1][j - 1];
-                } else if (s[i - 2][j - 2].equals("O")) {
+                } else if (s[i - 1][j - 1] == 'O') {
                     jungleSum[i][j] = jungleSum[i][j - 1] + jungleSum[i - 1][j] - jungleSum[i - 1][j - 1];
                     oceanSum[i][j] = oceanSum[i][j - 1] + oceanSum[i - 1][j] - oceanSum[i - 1][j - 1] + 1;
                     iceSum[i][j] = iceSum[i][j - 1] + iceSum[i - 1][j] - iceSum[i - 1][j - 1];
@@ -38,27 +42,25 @@ public class Main {
             }
         }
 
+        // StringBuilderもパフォーマンス改善に貢献
         StringBuilder builder = new StringBuilder();
         int a, b, c, d, jungleCount, oceanCount, iceCount;
         for (int i = 0; i < k; i++) {
             // 左上の頂点はそのまま区画の位置に対応する
-            a = sc.nextInt();
-            b = sc.nextInt();
+            a = sc.nextInt() - 1;
+            b = sc.nextInt() - 1;
             // 右下の頂点は区画の位置の右下に対応する
-            c = sc.nextInt() + 1;
-            d = sc.nextInt() + 1;
+            c = sc.nextInt();
+            d = sc.nextInt();
 
             jungleCount = jungleSum[c][d] - jungleSum[c][b] - jungleSum[a][d] + jungleSum[a][b];
             oceanCount = oceanSum[c][d] - oceanSum[c][b] - oceanSum[a][d] + oceanSum[a][b];
             iceCount = iceSum[c][d] - iceSum[c][b] - iceSum[a][d] + iceSum[a][b];
 
-            builder.append(jungleCount).append(" ").append(oceanCount).append(" ").append(iceCount);
-            if (i != k - 1) {
-                builder.append("\n");
-            }
+            builder.append(jungleCount).append(" ").append(oceanCount).append(" ").append(iceCount).append("\n");
         }
 
-        System.out.println(builder.toString());
+        System.out.print(builder);
     }
 }
 
