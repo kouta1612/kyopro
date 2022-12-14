@@ -1,6 +1,5 @@
 package selection._083;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -29,12 +28,12 @@ public class Main {
             int start = p[i];
             int end = p[i + 1];
             if (start > end) {
-                sum[start + 1]--;
-                sum[end + 1]++;
-            } else {
-                sum[start]++;
-                sum[end]--;
+                int tmp = start;
+                start = end;
+                end = tmp;
             }
+            sum[start]++;
+            sum[end]--;
         }
         for (int i = 1; i <= n; i++) {
             sum[i] += sum[i - 1];
@@ -46,6 +45,5 @@ public class Main {
         }
 
         System.out.println(result);
-        // System.out.println(Arrays.toString(sum));
     }
 }
