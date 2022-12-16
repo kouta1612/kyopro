@@ -55,9 +55,10 @@ public class Main {
     // index が条件を満たすかどうか
     static boolean isOK(double[] x, double[] y, double[] r, double mid) {
         int n = r.length;
+        int m = x.length - n;
         double r1, r2;
-        for (int i = 0; i < 2 * n; i++) {
-            for (int j = 0; j < 2 * n; j++) {
+        for (int i = 0; i < n + m; i++) {
+            for (int j = 0; j < n + m; j++) {
                 if (i < n) {
                     r1 = r[i];
                 } else {
@@ -79,7 +80,7 @@ public class Main {
         return true;
     }
 
-    static boolean check(double x1, double y1, double r1, double x2, double y2, double r2) {
+    static boolean check(double x1, double x2, double y1, double y2, double r1, double r2) {
         double length = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
         return r1 + r2 <= length;
     }
