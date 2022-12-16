@@ -1,39 +1,31 @@
 package selection._090;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    static final double INF = Double.MAX_VALUE;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m = sc.nextInt();
         double[] x = new double[n + m];
         double[] y = new double[n + m];
-        double[] r = new double[n];
+        double[] r = new double[n + m];
         for (int i = 0; i < n + m; i++) {
             x[i] = sc.nextDouble();
             y[i] = sc.nextDouble();
             if (i < n) {
                 r[i] = sc.nextDouble();
+            } else {
+                r[i] = 1e5;
             }
         }
         sc.close();
 
-        double result = INF;
+        double minR = Arrays.stream(r).min().getAsDouble();
+        double result = binary_search(n, m, x, y, r, minR);
 
-        for (int i = 0; i < n; i++) {
-            result = Math.min(result, r[i]);
-        }
-
-        if (m == 0) {
-            System.out.println(result);
-            return;
-        }
-
-        result = Math.min(result, binary_search(x, y, r));
-
-        System.out.println(Math.round(result * 10000000.0)/10000000.0);
+        System.out.println(result);
     }
 
     /**
@@ -43,17 +35,18 @@ public class Main {
      * @param key
      * @return
      */
-    static double binary_search(double[] x, double[] y, double[] r) {
+    static double binary_search(int n, int m, double[] x, double[] y, double[] r, double minR) {
         // 条件を満たす最大のインデックスを求める場合はng,okの値とisOKの処理を修正する
-        double ok = -1000;
-        double ng = 2000;
+        double ok = 0;
+        // 最後のWAが取れたのはここの設定が重要な気がする
+        double ng = minR + 1e-6;
 
         // これ以降テンプレなので変える必要なし
         // ng は「常に」条件を満たさず、ok は「常に」条件を満たすよう更新
-        while (Math.abs(ok - ng) > 0.00000001) {
+        while (Math.abs(ok - ng) > 1e-6) {
             double mid = (ok + ng) / 2;
 
-            if (isOK(x, y, r, mid)) {
+            if (isOK(n, m, x, y, r, mid)) {
                 ok = mid;
             } else {
                 ng = mid;
@@ -65,24 +58,11 @@ public class Main {
     }
 
     // index が条件を満たすかどうか
-    static boolean isOK(double[] x, double[] y, double[] r, double mid) {
-        int n = r.length;
-        int m = x.length - n;
-        double r1, r2;
+    static boolean isOK(int n, int m, double[] x, double[] y, double[] r, double mid) {
         for (int i = 0; i < n + m; i++) {
             for (int j = i + 1; j < n + m; j++) {
-                if (i < n) {
-                    r1 = r[i];
-                } else {
-                    r1 = mid;
-                }
-
-                if (j < n) {
-                    r2 = r[i];
-                } else {
-                    r2 = mid;
-                }
-
+                double r1 = i < n ? r[i] : mid;
+                double r2 = j < n ? r[j] : mid;
                 if (!check(x[i], x[j], y[i], y[j], r1, r2)) {
                     return false;
                 }
