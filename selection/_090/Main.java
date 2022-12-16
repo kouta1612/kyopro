@@ -3,6 +3,7 @@ package selection._090;
 import java.util.Scanner;
 
 public class Main {
+    static final double INF = Double.MAX_VALUE;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
@@ -19,26 +20,37 @@ public class Main {
         }
         sc.close();
 
-        double result = binary_search(x, y, r);
+        double result = INF;
 
-        System.out.println(result);
+        for (int i = 0; i < n; i++) {
+            result = Math.min(result, r[i]);
+        }
+
+        if (m == 0) {
+            System.out.println(result);
+            return;
+        }
+
+        result = Math.min(result, binary_search(x, y, r));
+
+        System.out.println(Math.round(result * 10000000.0)/10000000.0);
     }
 
     /**
      * 汎用的な二分探索法テンプレ
-     * 
+     *
      * @param a
      * @param key
      * @return
      */
     static double binary_search(double[] x, double[] y, double[] r) {
         // 条件を満たす最大のインデックスを求める場合はng,okの値とisOKの処理を修正する
-        double ok = 200;
-        double ng = 0;
+        double ok = -1000;
+        double ng = 2000;
 
         // これ以降テンプレなので変える必要なし
         // ng は「常に」条件を満たさず、ok は「常に」条件を満たすよう更新
-        while (Math.abs(ok - ng) > 1) {
+        while (Math.abs(ok - ng) > 0.00000001) {
             double mid = (ok + ng) / 2;
 
             if (isOK(x, y, r, mid)) {
@@ -58,7 +70,7 @@ public class Main {
         int m = x.length - n;
         double r1, r2;
         for (int i = 0; i < n + m; i++) {
-            for (int j = 0; j < n + m; j++) {
+            for (int j = i + 1; j < n + m; j++) {
                 if (i < n) {
                     r1 = r[i];
                 } else {
