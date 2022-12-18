@@ -23,7 +23,7 @@ public class Main {
             }
 
             int result = 0;
-            List<Pair> swaps = new ArrayList<>();
+            List<Point> swapPoints = new ArrayList<>();
             while (true) {
                 for (int i = 0; i < h; i++) {
                     boolean found = false;
@@ -36,7 +36,7 @@ public class Main {
                                 break;
                             }
                             if (same(j, j + len, p[i])) {
-                                swaps.add(new Pair(i, j, len));
+                                swapPoints.add(new Point(i, j, len));
                                 result += p[i][j] * len;
                                 destroy(j, j + len, p[i]);
                                 found = true;
@@ -44,16 +44,16 @@ public class Main {
                         }
                     }
                 }
-                if (swaps.size() == 0) {
+                if (swapPoints.size() == 0) {
                     break;
                 }
 
-                Collections.sort(swaps);
+                Collections.sort(swapPoints);
 
-                for (Pair swap : swaps) {
-                    swap(swap, p);
+                for (Point swapPoint : swapPoints) {
+                    swap(swapPoint, p);
                 }
-                swaps.clear();
+                swapPoints.clear();
             }
 
             out.println(result);
@@ -63,7 +63,7 @@ public class Main {
         sc.close();
     }
 
-    static void swap(Pair p, int[][] a) {
+    static void swap(Point p, int[][] a) {
         for (int i = p.x - 1; i >= 0; i--) {
             for (int j = p.y; j < p.y + p.len; j++) {
                 int tmp = a[i + 1][j];
@@ -94,17 +94,17 @@ public class Main {
     }
 }
 
-class Pair implements Comparable<Pair> {
+class Point implements Comparable<Point> {
     int x, y, len;
 
-    Pair(int x, int y, int len) {
+    Point(int x, int y, int len) {
         this.x = x;
         this.y = y;
         this.len = len;
     }
 
     @Override
-    public int compareTo(Pair o) {
+    public int compareTo(Point o) {
         return x - o.x;
     }
 
