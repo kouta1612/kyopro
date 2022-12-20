@@ -9,32 +9,50 @@ public class Main {
         int m = sc.nextInt();
         long[] a = new long[n];
         for (int i = 0; i < n; i++) {
-            a[i] = sc.nextLong();
+            a[i] = sc.nextLong() / 2;
         }
         sc.close();
 
-        if (n == 1) {
-            long result = 0;
-            for (long i = a[0] / 2; i <= m; i += a[0]) {
-                result++;
+        long division = countDivisionsByTwo(a[0]);
+        for (int i = 0; i < n; i++) {
+            if (division != countDivisionsByTwo(a[i])) {
+                System.out.println(0);
+                return;
             }
-            System.out.println(result);
+            a[i] >>= division;
+        }
+        // これを忘れずに！
+        m >>= division;
+
+        long l = lcm(a[0], 1);
+        if (l > m) {
+            System.out.println(0);
             return;
         }
-
-        long x = lcm(a[0], a[1]);
-        long y = lcm(a[0] / 2, a[1] / 2);
-        for (int i = 2; i < n; i++) {
-            x = lcm(x, a[i]);
-            y = lcm(y, a[i] / 2);
+        for (int i = 0; i < n; i++) {
+            l = lcm(l, a[i]);
+            if (l > m) {
+                System.out.println(0);
+                return;
+            }
         }
 
         long result = 0;
-        for (long i = y; i <= m; i += x) {
+        for (long i = 1; i * l <= m; i += 2) {
             result++;
         }
 
         System.out.println(result);
+    }
+
+    static long countDivisionsByTwo(long a) {
+        long result = 0;
+        while (a % 2 == 0) {
+            a /= 2;
+            result++;
+        }
+
+        return result;
     }
 
     static long gcd(long a, long b) {
