@@ -1,7 +1,5 @@
 package selection._099;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -16,38 +14,13 @@ public class Main {
         }
         sc.close();
 
-        List<Pair> result = new ArrayList<>();
+        long digitSum = 0;
+        long digitLength = 0;
         for (int i = 0; i < m; i++) {
-            result.add(new Pair(d[i] * c[i], c[i] - 1));
+            digitSum += d[i] * c[i];
+            digitLength += c[i];
         }
 
-        long ans = 0;
-        long current = 0;
-        for (Pair pair : result) {
-            ans += pair.count;
-            current += pair.value;
-        }
-
-        ans += addition(current);
-        System.out.println(ans);
-    }
-
-    static long addition(long x) {
-        long result = 0;
-        while (x >= 10) {
-            result++;
-            String s = String.valueOf(x/100) + String.valueOf(x%10 + x/10%10);
-            x = Long.valueOf(s);
-        }
-
-        return result;
-    }
-}
-
-class Pair {
-    long value, count;
-    Pair(long value, long count) {
-        this.value = value;
-        this.count = count;
+        System.out.println((digitLength - 1) + (digitSum - 1) / 9);
     }
 }
