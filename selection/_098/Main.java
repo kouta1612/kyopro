@@ -3,7 +3,7 @@ package selection._098;
 import java.util.Scanner;
 
 public class Main {
-    static final int MOD = 1000000007;
+    static final long MOD = 1000000007;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
