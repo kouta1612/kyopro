@@ -1,43 +1,23 @@
 package lib.Permutation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) {
-        Permutation p = new Permutation();
-        List<Integer[]> result = p.make(new Integer[] { 1, 2, 3 });
-        for (Integer[] list : result) {
-            System.out.println(Arrays.toString(list));
-        }
-    }
-}
-
-class Permutation {
-    List<Integer[]> make(Integer[] seed) {
-        List<Integer[]> result = new ArrayList<>();
-        Integer[] perm = new Integer[seed.length];
-        boolean[] used = new boolean[seed.length];
-        return buildPerm(0, result, seed, perm, used);
+        permutation("abcd");
     }
 
-    List<Integer[]> buildPerm(Integer pos, List<Integer[]> result, Integer[] seed, Integer[] perm, boolean[] used) {
-        Integer[] newPerm = Arrays.copyOf(perm, perm.length);
-        if (pos == newPerm.length) {
-            result.add(newPerm);
-        }
+    // 世界で戦うプログラミング力を鍛える本(p60,61)を参照
+    static void permutation(String str) {
+        permutation(str, "");
+    }
 
-        for (int i = 0; i < newPerm.length; i++) {
-            if (used[i]) {
-                continue;
+    static void permutation(String str, String prefix) {
+        if (str.length() == 0) {
+            System.out.println(prefix);
+        } else {
+            for (int i = 0; i < str.length(); i++) {
+                String rem = str.substring(0, i) + str.substring(i + 1);
+                permutation(rem, prefix + str.charAt(i));
             }
-            newPerm[pos] = seed[i];
-            used[i] = true;
-            buildPerm(pos + 1, result, seed, newPerm, used);
-            used[i] = false;
         }
-
-        return result;
     }
 }
