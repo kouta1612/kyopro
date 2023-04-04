@@ -5,7 +5,7 @@ public class Main {
         permutation("abcd");
     }
 
-    // 世界で戦うプログラミング力を鍛える本(p60,61)を参照
+    // 世界で戦うプログラミング力を鍛える本(p60,61,84)を参照
     static void permutation(String str) {
         permutation(str, "");
     }
