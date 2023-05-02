@@ -1,4 +1,4 @@
-package neetcode._238;
+package neetcode.java._238;
 
 public class Solution {
     public int[] productExceptSelf(int[] nums) {

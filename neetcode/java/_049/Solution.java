@@ -1,4 +1,4 @@
-package neetcode._049;
+package neetcode.java._049;
 
 import java.util.ArrayList;
 import java.util.Arrays;

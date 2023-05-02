@@ -1,4 +1,4 @@
-package neetcode._217;
+package neetcode.java._217;
 
 import java.util.HashSet;
 import java.util.Set;
