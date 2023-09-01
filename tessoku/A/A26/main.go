@@ -11,12 +11,9 @@ func main() {
 		primes[i] = true
 	}
 
-	for i := 2; i <= 300000; i++ {
-		for j := 2; j*j <= i; j++ {
-			if i%j == 0 {
-				primes[i] = false
-				break
-			}
+	for i := 2; i*i <= 300000; i++ {
+		for j := 2; i*j <= 300000; j++ {
+			primes[i*j] = false
 		}
 	}
 
