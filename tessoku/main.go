@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-type To struct {
-	Pos  int
+type Edge struct {
+	To   int
 	Cost int64
 }
 
@@ -16,13 +16,11 @@ type Vertex struct {
 	index int
 }
 
-// A PriorityQueue implements heap.Interface and holds Items.
 type PriorityQueue []*Vertex
 
 func (pq PriorityQueue) Len() int { return len(pq) }
 
 func (pq PriorityQueue) Less(i, j int) bool {
-	// We want Pop to give us the highest, not lowest, priority so we use greater than here.
 	return pq[i].Cost < pq[j].Cost
 }
 
@@ -55,14 +53,14 @@ func main() {
 	var v, e, r int
 	fmt.Scan(&v, &e, &r)
 
-	g := make([][]To, v)
+	g := make([][]Edge, v)
 	// TODO: 標準入力の高速化対応
 	for i := 0; i < e; i++ {
 		var s, t int
 		var d int64
 		fmt.Scan(&s, &t, &d)
 
-		g[s] = append(g[s], To{Pos: t, Cost: d})
+		g[s] = append(g[s], Edge{To: t, Cost: d})
 	}
 
 	pq := make(PriorityQueue, 0)
@@ -78,19 +76,14 @@ func main() {
 	heap.Push(&pq, &Vertex{Pos: r, Cost: 0})
 
 	for pq.Len() > 0 {
-		now := heap.Pop(&pq).(*Vertex)
+		from := heap.Pop(&pq).(*Vertex)
+		dist[from.Pos] = cur[from.Pos]
 
-		if dist[now.Pos] != INF {
-			continue
-		}
-
-		dist[now.Pos] = cur[now.Pos]
-
-		for i := 0; i < len(g[now.Pos]); i++ {
-			next := g[now.Pos][i]
-			if dist[next.Pos] == INF && cur[next.Pos] > cur[now.Pos]+next.Cost {
-				cur[next.Pos] = cur[now.Pos] + next.Cost
-				heap.Push(&pq, &Vertex{Pos: next.Pos, Cost: cur[next.Pos]})
+		for i := 0; i < len(g[from.Pos]); i++ {
+			edge := g[from.Pos][i]
+			if dist[edge.To] == INF && cur[edge.To] > cur[from.Pos]+edge.Cost {
+				cur[edge.To] = cur[from.Pos] + edge.Cost
+				heap.Push(&pq, &Vertex{Pos: edge.To, Cost: cur[edge.To]})
 			}
 		}
 	}
