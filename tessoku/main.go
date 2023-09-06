@@ -1,18 +1,22 @@
 package main
 
 import (
+	"bufio"
 	"container/heap"
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
 )
 
 type Edge struct {
-	To   int
-	Cost int64
+	to   int
+	cost int64
 }
 
 type Vertex struct {
-	Pos   int
-	Cost  int64
+	pos   int
+	cost  int64
 	index int
 }
 
@@ -21,7 +25,7 @@ type PriorityQueue []*Vertex
 func (pq PriorityQueue) Len() int { return len(pq) }
 
 func (pq PriorityQueue) Less(i, j int) bool {
-	return pq[i].Cost < pq[j].Cost
+	return pq[i].cost < pq[j].cost
 }
 
 func (pq PriorityQueue) Swap(i, j int) {
@@ -54,13 +58,16 @@ func main() {
 	fmt.Scan(&v, &e, &r)
 
 	g := make([][]Edge, v)
-	// TODO: 標準入力の高速化対応
+	reader := bufio.NewReaderSize(os.Stdin, e)
 	for i := 0; i < e; i++ {
+		line, _, _ := reader.ReadLine()
+		datas := strings.Split(string(line), " ")
 		var s, t int
 		var d int64
-		fmt.Scan(&s, &t, &d)
-
-		g[s] = append(g[s], Edge{To: t, Cost: d})
+		s, _ = strconv.Atoi(datas[0])
+		t, _ = strconv.Atoi(datas[1])
+		d, _ = strconv.ParseInt(datas[2], 10, 64)
+		g[s] = append(g[s], Edge{to: t, cost: d})
 	}
 
 	pq := make(PriorityQueue, 0)
@@ -73,17 +80,17 @@ func main() {
 		dist[i] = INF
 	}
 	cur[r] = 0
-	heap.Push(&pq, &Vertex{Pos: r, Cost: 0})
+	heap.Push(&pq, &Vertex{pos: r, cost: 0})
 
 	for pq.Len() > 0 {
 		from := heap.Pop(&pq).(*Vertex)
-		dist[from.Pos] = cur[from.Pos]
+		dist[from.pos] = cur[from.pos]
 
-		for i := 0; i < len(g[from.Pos]); i++ {
-			edge := g[from.Pos][i]
-			if dist[edge.To] == INF && cur[edge.To] > cur[from.Pos]+edge.Cost {
-				cur[edge.To] = cur[from.Pos] + edge.Cost
-				heap.Push(&pq, &Vertex{Pos: edge.To, Cost: cur[edge.To]})
+		for i := 0; i < len(g[from.pos]); i++ {
+			edge := g[from.pos][i]
+			if dist[edge.to] == INF && cur[edge.to] > cur[from.pos]+edge.cost {
+				cur[edge.to] = cur[from.pos] + edge.cost
+				heap.Push(&pq, &Vertex{pos: edge.to, cost: cur[edge.to]})
 			}
 		}
 	}
