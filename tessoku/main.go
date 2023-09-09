@@ -1,33 +1,48 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	a := []int{1, 2, 3, 4, 5}
-	permutation(a)
-}
+	for {
+		fmt.Println(a)
 
-func permutation(a []int) {
-	used := make([]bool, len(a))
-	b := make([]int, len(a))
-	copy(b, a)
-	permutation2([]int{}, used, b)
-}
-
-func permutation2(perm []int, used []bool, seed []int) {
-	if len(perm) == len(seed) {
-		fmt.Println(perm)
-		return
-	}
-
-	for i := 0; i < len(seed); i++ {
-		if used[i] {
-			continue
+		if !permutation(a) {
+			break
 		}
-		used[i] = true
-		perm = append(perm, seed[i])
-		permutation2(perm, used, seed)
-		used[i] = false
-		perm = perm[:len(perm)-1]
 	}
+}
+
+func permutation(a []int) bool {
+	// a[l] < a[l+1]を満たす最大のlを求める
+	l := -1
+	for i := 0; i < len(a)-1; i++ {
+		if a[i] < a[i+1] {
+			l = i
+		}
+	}
+
+	if l == -1 {
+		return false
+	}
+
+	// a[l] < a[r]を満たす最大のrを求める
+	r := len(a) - 1
+	for i := r; i > l; i-- {
+		if a[l] < a[i] {
+			r = i
+			break
+		}
+	}
+
+	a[l], a[r] = a[r], a[l]
+	if r != len(a) {
+		for i := l + 1; i < len(a)-1; i++ {
+			a[i], a[i+1] = a[i+1], a[i]
+		}
+	}
+
+	return true
 }
