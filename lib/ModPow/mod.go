@@ -1,12 +1,12 @@
 package modpow
 
-func ModPow(a, b, mod uint64) uint64 {
+func ModPow(a, b, p uint64) uint64 {
 	var ret uint64 = 1
 	for b > 0 {
 		if b&1 == 1 {
-			ret = ret * a % mod
+			ret = ret * a % p
 		}
-		a = a * a % mod
+		a = a * a % p
 		b >>= 1
 	}
 
