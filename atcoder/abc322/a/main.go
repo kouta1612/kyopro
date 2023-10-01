@@ -1,19 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
 	var n int
 	var s string
 	fmt.Scan(&n, &s)
 
-	for i := 0; i <= n-3; i++ {
-		sub := s[i : i+3]
-		if sub == "ABC" {
-			fmt.Println(i + 1)
-			return
-		}
+	result := strings.Index(s, "ABC")
+	if result == -1 {
+		fmt.Println(-1)
+	} else {
+		fmt.Println(result + 1)
 	}
-
-	fmt.Println((-1))
 }
