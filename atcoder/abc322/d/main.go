@@ -7,95 +7,134 @@ import (
 	"strings"
 )
 
-var sc = bufio.NewScanner(os.Stdin)
-
-func nextLine() string {
-	sc.Scan()
-	return sc.Text()
-}
-
 func main() {
-	blocks := make([][][]string, 3)
+	sc := bufio.NewScanner(os.Stdin)
+	p := make([][][]string, 3)
 	for i := 0; i < 3; i++ {
-		block := make([][]string, 4)
+		p[i] = make([][]string, 4)
 		for j := 0; j < 4; j++ {
-			block[j] = strings.Split(nextLine(), "")
+			sc.Scan()
+			p[i][j] = strings.Split(sc.Text(), "")
 		}
-		blocks[i] = block
-	}
-
-	grid := make([][]string, 4)
-	for i := 0; i < 4; i++ {
-		grid[i] = []string{".", ".", ".", "."}
 	}
 
 	for i := 0; i < 4; i++ {
 		for j := 0; j < 4; j++ {
-			if dfs(0, blocks, grid) {
+			all := getAll(p)
+			if isOk(all) {
 				fmt.Println("Yes")
 				return
 			}
-			clear(grid)
-			rotate(blocks[2])
+			rotate(p[2])
 		}
-		rotate(blocks[1])
+		rotate(p[1])
 	}
 
 	fmt.Println("No")
 }
 
-func clear(grid [][]string) {
-	for i := 0; i < 4; i++ {
-		for j := 0; j < 4; j++ {
-			grid[i][j] = "."
-		}
-	}
-}
-
-func dfs(n int, blocks [][][]string, grid [][]string) bool {
-	if n == 3 {
-		for i := 0; i < 4; i++ {
-			for j := 0; j < 4; j++ {
-				if grid[i][j] == "." {
-					return false
-				}
-			}
-		}
-		return true
-	}
-
-	for i := -3; i <= 3; i++ {
-		for j := -3; j <= 3; j++ {
-			newGrid := deepCopy(grid)
-			if canPut(blocks[n], newGrid, i, j) {
-				if dfs(n+1, blocks, newGrid) {
+func isOk(inputs [][][][]string) bool {
+	for i := 0; i < len(inputs[0]); i++ {
+		for j := 0; j < len(inputs[1]); j++ {
+			for k := 0; k < len(inputs[2]); k++ {
+				if isPut(inputs[0][i], inputs[1][j], inputs[2][k]) {
 					return true
 				}
 			}
 		}
 	}
-
 	return false
 }
 
-func canPut(block, grid [][]string, i, j int) bool {
-	for x := 0; x < 4; x++ {
-		for y := 0; y < 4; y++ {
-			if block[x][y] == "." {
+func isPut(a, b, c [][]string) bool {
+	g := [][]string{{".", ".", ".", "."}, {".", ".", ".", "."}, {".", ".", ".", "."}, {".", ".", ".", "."}}
+	for i := 0; i < 4; i++ {
+		for j := 0; j < 4; j++ {
+			if a[i][j] == "." {
 				continue
 			}
-			nx := x + i
-			ny := y + j
-			if 0 > nx || 3 < nx || 0 > ny || 3 < ny {
+			if g[i][j] == "#" {
 				return false
 			}
-			if grid[nx][ny] == "#" {
-				return false
-			}
-			grid[nx][ny] = "#"
+			g[i][j] = "#"
 		}
 	}
+
+	for i := 0; i < 4; i++ {
+		for j := 0; j < 4; j++ {
+			if b[i][j] == "." {
+				continue
+			}
+			if g[i][j] == "#" {
+				return false
+			}
+			g[i][j] = "#"
+		}
+	}
+
+	for i := 0; i < 4; i++ {
+		for j := 0; j < 4; j++ {
+			if c[i][j] == "." {
+				continue
+			}
+			if g[i][j] == "#" {
+				return false
+			}
+			g[i][j] = "#"
+		}
+	}
+
+	for i := 0; i < 4; i++ {
+		for j := 0; j < 4; j++ {
+			if g[i][j] == "." {
+				return false
+			}
+		}
+	}
+
 	return true
+}
+
+func getAll(p [][][]string) [][][][]string {
+	result := make([][][][]string, 3)
+	for k := 0; k < 3; k++ {
+		result[k] = [][][]string{}
+		for dx := -3; dx <= 3; dx++ {
+			for dy := -3; dy <= 3; dy++ {
+				ok := true
+				for i := 0; i < 4; i++ {
+					for j := 0; j < 4; j++ {
+						if p[k][i][j] == "." {
+							continue
+						}
+						nx := i + dx
+						ny := j + dy
+						if nx < 0 || ny < 0 || nx > 3 || ny > 3 {
+							ok = false
+							continue
+						}
+
+					}
+				}
+				if ok {
+					m := [][]string{{".", ".", ".", "."}, {".", ".", ".", "."}, {".", ".", ".", "."}, {".", ".", ".", "."}}
+					for i := 0; i < 4; i++ {
+						for j := 0; j < 4; j++ {
+							if p[k][i][j] == "." {
+								continue
+							}
+							nx := i + dx
+							ny := j + dy
+							m[nx][ny] = "#"
+						}
+					}
+					result[k] = append(result[k], m)
+				}
+			}
+		}
+	}
+
+	return result
 }
 
 func rotate(input [][]string) {
