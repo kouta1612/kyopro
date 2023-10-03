@@ -37,7 +37,7 @@ func isOk(inputs [][][][]string) bool {
 	for i := 0; i < len(inputs[0]); i++ {
 		for j := 0; j < len(inputs[1]); j++ {
 			for k := 0; k < len(inputs[2]); k++ {
-				if isPut(inputs[0][i], inputs[1][j], inputs[2][k]) {
+				if isPut([][][]string{inputs[0][i], inputs[1][j], inputs[2][k]}) {
 					return true
 				}
 			}
@@ -46,41 +46,19 @@ func isOk(inputs [][][][]string) bool {
 	return false
 }
 
-func isPut(a, b, c [][]string) bool {
+func isPut(inputs [][][]string) bool {
 	g := [][]string{{".", ".", ".", "."}, {".", ".", ".", "."}, {".", ".", ".", "."}, {".", ".", ".", "."}}
-	for i := 0; i < 4; i++ {
-		for j := 0; j < 4; j++ {
-			if a[i][j] == "." {
-				continue
+	for k := 0; k < 3; k++ {
+		for i := 0; i < 4; i++ {
+			for j := 0; j < 4; j++ {
+				if inputs[k][i][j] == "." {
+					continue
+				}
+				if g[i][j] == "#" {
+					return false
+				}
+				g[i][j] = "#"
 			}
-			if g[i][j] == "#" {
-				return false
-			}
-			g[i][j] = "#"
-		}
-	}
-
-	for i := 0; i < 4; i++ {
-		for j := 0; j < 4; j++ {
-			if b[i][j] == "." {
-				continue
-			}
-			if g[i][j] == "#" {
-				return false
-			}
-			g[i][j] = "#"
-		}
-	}
-
-	for i := 0; i < 4; i++ {
-		for j := 0; j < 4; j++ {
-			if c[i][j] == "." {
-				continue
-			}
-			if g[i][j] == "#" {
-				return false
-			}
-			g[i][j] = "#"
 		}
 	}
 
