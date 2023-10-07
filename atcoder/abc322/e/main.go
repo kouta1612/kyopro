@@ -20,34 +20,32 @@ func main() {
 		}
 	}
 
-	dp := make([]map[[5]int]int, n+1)
-	// ここはより良い方法ないか探る
-	dp[0] = map[[5]int]int{{0, 0, 0, 0, 0}: 0}
+	dp := map[[5]int]int{{0, 0, 0, 0, 0}: 0}
 	for i := 0; i < n; i++ {
-		dp[i+1] = copyMap(dp[i])
-		for status := range dp[i] {
-			nextStatus := status
+		tmp := copyMap(dp)
+		for now := range tmp {
+			next := now
 			for j := 0; j < k; j++ {
-				nextStatus[j] = int(math.Min(float64(p), float64(nextStatus[j]+a[i][j])))
+				next[j] = int(math.Min(float64(p), float64(now[j]+a[i][j])))
 			}
-			if cost, exist := dp[i+1][nextStatus]; exist {
-				dp[i+1][nextStatus] = int(math.Min(float64(cost), float64(dp[i][status]+c[i])))
+			if cost, exist := dp[next]; exist {
+				dp[next] = int(math.Min(float64(cost), float64(tmp[now]+c[i])))
 			} else {
-				dp[i+1][nextStatus] = dp[i][status] + c[i]
+				dp[next] = tmp[now] + c[i]
 			}
 		}
 	}
 
 	// ここはより良い方法ないか探る
-	searchStatus := [5]int{p, p, p, p, p}
+	search := [5]int{p, p, p, p, p}
 	for i := k; i < 5; i++ {
-		searchStatus[i] = 0
+		search[i] = 0
 	}
 
-	if dp[n][searchStatus] == 0 {
+	if dp[search] == 0 {
 		fmt.Println(-1)
 	} else {
-		fmt.Println(dp[n][searchStatus])
+		fmt.Println(dp[search])
 	}
 }
 
