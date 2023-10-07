@@ -24,12 +24,8 @@ func main() {
 	// ここはより良い方法ないか探る
 	dp[0] = map[[5]int]int{{0, 0, 0, 0, 0}: 0}
 	for i := 0; i < n; i++ {
-		dp[i+1] = make(map[[5]int]int)
-		for d, v := range dp[i] {
-			dp[i+1][d] = v
-		}
+		dp[i+1] = copyMap(dp[i])
 		for status := range dp[i] {
-			// 選ぶ場合
 			nextStatus := status
 			for j := 0; j < k; j++ {
 				nextStatus[j] = int(math.Min(float64(p), float64(nextStatus[j]+a[i][j])))
@@ -53,4 +49,12 @@ func main() {
 	} else {
 		fmt.Println(dp[n][searchStatus])
 	}
+}
+
+func copyMap(input map[[5]int]int) map[[5]int]int {
+	result := make(map[[5]int]int)
+	for i, v := range input {
+		result[i] = v
+	}
+	return result
 }
