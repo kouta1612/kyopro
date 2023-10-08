@@ -5,11 +5,6 @@ import (
 	"sort"
 )
 
-type player struct {
-	number   int
-	winCount int
-}
-
 func main() {
 	var n int
 	fmt.Scan(&n)
@@ -19,29 +14,32 @@ func main() {
 		fmt.Scan(&s[i])
 	}
 
-	players := make([]player, n)
+	// i番目のプレイヤーの勝ち数
+	p := make([]int, n)
 
 	for i := 0; i < n; i++ {
-		players[i] = player{number: i + 1, winCount: 0}
 		for j := 0; j < n; j++ {
 			if s[i][j] == 'o' {
-				players[i].winCount += 1
+				p[i]++
 			}
 		}
 	}
 
-	sort.Slice(players, func(i, j int) bool {
-		if players[i].winCount == players[j].winCount {
-			return players[i].number < players[j].number
+	// i番目のプレイヤーの番号
+	ans := make([]int, n)
+	for i := 0; i < n; i++ {
+		ans[i] = i
+	}
+
+	sort.Slice(ans, func(i, j int) bool {
+		if p[ans[i]] == p[ans[j]] {
+			return ans[i] < ans[j]
 		}
-		return players[i].winCount > players[j].winCount
+		return p[ans[i]] > p[ans[j]]
 	})
 
 	for i := 0; i < n; i++ {
-		if i != n-1 {
-			fmt.Print(players[i].number, " ")
-		} else {
-			fmt.Println(players[i].number)
-		}
+		fmt.Print(ans[i]+1, " ")
 	}
+	fmt.Println()
 }
