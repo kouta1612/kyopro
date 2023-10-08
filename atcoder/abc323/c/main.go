@@ -2,18 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"sort"
 )
-
-type player struct {
-	point         int
-	solveProblems []int
-}
-
-type problem struct {
-	point int
-	index int
-}
 
 func main() {
 	var n, m int
@@ -29,57 +20,39 @@ func main() {
 		fmt.Scan(&s[i])
 	}
 
-	players := make([]player, n)
+	p := make([]int, n)
 	for i := 0; i < n; i++ {
-		players[i] = player{point: i + 1, solveProblems: []int{}}
+		p[i] += i + 1
 		for j := 0; j < m; j++ {
 			if s[i][j] == 'o' {
-				players[i].point += a[j]
-				players[i].solveProblems = append(players[i].solveProblems, j)
+				p[i] += a[j]
 			}
 		}
 	}
 
-	problems := make([]problem, m)
-	for i := 0; i < m; i++ {
-		problems[i] = problem{point: a[i], index: i}
-	}
-	sort.Slice(problems, func(i, j int) bool {
-		return problems[i].point > problems[j].point
-	})
-
-	maxPoint := 0
-	maxPlayer := 0
+	max := 0
 	for i := 0; i < n; i++ {
-		if maxPoint < players[i].point {
-			maxPoint = players[i].point
-			maxPlayer = i
-		}
+		max = int(math.Max(float64(max), float64(p[i])))
 	}
 
 	for i := 0; i < n; i++ {
-		result := 0
+		ans := 0
+
+		r := make([]int, 0)
 		for j := 0; j < m; j++ {
-			if maxPlayer == i {
-				continue
+			if s[i][j] == 'x' {
+				r = append(r, a[j])
 			}
-			if players[i].point > maxPoint {
-				continue
-			}
-			found := false
-			for k := 0; k < len(players[i].solveProblems); k++ {
-				if players[i].solveProblems[k] == problems[j].index {
-					found = true
-				}
-			}
-			if found {
-				continue
-			}
-
-			players[i].point += problems[j].point
-			players[i].solveProblems = append(players[i].solveProblems, problems[j].index)
-			result++
 		}
-		fmt.Println(result)
+		sort.Slice(r, func(i, j int) bool {
+			return r[i] > r[j]
+		})
+
+		for j := 0; max > p[i]; j++ {
+			p[i] += r[j]
+			ans++
+		}
+
+		fmt.Println(ans)
 	}
 }
