@@ -14,16 +14,37 @@ func main() {
 	for i := 0; i <= 9; i++ {
 		for j := 0; j <= 9; j++ {
 			for k := 0; k <= 9; k++ {
-				a := search(0, n, i, s)
-				if a == -1 {
+				key := -1
+				for a := 0; a < n; a++ {
+					if strconv.Itoa(i) == string(s[a]) {
+						key = a
+						break
+					}
+				}
+				if key == -1 {
 					continue
 				}
-				b := search(a+1, n, j, s)
-				if b == -1 {
+
+				key2 := -1
+				for b := key + 1; b < n; b++ {
+					if strconv.Itoa(j) == string(s[b]) {
+						key2 = b
+						break
+					}
+				}
+
+				if key2 == -1 {
 					continue
 				}
-				c := search(b+1, n, k, s)
-				if c == -1 {
+
+				key3 := -1
+				for c := key2 + 1; c < n; c++ {
+					if strconv.Itoa(k) == string(s[c]) {
+						key3 = c
+						break
+					}
+				}
+				if key3 == -1 {
 					continue
 				}
 
@@ -33,13 +54,4 @@ func main() {
 	}
 
 	fmt.Println(ans)
-}
-
-func search(a, b, v int, s string) int {
-	for i := a; i < b; i++ {
-		if strconv.Itoa(v) == string(s[i]) {
-			return i
-		}
-	}
-	return -1
 }
