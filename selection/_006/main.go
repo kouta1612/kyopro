@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -14,37 +15,21 @@ func main() {
 	for i := 0; i <= 9; i++ {
 		for j := 0; j <= 9; j++ {
 			for k := 0; k <= 9; k++ {
-				key := -1
-				for a := 0; a < n; a++ {
-					if strconv.Itoa(i) == string(s[a]) {
-						key = a
-						break
-					}
-				}
-				if key == -1 {
+				t := s
+				x := strings.Index(t, strconv.Itoa(i))
+				if x == -1 {
 					continue
 				}
+				t = t[x+1:]
 
-				key2 := -1
-				for b := key + 1; b < n; b++ {
-					if strconv.Itoa(j) == string(s[b]) {
-						key2 = b
-						break
-					}
-				}
-
-				if key2 == -1 {
+				y := strings.Index(t, strconv.Itoa(j))
+				if y == -1 {
 					continue
 				}
+				t = t[y+1:]
 
-				key3 := -1
-				for c := key2 + 1; c < n; c++ {
-					if strconv.Itoa(k) == string(s[c]) {
-						key3 = c
-						break
-					}
-				}
-				if key3 == -1 {
+				z := strings.Index(t, strconv.Itoa(k))
+				if z == -1 {
 					continue
 				}
 
