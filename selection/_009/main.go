@@ -22,11 +22,13 @@ func main() {
 	fmt.Scan(&n)
 
 	b := make([]point, n)
+	mp := make(map[point]bool)
 	for i := 0; i < n; i++ {
 		var x, y int
 		fmt.Scan(&x, &y)
 
 		b[i] = point{x: x, y: y}
+		mp[b[i]] = true
 	}
 
 	for i := 0; i < n; i++ {
@@ -43,13 +45,7 @@ func main() {
 
 		ok := true
 		for j := 0; j < m; j++ {
-			found := false
-			for k := 0; k < n; k++ {
-				if c[j].x == b[k].x && c[j].y == b[k].y {
-					found = true
-				}
-			}
-			if !found {
+			if !mp[point{x: c[j].x, y: c[j].y}] {
 				ok = false
 			}
 		}
