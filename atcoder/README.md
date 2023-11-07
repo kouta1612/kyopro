@@ -1,8 +1,6 @@
 # atcoder
 
-## atcoder cli
-
-### コマンド一覧
+## コマンドについて
 
 abc001ディレクトリとその直下にコンテスト情報が作成される
 
@@ -13,13 +11,28 @@ acc new abc001
 サンプルケースが正しいか確認する
 
 ```bash
-oj t -c "go run ./main.go" -d tests/
+make t
 ```
 
 実装したコードを提出する
 
 ```bash
-acc submit main.go
+make s
+```
+
+## テンプレートについて
+
+コマンドでディレクトリを作成する際に、[atcoder-cli公式のテンプレート機能](https://github.com/Tatamo/atcoder-cli#provisioning-templates)を使用して、事前に用意した下記テンプレートコードも出力するようにしている。
+
+```text
+・各タスクで必要なMakefile（プロジェクト直下のデータをコピーしたもの）
+・各タスクで実装するテンプレート
+```
+
+テンプレートコードの場所は下記コマンドで確認ができる。
+
+```bash
+acc templates
 ```
 
 ### 参考リンク一覧
