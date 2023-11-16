@@ -71,18 +71,18 @@ func main() {
 			dp[i][j] = INF
 		}
 	}
-	dp[1][0] = 0
+	dp[0][0] = 0
 
 	// dp[b][i]: 今までに通った頂点が集合bで頂点iにいる時の最短経路の長さ
 	// dp[b][i] → dp[b|k][k] (k: iの隣接頂点で0~i-1)
-	for b := 1; b < 1<<uint(v); b++ {
+	for b := 0; b < 1<<uint(v); b++ {
 		for i := 0; i < v; i++ {
-			if b&(1<<uint(i)) == 0 {
+			if i != 0 && b&(1<<uint(i)) == 0 {
 				continue
 			}
 
 			for _, ne := range g[i] {
-				if ne.t != 0 && (b&(1<<uint(ne.t))) > 0 {
+				if (b & (1 << uint(ne.t))) > 0 {
 					continue
 				}
 				dp[b|(1<<uint(ne.t))][ne.t] = min(dp[b|(1<<uint(ne.t))][ne.t], dp[b][i]+ne.d)
