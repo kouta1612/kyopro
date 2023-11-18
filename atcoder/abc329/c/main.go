@@ -56,18 +56,17 @@ func main() {
 
 	m := make(map[byte]int)
 	l, r := 0, 0
-	for {
-		if r == n {
-			break
-		}
-
-		for r = l + 1; ; r++ {
-			if r == n || s[l] != s[r] {
-				m[s[l]] = max(m[s[l]], r-l)
-				l = r
+	for l < n {
+		for r < n {
+			if s[l] == s[r] {
+				r++
+			} else {
 				break
 			}
 		}
+
+		m[s[l]] = max(m[s[l]], r-l)
+		l = r
 	}
 
 	result := 0
