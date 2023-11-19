@@ -56,38 +56,16 @@ func main() {
 		a[i] = scanInt() - 1
 	}
 
-	now := -1
 	scores := make([]int, n)
-	results := make([]int, m)
+	now := 0
 	for i := 0; i < m; i++ {
 		scores[a[i]]++
-
-		if i == 0 {
+		if scores[now] == scores[a[i]] {
+			now = min(now, a[i])
+		} else if scores[now] < scores[a[i]] {
 			now = a[i]
-			results[i] = now
-			continue
 		}
 
-		if scores[a[i]] == scores[now] {
-			if a[i] < now {
-				now = a[i]
-			}
-			results[i] = now
-			continue
-		}
-
-		if scores[a[i]] > scores[now] {
-			now = a[i]
-			results[i] = now
-			continue
-		}
-
-		if scores[a[i]] < scores[now] {
-			results[i] = now
-		}
-	}
-
-	for i := 0; i < m; i++ {
-		fmt.Println(results[i] + 1)
+		fmt.Println(now + 1)
 	}
 }
