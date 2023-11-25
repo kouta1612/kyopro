@@ -97,32 +97,39 @@ func main() {
 		}
 	}
 
-	kakutei := make([]bool, n+1)
-	ans := make([]int, n+1)
-	for i := 0; i < n+1; i++ {
-		ans[i] = INF
+	ans := dijkstra(g, 1)
+
+	fmt.Println(ans[n])
+}
+
+func dijkstra(g [][]edge, s int) []int {
+	n := len(g)
+	kakutei := make([]bool, n)
+	result := make([]int, n)
+	for i := 0; i < n; i++ {
+		result[i] = INF
 	}
-	ans[1] = 0
+	result[s] = 0
 
 	pq := NewPriorityQueue()
-	pq.push(&item{v: 1, w: 0})
+	pq.push(&item{v: s, w: 0})
 	for pq.len() > 0 {
 		now := pq.pop()
 		for _, edge := range g[now.v] {
 			if kakutei[edge.to] {
 				continue
 			}
-			if ans[edge.to] <= ans[now.v]+edge.cost {
+			if result[edge.to] <= result[now.v]+edge.cost {
 				continue
 			}
 
-			ans[edge.to] = ans[now.v] + edge.cost
-			pq.push(&item{v: edge.to, w: ans[edge.to]})
+			result[edge.to] = result[now.v] + edge.cost
+			pq.push(&item{v: edge.to, w: result[edge.to]})
 		}
 		kakutei[now.v] = true
 	}
 
-	fmt.Println(ans[n])
+	return result
 }
 
 // 以降はプライオリティーキュー自前ライブラリ
