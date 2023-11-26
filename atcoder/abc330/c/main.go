@@ -22,13 +22,13 @@ func main() {
 	for x := 0; x <= rd; x++ {
 		c := x*x - d
 
-		if c >= 0 {
-			ans = min(ans, abs(x*x-d))
-		} else {
-			y := sqrt(-c)
-			ans = min(ans, abs(x*x+y*y-d))
-			ans = min(ans, abs(x*x+(y+1)*(y+1)-d))
-		}
+		// c >= 0
+		ans = min(ans, abs(x*x-d))
+
+		// c < 0
+		y := sqrt(-c)
+		ans = min(ans, abs(x*x+y*y-d))
+		ans = min(ans, abs(x*x+(y+1)*(y+1)-d))
 	}
 
 	fmt.Println(ans)
