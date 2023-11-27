@@ -99,6 +99,10 @@ func dijkstra(g [][]int, costs []int, s int) []int {
 	pq.push(&item{v: s, w: 0})
 	for pq.len() > 0 {
 		now := pq.pop()
+		if result[now.v] < now.w {
+			continue
+		}
+
 		for _, edge := range g[now.v] {
 			if kakutei[edge] {
 				continue
