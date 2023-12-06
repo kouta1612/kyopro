@@ -5,4 +5,9 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
+# 指定したフォルダが存在しなかったら作成する
+if [ ! -d $1 ]; then
+    mkdir $1
+fi
+
 cp ~/Library/Preferences/atcoder-cli-nodejs/template/main.go ./$1
