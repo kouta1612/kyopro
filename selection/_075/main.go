@@ -26,10 +26,11 @@ func main() {
 		g[b] = append(g[b], a)
 	}
 
-	ans := 0
-	dfs(g, 0, &ans, -1)
+	sum := 0
+	dfs(g, 0, &sum, -1)
 
-	fmt.Println((ans % MOD * inv(modpow(2, n, MOD), MOD)) % MOD)
+	ans := newModint(sum, MOD).div(newModint(2, MOD).pow(n).toint()).toint()
+	fmt.Println(ans)
 }
 
 func dfs(g [][]int, u int, ans *int, p int) int {
@@ -48,12 +49,11 @@ func dfs(g [][]int, u int, ans *int, p int) int {
 		ts = append(ts, len(g)-res)
 	}
 
-	t := modpow(2, len(g)-1, MOD) - 1
+	t := newModint(2, MOD).pow(len(g) - 1).sub(1)
 	for _, v := range ts {
-		t -= modpow(2, v, MOD) - 1
+		t = t.sub(newModint(2, MOD).pow(v).sub(1).toint())
 	}
-	t = (t + MOD) % MOD
-	*ans += t
+	*ans += t.toint()
 
 	return res
 }
@@ -134,6 +134,34 @@ func upperBound(a []int, v int) int {
 	return ok
 }
 
+func min(n ...int) int {
+	res := n[0]
+
+	for _, v := range n {
+		res = int(math.Min(float64(res), float64(v)))
+	}
+
+	return res
+}
+
+func max(n ...int) int {
+	res := n[0]
+
+	for _, v := range n {
+		res = int(math.Max(float64(res), float64(v)))
+	}
+
+	return res
+}
+
+func abs(a int) int {
+	return int(math.Abs(float64(a)))
+}
+
+func sqrt(x int) int {
+	return int(math.Sqrt(float64(x)))
+}
+
 // nCr mod pを求める
 func nCr(n, r, p int) int {
 	fact := factorization(2e6, p)
@@ -151,28 +179,6 @@ func factorization(n, p int) []int {
 	}
 
 	return result
-}
-
-// nのmod p上でのn^(-1)を求める
-func inv(n, p int) int {
-	return modpow(n, p-2, p)
-}
-
-// a^b mod pを求める
-func modpow(a, b, p int) int {
-	if b == 0 {
-		return 1
-	}
-	if b == 1 {
-		return a % p
-	}
-
-	t := modpow(a, b/2, p)
-	if b%2 == 0 {
-		return (t * t) % p
-	} else {
-		return (((t * t) % p) * a) % p
-	}
 }
 
 type unionfind struct {
@@ -229,30 +235,56 @@ func (u *unionfind) size(x int) int {
 	return u.siz[u.root(x)]
 }
 
-func min(n ...int) int {
-	res := n[0]
+type modint struct {
+	v, p int
+}
 
-	for _, v := range n {
-		res = int(math.Min(float64(res), float64(v)))
+func newModint(n, p int) modint {
+	return modint{n % p, p}
+}
+
+func (m modint) pow(n int) modint {
+	return modint{modpow(m.v, n, m.p), m.p}
+}
+
+func (m modint) add(n int) modint {
+	return modint{(m.v + n) % m.p, m.p}
+}
+
+func (m modint) sub(n int) modint {
+	return modint{(m.v - n + m.p) % m.p, m.p}
+}
+
+func (m modint) mul(n int) modint {
+	return modint{(m.v * n) % m.p, m.p}
+}
+
+func (m modint) div(n int) modint {
+	return modint{(m.v * inv(n, m.p)) % m.p, m.p}
+}
+
+func (m modint) toint() int {
+	return m.v % m.p
+}
+
+// nのmod p上でのn^(-1)を求める
+func inv(n, p int) int {
+	return modpow(n, p-2, p)
+}
+
+// a^b mod pを求める
+func modpow(a, b, p int) int {
+	if b == 0 {
+		return 1
+	}
+	if b == 1 {
+		return a % p
 	}
 
-	return res
-}
-
-func max(n ...int) int {
-	res := n[0]
-
-	for _, v := range n {
-		res = int(math.Max(float64(res), float64(v)))
+	t := modpow(a, b/2, p)
+	if b%2 == 0 {
+		return (t * t) % p
+	} else {
+		return (((t * t) % p) * a) % p
 	}
-
-	return res
-}
-
-func abs(a int) int {
-	return int(math.Abs(float64(a)))
-}
-
-func sqrt(x int) int {
-	return int(math.Sqrt(float64(x)))
 }
