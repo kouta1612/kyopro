@@ -28,14 +28,8 @@ func main() {
 		a[i], b[i], c[i] = ni(), ni(), ni()
 	}
 
-	// どの定期券を購入するかを登録する
-	// 購入する条件はc/(a-b)の切り上げ回以上都市iから移動するとき
-	base := make([]int, n-1)
-	mv := make([]int, n+1)
-	teiki := make(map[int]bool)
-	for i := 0; i < n-1; i++ {
-		base[i] = c[i]/(a[i]-b[i]) + 1
-	}
+	// 都市iから何回移動したかを求める
+	mv := make([]int, n)
 	for i := 0; i < m-1; i++ {
 		u, v := p[i], p[i+1]
 		if u > v {
@@ -47,39 +41,10 @@ func main() {
 	for i := 0; i < n-1; i++ {
 		mv[i+1] += mv[i]
 	}
-	for i := 0; i < n-1; i++ {
-		if mv[i] >= base[i] {
-			teiki[i] = true
-		}
-	}
-
-	// 都市iから都市jへの移動は累積和で求める
-	sum := make([]int, n)
-	for i := 0; i < n-1; i++ {
-		if teiki[i] {
-			sum[i+1] = b[i]
-
-		} else {
-			sum[i+1] = a[i]
-		}
-	}
-	for i := 0; i < n-1; i++ {
-		sum[i+1] += sum[i]
-	}
 
 	ans := 0
 	for i := 0; i < n-1; i++ {
-		if teiki[i] {
-			ans += c[i]
-		}
-	}
-	for i := 0; i < m-1; i++ {
-		u, v := p[i], p[i+1]
-		if u > v {
-			u, v = v, u
-		}
-
-		ans += sum[v] - sum[u]
+		ans += min(a[i]*mv[i], b[i]*mv[i]+c[i])
 	}
 
 	fmt.Println(ans)
