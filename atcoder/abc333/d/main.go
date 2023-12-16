@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"sort"
 	"strconv"
 )
 
@@ -20,50 +19,36 @@ func main() {
 	sc.Split(bufio.ScanWords)
 
 	n := ni()
-	u, v := make([]int, n-1), make([]int, n-1)
 	g := make([][]int, n)
-	for i := 0; i < n; i++ {
-		g[i] = make([]int, 0, n)
-	}
-	in := 0
 	for i := 0; i < n-1; i++ {
-		u[i], v[i] = ni()-1, ni()-1
-		if u[i] == 0 || v[i] == 0 {
-			in++
-		}
-
-		g[u[i]] = append(g[u[i]], v[i])
-		g[v[i]] = append(g[v[i]], u[i])
+		u, v := ni()-1, ni()-1
+		g[u] = append(g[u], v)
+		g[v] = append(g[v], u)
 	}
-	if in == 1 {
+	if len(g[0]) == 1 {
 		fmt.Println(1)
 		return
 	}
 
-	ts := make([]int, 0, n+10)
-	dfs(&ts, g, 0, -1)
-	sort.Ints(ts)
-	ans := 0
-	for i := 0; i < len(ts)-1; i++ {
-		ans += ts[i]
-	}
-
-	fmt.Println(ans + 1)
-}
-
-func dfs(ts *[]int, g [][]int, n, p int) int {
-	ret := 1
-	for _, v := range g[n] {
-		if p == v {
-			continue
+	max := 0
+	var dfs func(n, p int) int
+	dfs = func(n, p int) int {
+		ret := 1
+		for _, v := range g[n] {
+			if p == v {
+				continue
+			}
+			cnt := dfs(v, n)
+			if n == 0 {
+				chmax(&max, cnt)
+			}
+			ret += cnt
 		}
-		cnt := dfs(ts, g, v, n)
-		if n == 0 {
-			*ts = append(*ts, cnt)
-		}
-		ret += cnt
+		return ret
 	}
-	return ret
+	ans := dfs(0, -1)
+
+	fmt.Println(ans - max)
 }
 
 func ni() int {
