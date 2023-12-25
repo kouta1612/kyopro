@@ -11,6 +11,7 @@ import (
 const (
 	INF = int(1e16)
 	MOD = int(1e9) + 7
+	ADD = int(2e18) + 1
 )
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -19,14 +20,12 @@ func main() {
 	sc.Split(bufio.ScanWords)
 
 	a, m, l, r := ni(), ni(), ni(), ni()
+
 	l, r = l-a, r-a
-	if l >= 0 && r >= 0 {
-		fmt.Println(f(r, m) - f(l-1, m))
-	} else if l < 0 && r >= 0 {
-		fmt.Println(f(r, m) + f(-l, m) - 1)
-	} else {
-		fmt.Println(f(-l, m) - f(-(r+1), m))
-	}
+	l += m * (ADD/m + 1)
+	r += m * (ADD/m + 1)
+
+	fmt.Println(f(r, m) - f(l-1, m))
 }
 
 func f(x, m int) int {
