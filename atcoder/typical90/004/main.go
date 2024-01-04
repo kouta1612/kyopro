@@ -28,20 +28,16 @@ func main() {
 	for i := 0; i < h; i++ {
 		for j := 0; j < w; j++ {
 			sumh[i] += a[i][j]
-		}
-	}
-	for i := 0; i < w; i++ {
-		for j := 0; j < h; j++ {
-			sumw[i] += a[j][i]
+			sumw[j] += a[i][j]
 		}
 	}
 
 	for i := 0; i < h; i++ {
-		res := make([]int, w)
+		ans := make([]int, w)
 		for j := 0; j < w; j++ {
-			res[j] = sumh[i] + sumw[j] - a[i][j]
+			ans[j] = sumh[i] + sumw[j] - a[i][j]
 		}
-		printIntLn(res)
+		printIntLn(ans)
 	}
 }
 
