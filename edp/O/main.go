@@ -25,29 +25,41 @@ func main() {
 	dp := make([][]int, n+1)
 	for i := 0; i < n+1; i++ {
 		dp[i] = make([]int, 1<<n)
-	}
-	dp[0][0] = 1
-
-	for i := 0; i < n; i++ {
-		for s := 0; s < 1<<n; s++ {
-			if i != bits.OnesCount(uint(s)) {
-				continue
-			}
-
-			for j := 0; j < n; j++ {
-				if s&(1<<j) > 0 {
-					continue
-				}
-				if a[i][j] == 0 {
-					continue
-				}
-
-				dp[i+1][s|(1<<j)] = (dp[i+1][s|(1<<j)] + dp[i][s]) % MOD
-			}
+		for j := 0; j < 1<<n; j++ {
+			dp[i][j] = -1
 		}
 	}
 
-	fmt.Println(dp[n][(1<<n)-1])
+	var rec func(x, s int) int
+	rec = func(x, s int) int {
+		if dp[x][s] >= 0 {
+			return dp[x][s]
+		}
+		if x == 0 && s == 0 {
+			return 1
+		}
+		if x != bits.OnesCount(uint(s)) {
+			return 0
+		}
+
+		res := 0
+		for i := 0; i < n; i++ {
+			if s&(1<<i) == 0 {
+				continue
+			}
+			if a[x-1][i] == 0 {
+				continue
+			}
+
+			res = (res + rec(x-1, s^(1<<i))) % MOD
+		}
+
+		dp[x][s] = res
+
+		return dp[x][s]
+	}
+
+	fmt.Println(rec(n, (1<<n)-1))
 }
 
 func ni() int {
