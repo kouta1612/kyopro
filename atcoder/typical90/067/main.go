@@ -41,21 +41,12 @@ func base8To9(n string) string {
 }
 
 func base8ToInt(n string) int {
-	res, base := 0, 1
-	for i := len(n) - 1; i >= 0; i-- {
-		res += base * int(n[i]-'0')
-		base *= 8
-	}
-	return res
+	res, _ := strconv.ParseInt(n, 8, 64)
+	return int(res)
 }
 
 func intToBase9(n int) string {
-	res := ""
-	for n > 0 {
-		res = itoa(n%9) + res
-		n /= 9
-	}
-	return res
+	return strconv.FormatInt(int64(n), 9)
 }
 
 func ni() int {
