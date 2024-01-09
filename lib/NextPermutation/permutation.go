@@ -1,6 +1,6 @@
 package nextpermutation
 
-func Permutation(a []int) bool {
+func permutation(a []int) bool {
 	// a[l] < a[l+1]を満たす最大のlを求める
 	l := -1
 	for i := 0; i < len(a)-1; i++ {
@@ -23,10 +23,9 @@ func Permutation(a []int) bool {
 	}
 
 	a[l], a[r] = a[r], a[l]
-	if r != len(a) {
-		for i := l + 1; i < len(a)-1; i++ {
-			a[i], a[i+1] = a[i+1], a[i]
-		}
+	// [l+1,n-1]が降順なので逆順にする
+	for i := l + 1; i <= (l+len(a))/2; i++ {
+		a[i], a[len(a)-1-(i-(l+1))] = a[len(a)-1-(i-(l+1))], a[i]
 	}
 
 	return true
