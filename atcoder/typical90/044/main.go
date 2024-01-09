@@ -23,19 +23,18 @@ func main() {
 	n, q := ni2()
 	a := ni1d(n)
 
-	l, r := 0, n-1
+	shift := 0
 	for i := 0; i < q; i++ {
 		t, x, y := ni(), ni()-1, ni()-1
 		if t == 1 {
-			x, y = (l+x)%n, (l+y)%n
+			x, y = ((x-shift)+n)%n, ((y-shift)+n)%n
 			a[x], a[y] = a[y], a[x]
 		}
 		if t == 2 {
-			l = (l - 1 + n) % n
-			r = (r - 1 + n) % n
+			shift = (shift + 1) % n
 		}
 		if t == 3 {
-			x = (l + x) % n
+			x = ((x - shift) + n) % n
 			println(a[x])
 		}
 	}
