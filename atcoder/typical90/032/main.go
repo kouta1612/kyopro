@@ -56,7 +56,7 @@ func main() {
 			chmin(&ans, sum)
 		}
 
-		if !permutation(b) {
+		if !next_permutation(b) {
 			break
 		}
 	}
@@ -68,7 +68,19 @@ func main() {
 	}
 }
 
-func permutation(a []int) bool {
+/*
+指定したスライスの順列を生成する。（要素が重複していてもOK）
+ex:
+
+	for {
+		// aの処理
+
+		if !next_permutation(a) {
+			break
+		}
+	}
+*/
+func next_permutation(a []int) bool {
 	// a[l] < a[l+1]を満たす最大のlを求める
 	l := -1
 	for i := 0; i < len(a)-1; i++ {
@@ -93,7 +105,7 @@ func permutation(a []int) bool {
 	a[l], a[r] = a[r], a[l]
 	// [l+1,n-1]が降順なので逆順にする
 	for i := l + 1; i <= (l+len(a))/2; i++ {
-		a[i], a[len(a)-1-(i-(l+1))] = a[len(a)-1-(i-(l+1))], a[i]
+		a[i], a[len(a)-(i-l)] = a[len(a)-(i-l)], a[i]
 	}
 
 	return true
