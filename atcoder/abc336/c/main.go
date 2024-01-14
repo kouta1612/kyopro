@@ -20,24 +20,9 @@ func main() {
 	sc.Split(bufio.ScanWords)
 	defer out.Flush()
 
-	n := ni() - 1
-	s := make(map[int]int)
-	s[5] = 20
-	for i := 25; i <= int(10e12); i *= 5 {
-		s[i] = s[i/5] * 10
-	}
-	keys := make([]int, 0, 100)
-	for i := 5; i < int(10e12); i *= 5 {
-		keys = append(keys, i)
-	}
-
-	ans, ret := 0, n
-	for i := len(keys) - 1; i >= 0; i-- {
-		ans += ret / keys[i] * s[keys[i]]
-		ret = n % keys[i]
-	}
-	ans += ret * 2
-
+	n := ni()
+	base5 := strconv.FormatInt(int64(n-1), 5)
+	ans := atoi(base5) * 2
 	println(ans)
 }
 
