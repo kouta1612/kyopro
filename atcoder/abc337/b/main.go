@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -20,26 +22,12 @@ func main() {
 	sc.Split(bufio.ScanWords)
 	defer out.Flush()
 
-	s := ns()
-	n := len(s)
+	s := strings.Split(ns(), "")
 
-	ans := ""
-	for i := 0; i < n; {
-		c := s[i]
-		j := i
-		for j < n && s[j] == c {
-			j++
-		}
-
-		ans += string(c)
-
-		i = j
-	}
-
-	if ans == "" || ans == "A" || ans == "B" || ans == "C" || ans == "AB" || ans == "AC" || ans == "BC" || ans == "ABC" {
-		println("Yes")
+	if sort.IsSorted(sort.StringSlice(s)) {
+		fmt.Println("Yes")
 	} else {
-		println("No")
+		fmt.Println("No")
 	}
 }
 
