@@ -9,18 +9,13 @@ import (
 	"strings"
 )
 
-const (
-	INF = int(1e16)
-	MOD = int(1e9) + 7
-)
+const INF = int(1e16)
+const MOD = int(1e9) + 7
 
 var sc = bufio.NewScanner(os.Stdin)
 var out = bufio.NewWriter(os.Stdout)
 
 func main() {
-	buf := make([]byte, 1024*1024)
-	sc.Buffer(buf, bufio.MaxScanTokenSize)
-	sc.Split(bufio.ScanWords)
 	defer out.Flush()
 
 	h, w, k := ni3()
@@ -96,6 +91,11 @@ func main() {
 	} else {
 		println(ans)
 	}
+}
+
+func init() {
+	sc.Buffer([]byte{}, math.MaxInt64)
+	sc.Split(bufio.ScanWords)
 }
 
 func ni() int {
