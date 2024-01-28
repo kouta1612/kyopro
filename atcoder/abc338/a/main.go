@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"strconv"
+	"unicode"
 )
 
 const (
@@ -20,21 +21,23 @@ func main() {
 	defer out.Flush()
 
 	s := ns()
-	ans := true
-	if s[0] > 90 {
-		ans = false
+	ok := true
+
+	if !unicode.IsUpper(rune(s[0])) {
+		ok = false
 	}
 	for i := 1; i < len(s); i++ {
-		if s[i] < 97 {
-			ans = false
+		if unicode.IsUpper(rune(s[i])) {
+			ok = false
 		}
 	}
 
-	if ans {
+	if ok {
 		println("Yes")
 	} else {
 		println("No")
 	}
+
 }
 
 func init() {
