@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"sort"
 	"strconv"
 )
 
@@ -21,32 +20,19 @@ func main() {
 	defer out.Flush()
 
 	s := ns()
-	mp := make(map[string]int)
-	for i := 0; i < len(s); i++ {
-		if _, exist := mp[string(s[i])]; exist {
-			mp[string(s[i])]++
-		} else {
-			mp[string(s[i])] = 1
+	mp := make(map[rune]int)
+	for _, v := range s {
+		mp[v]++
+	}
+
+	ans := 'a'
+	for c := 'b'; c <= 'z'; c++ {
+		if mp[c] > mp[ans] {
+			ans = c
 		}
 	}
 
-	max := 0
-	for i := 0; i < len(s); i++ {
-		if mp[string(s[i])] > max {
-			max = mp[string(s[i])]
-		}
-	}
-
-	ans := make([]string, 0)
-	for i := 0; i < len(s); i++ {
-		if mp[string(s[i])] == max {
-			ans = append(ans, string(s[i]))
-		}
-	}
-
-	sort.Strings(ans)
-
-	println(string(ans[0]))
+	println(string(ans))
 }
 
 func init() {
