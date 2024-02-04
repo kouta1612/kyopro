@@ -30,32 +30,22 @@ func main() {
 		}
 	}
 
-	ans := 0
+	ans := mint(0)
 	for i := 1; i <= 19; i++ {
 		il, ir := max(l, pows[i-1]), min(r, pows[i]-1)
 		if il > ir {
 			continue
 		}
 
-		t := (f(int(ir)) - f(int(il-1)) + MOD) % MOD
-		ans += i * t
-		ans %= MOD
+		t := mint(0).add(f(int(ir))).sub(f(int(il - 1)))
+		ans = ans.add(int(t.mul(i)))
 	}
 
 	println(ans)
 }
 
 func f(n int) int {
-	a := n % MOD
-	b := (n + 1) % MOD
-	t := a * b % MOD
-
-	return (t * inverse(2)) % MOD
-}
-
-func inverse(x int) int {
-	base := x
-	return modpow(base, MOD-2, MOD)
+	return int(mint(n).mod().mul(n + 1).div(2))
 }
 
 func init() {
@@ -273,10 +263,10 @@ func sqrt(x int) int {
 }
 
 // nCr mod pを求める
-func nCr(n, r, p int) int {
-	fact := factorization(2e6, p)
-	return (fact[n] * inv((fact[n-r]*fact[r])%p, p)) % p
-}
+// func nCr(n, r, p int) int {
+// 	fact := factorization(2e6, p)
+// 	return (fact[n] * inv((fact[n-r]*fact[r])%p, p)) % p
+// }
 
 // n! mod p
 func factorization(n, p int) []int {
@@ -345,53 +335,42 @@ func (u *unionfind) size(x int) int {
 	return u.siz[u.root(x)]
 }
 
-type modint struct {
-	v, p int
+type mint int
+
+func (m mint) add(n int) mint {
+	n = n % MOD
+	return mint(int(m) + n).mod()
 }
 
-func newModint(n, p int) modint {
-	return modint{n % p, p}
+func (m mint) sub(n int) mint {
+	return mint(int(m) - n + MOD).mod()
 }
 
-func (m modint) pow(n int) modint {
-	return newModint(modpow(m.v, n, m.p), m.p)
+func (m mint) mul(n int) mint {
+	n = n % MOD
+	return mint(int(m) * n).mod()
 }
 
-func (m modint) add(n int) modint {
-	return newModint((m.v+n)%m.p, m.p)
+func (m mint) div(n int) mint {
+	n = n % MOD
+	d := inv(n)
+	return m.mul(d).mod()
 }
 
-func (m modint) sub(n int) modint {
-	return newModint((m.v-n+m.p)%m.p, m.p)
+func (m mint) mod() mint {
+	return mint(int(m) % MOD)
 }
 
-func (m modint) mul(n int) modint {
-	return newModint((m.v*n)%m.p, m.p)
+func inv(n int) int {
+	return mpow(n, MOD-2, MOD)
 }
 
-func (m modint) div(n int) modint {
-	return newModint((m.v*inv(n, m.p))%m.p, m.p)
-}
-
-func (m modint) toint() int {
-	return m.v % m.p
-}
-
-// nのmod p上でのn^(-1)を求める
-func inv(n, p int) int {
-	return modpow(n, p-2, p)
-}
-
-// a^b mod pを求める
-func modpow(a, b, p int) int {
+func mpow(a, b, p int) int {
 	if b == 0 {
 		return 1
 	}
-	if b == 1 {
-		return a % p
-	}
 
-	t := modpow(a, b/2, p)
+	t := mpow(a, b/2, p)
 	if b%2 == 0 {
 		return (t * t) % p
 	} else {
