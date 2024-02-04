@@ -262,25 +262,6 @@ func sqrt(x int) int {
 	return int(math.Sqrt(float64(x)))
 }
 
-// nCr mod pを求める
-// func nCr(n, r, p int) int {
-// 	fact := factorization(2e6, p)
-// 	return (fact[n] * inv((fact[n-r]*fact[r])%p, p)) % p
-// }
-
-// n! mod p
-func factorization(n, p int) []int {
-	result := make([]int, n+1)
-
-	result[0] = 1
-	for i := 1; i <= n; i++ {
-		result[i] = result[i-1] * i
-		result[i] %= p
-	}
-
-	return result
-}
-
 type unionfind struct {
 	// par[x]: 要素 x の親頂点の番号 (自身が根の場合は −1)
 	// rank[x]: 要素 x の属する根付き木の高さ
@@ -376,4 +357,30 @@ func mpow(a, b, p int) int {
 	} else {
 		return (((t * t) % p) * a) % p
 	}
+}
+
+func combination(n int, k int) int {
+	if n-k < k {
+		k = n - k
+	}
+	v := 1
+	for i := 0; i < k; i++ {
+		v *= (n - i)
+		v /= (i + 1)
+	}
+	return v
+}
+
+func modcombination(n int, k int) int {
+	if k > n || k <= 0 {
+		panic(fmt.Sprintf("invalid param n:%v k:%v", n, k))
+	}
+	if n-k < k {
+		k = n - k
+	}
+	v := mint(1)
+	for i := 0; i < k; i++ {
+		v = v.mul(n - i).div(i + 1)
+	}
+	return int(v)
 }
