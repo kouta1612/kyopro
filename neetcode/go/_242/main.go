@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+	"strings"
+)
 
 func main() {
 	fmt.Println(isAnagram("anagram", "nagaram"))
@@ -11,18 +15,15 @@ func isAnagram(s string, t string) bool {
 		return false
 	}
 
-	smaps := map[rune]int{}
-	tmaps := map[rune]int{}
-	for _, ss := range s {
-		smaps[ss]++
-	}
-	for _, tt := range t {
-		tmaps[tt]++
-	}
-	for k, v := range smaps {
-		if tmaps[k] != v {
+	sa, ta := strings.Split(s, ""), strings.Split(t, "")
+	sort.Strings(sa)
+	sort.Strings(ta)
+
+	for i := 0; i < len(sa); i++ {
+		if sa[i] != ta[i] {
 			return false
 		}
 	}
+
 	return true
 }
