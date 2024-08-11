@@ -11,7 +11,6 @@ func main() {
 }
 
 func groupAnagrams(strs []string) [][]string {
-	result := make([][]string, 0)
 	mp := make(map[string][]string)
 
 	for _, str := range strs {
@@ -19,20 +18,12 @@ func groupAnagrams(strs []string) [][]string {
 		sort.Strings(s)
 		t := strings.Join(s, "")
 
-		if _, ok := mp[t]; !ok {
-			mp[t] = []string{str}
-			continue
-		}
-
 		mp[t] = append(mp[t], str)
 	}
 
+	result := make([][]string, 0, len(mp))
 	for _, vs := range mp {
-		result = append(result, []string{})
-		for _, v := range vs {
-			i := len(result) - 1
-			result[i] = append(result[i], v)
-		}
+		result = append(result, vs)
 	}
 
 	return result
