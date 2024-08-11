@@ -2,15 +2,10 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
 func main() {
 	fmt.Println(topKFrequent([]int{1, 1, 1, 2, 2, 3}, 2))
-}
-
-type frequent struct {
-	val, cnt int
 }
 
 func topKFrequent(nums []int, k int) []int {
@@ -20,19 +15,24 @@ func topKFrequent(nums []int, k int) []int {
 		mp[v]++
 	}
 
-	fs := make([]frequent, 0, len(mp))
+	frequent := make([][]int, len(nums)+1)
 	for k, v := range mp {
-		fs = append(fs, frequent{val: k, cnt: v})
+		frequent[v] = append(frequent[v], k)
 	}
-
-	sort.Slice(fs, func(i, j int) bool {
-		return fs[i].cnt > fs[j].cnt
-	})
 
 	result := make([]int, 0, k)
-	for i := 0; i < k; i++ {
-		result = append(result, fs[i].val)
+	for i := len(nums); i >= 0; i-- {
+		if len(frequent[i]) == 0 {
+			continue
+		}
+
+		for _, v := range frequent[i] {
+			result = append(result, v)
+			if len(result) == k {
+				return result
+			}
+		}
 	}
 
-	return result
+	return []int{}
 }
