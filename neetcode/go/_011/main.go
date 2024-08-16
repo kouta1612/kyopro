@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
 func main() {
@@ -12,18 +11,32 @@ func main() {
 func maxArea(height []int) int {
 	l, r := 0, len(height)-1
 	result := 0
-	for l < r {
-		w := r - l
-		hmin := int(math.Min(float64(height[l]), float64(height[r])))
-		hmax := int(math.Max(float64(height[l]), float64(height[r])))
-		result = int(math.Max(float64(result), float64(w*hmin)))
 
-		if height[l] == hmax {
+	for l < r {
+		result = max(result, (r-l)*min(height[l], height[r]))
+
+		if height[l] > height[r] {
 			r--
-		} else if height[r] == hmax {
+		} else {
 			l++
 		}
 	}
 
 	return result
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+
+	return b
+}
+
+func min(a, b int) int {
+	if a > b {
+		return b
+	}
+
+	return a
 }
