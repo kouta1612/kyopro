@@ -17,15 +17,12 @@ func characterReplacement(s string, k int) int {
 		count[s[r]]++
 		maxf = max(maxf, count[s[r]])
 
-		if r-l+1-maxf <= k {
-			result = max(result, r-l+1)
-			continue
-		}
-
 		for r-l+1-maxf > k {
 			count[s[l]]--
 			l++
 		}
+
+		result = max(result, r-l+1)
 	}
 
 	return result
