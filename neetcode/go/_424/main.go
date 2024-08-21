@@ -10,16 +10,12 @@ func main() {
 func characterReplacement(s string, k int) int {
 	count := make(map[byte]int)
 
-	result := 0
+	result, maxf := 0, 0
 
 	l := 0
 	for r := range s {
 		count[s[r]]++
-
-		maxf := 0
-		for _, v := range count {
-			maxf = max(maxf, v)
-		}
+		maxf = max(maxf, count[s[r]])
 
 		if r-l+1-maxf <= k {
 			result = max(result, r-l+1)
