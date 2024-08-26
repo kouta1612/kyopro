@@ -10,18 +10,27 @@ func main() {
 }
 
 func isValid(s string) bool {
+	pairs := map[byte]byte{
+		')': '(',
+		'}': '{',
+		']': '[',
+	}
+
 	stack := make([]byte, 0)
 	for i := range s {
-		if s[i] == '(' || s[i] == '{' || s[i] == '[' {
+		open, exist := pairs[s[i]]
+		if !exist {
 			stack = append(stack, s[i])
 			continue
 		}
-
-		if (s[i] == ')' && len(stack) > 0 && stack[len(stack)-1] == '(') || (s[i] == ']' && len(stack) > 0 && stack[len(stack)-1] == '[') || (s[i] == '}' && len(stack) > 0 && stack[len(stack)-1] == '{') {
-			stack = stack[:len(stack)-1]
-		} else {
+		if len(stack) == 0 {
 			return false
 		}
+		if stack[len(stack)-1] != open {
+			return false
+		}
+
+		stack = stack[:len(stack)-1]
 	}
 
 	return len(stack) == 0
