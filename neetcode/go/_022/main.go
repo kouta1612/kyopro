@@ -12,41 +12,25 @@ func main() {
 
 func generateParenthesis(n int) []string {
 	result := []string{}
+	stack := []string{}
 
-	for bit := 0; bit < 1<<(2*n); bit++ {
-		kakko := []string{}
-		for i := 0; i < 2*n; i++ {
-			if (bit & (1 << i)) > 0 {
-				kakko = append(kakko, "(")
-			} else {
-				kakko = append(kakko, ")")
-			}
+	var dfs func(int, int)
+	dfs = func(open, close int) {
+		if open == n && close == n {
+			result = append(result, strings.Join(stack, ""))
 		}
-
-		if valid(kakko) {
-			result = append(result, strings.Join(kakko, ""))
+		if open < n {
+			stack = append(stack, "(")
+			dfs(open+1, close)
+			stack = stack[:len(stack)-1]
+		}
+		if close < open {
+			stack = append(stack, ")")
+			dfs(open, close+1)
+			stack = stack[:len(stack)-1]
 		}
 	}
+	dfs(0, 0)
 
 	return result
-}
-
-func valid(kakko []string) bool {
-	stack := []string{}
-	for i := range kakko {
-		if kakko[i] == ")" {
-			if len(stack) == 0 {
-				return false
-			}
-			if stack[len(stack)-1] == ")" {
-				return false
-			}
-
-			stack = stack[:len(stack)-1]
-		} else {
-			stack = append(stack, kakko[i])
-		}
-	}
-
-	return len(stack) == 0
 }
