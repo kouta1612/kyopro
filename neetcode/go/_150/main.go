@@ -12,20 +12,21 @@ func main() {
 }
 
 func evalRPN(tokens []string) int {
-	stack := []string{}
+	stack := []int{}
 
 	for _, v := range tokens {
 		if isSymbol(v) {
-			num1, _ := strconv.Atoi(stack[len(stack)-1])
-			num2, _ := strconv.Atoi(stack[len(stack)-2])
+			num1 := stack[len(stack)-1]
+			num2 := stack[len(stack)-2]
 			stack = stack[:len(stack)-2]
-			stack = append(stack, strconv.Itoa(calc(num2, num1, v)))
+			stack = append(stack, calc(num2, num1, v))
 		} else {
-			stack = append(stack, v)
+			i, _ := strconv.Atoi(v)
+			stack = append(stack, i)
 		}
 	}
 
-	res, _ := strconv.Atoi(stack[len(stack)-1])
+	res := stack[len(stack)-1]
 	return res
 }
 
