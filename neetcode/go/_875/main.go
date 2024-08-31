@@ -10,10 +10,10 @@ func main() {
 }
 
 func minEatingSpeed(piles []int, h int) int {
-	ng, ok := -1, 1000000001
+	ng, ok := 0, 1000000001
 	for ng != ok-1 {
 		mid := (ng + ok) / 2
-		if mid == 0 || gettime(piles, mid) > h {
+		if gettime(piles, mid) > h {
 			ng = mid
 		} else {
 			ok = mid
