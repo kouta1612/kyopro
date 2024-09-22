@@ -34,12 +34,10 @@ func main() {
 	}
 
 	sort.Slice(stores, func(i, j int) bool {
-		if stores[i].str < stores[j].str {
-			return true
-		} else if stores[i].str == stores[j].str {
+		if stores[i].str == stores[j].str {
 			return stores[i].point > stores[j].point
 		} else {
-			return false
+			return stores[i].str < stores[j].str
 		}
 	})
 
