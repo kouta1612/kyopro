@@ -18,39 +18,36 @@ var sc = bufio.NewScanner(os.Stdin)
 var out = bufio.NewWriter(os.Stdout)
 
 type card struct {
-	v, cnt int
+	v, num int
 }
 
 func main() {
 	defer out.Flush()
 
 	n, m := ni2()
-	a := ni1d(n)
-	cards := make([]card, m)
+	cards := make([]card, 0, n+m)
+	for i := 0; i < n; i++ {
+		cards = append(cards, card{v: ni(), num: 1})
+	}
 	for i := 0; i < m; i++ {
 		b, c := ni2()
-		cards[i] = card{v: c, cnt: b}
+		cards = append(cards, card{v: c, num: b})
 	}
 
-	sort.Ints(a)
 	sort.Slice(cards, func(i, j int) bool {
-		return cards[i].v < cards[j].v
+		return cards[i].v > cards[j].v
 	})
 
-	ptr := len(cards) - 1
-	for i := 0; i < n; i++ {
-		if ptr >= 0 && a[i] < cards[ptr].v {
-			a[i] = cards[ptr].v
-			cards[ptr].cnt--
-			if cards[ptr].cnt == 0 {
-				ptr--
-			}
-		}
-	}
-
 	result := 0
-	for _, v := range a {
-		result += v
+	i := 0
+	cnt := 0
+	for cnt < n && i < len(cards)-1 {
+		result += cards[i].v
+		cards[i].num--
+		cnt++
+		if cards[i].num == 0 {
+			i++
+		}
 	}
 
 	fmt.Println(result)
