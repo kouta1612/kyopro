@@ -37,8 +37,8 @@ func main() {
 			for k := 0; k < l; k++ {
 				vals = append(vals, v[k])
 			}
-			for k := n - 1; k >= n-r; k-- {
-				vals = append(vals, v[k])
+			for k := 0; k < r; k++ {
+				vals = append(vals, v[n-k-1])
 			}
 			sort.Ints(vals)
 
