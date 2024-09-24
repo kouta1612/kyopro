@@ -26,60 +26,45 @@ func main() {
 		g[i] = strings.Split(ns(), "")
 	}
 
-	left, right, top, down := make([][]int, h), make([][]int, h), make([][]int, h), make([][]int, h)
+	yoko, tate := make([][]int, h), make([][]int, h)
 	for i := 0; i < h; i++ {
-		left[i], right[i], top[i], down[i] = make([]int, w), make([]int, w), make([]int, w), make([]int, w)
+		yoko[i], tate[i] = make([]int, w), make([]int, w)
 	}
 
 	for i := 0; i < h; i++ {
+		start := 0
 		for j := 0; j < w; j++ {
 			if g[i][j] == "#" {
-				left[i][j] = 0
-			} else if j == 0 {
-				left[i][j] = 1
-			} else {
-				left[i][j] = left[i][j-1] + 1
+				for k := start; k < j; k++ {
+					yoko[i][k] = j - start
+				}
+				start = j + 1
 			}
 		}
-	}
-	for i := 0; i < h; i++ {
-		for j := 0; j < w; j++ {
-			if g[i][w-j-1] == "#" {
-				right[i][w-j-1] = 0
-			} else if w-j-1 == w-1 {
-				right[i][w-j-1] = 1
-			} else {
-				right[i][w-j-1] = right[i][w-j] + 1
-			}
+		for j := start; j < w; j++ {
+			yoko[i][j] = w - start
 		}
 	}
+
 	for i := 0; i < w; i++ {
+		start := 0
 		for j := 0; j < h; j++ {
 			if g[j][i] == "#" {
-				top[j][i] = 0
-			} else if j == 0 {
-				top[j][i] = 1
-			} else {
-				top[j][i] = top[j-1][i] + 1
+				for k := start; k < j; k++ {
+					tate[k][i] = j - start
+				}
+				start = j + 1
 			}
 		}
-	}
-	for i := 0; i < w; i++ {
-		for j := 0; j < h; j++ {
-			if g[h-j-1][i] == "#" {
-				down[h-j-1][i] = 0
-			} else if h-j-1 == h-1 {
-				down[h-j-1][i] = 1
-			} else {
-				down[h-j-1][i] = down[h-j][i] + 1
-			}
+		for j := start; j < h; j++ {
+			tate[j][i] = h - start
 		}
 	}
 
 	result := 0
 	for i := 0; i < h; i++ {
 		for j := 0; j < w; j++ {
-			result = max(result, left[i][j]+right[i][j]+top[i][j]+down[i][j]-3)
+			result = max(result, yoko[i][j]+tate[i][j]-1)
 		}
 	}
 
