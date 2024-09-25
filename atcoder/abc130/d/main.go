@@ -29,7 +29,7 @@ func main() {
 			sum += a[r]
 			r++
 		}
-		result += r - l
+		result += n - r
 
 		if l == r {
 			l++
@@ -40,7 +40,7 @@ func main() {
 		}
 	}
 
-	fmt.Println(n*(n+1)/2 - result)
+	fmt.Println(result)
 }
 
 func init() {
