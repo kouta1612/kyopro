@@ -36,18 +36,16 @@ func main() {
 		}
 	}
 
-	sum := 0
+	result := make([]int, 0, len(boal))
 	for i := 1; i <= n; i++ {
 		if boal[i] == 1 {
-			sum++
+			result = append(result, i)
 		}
 	}
 
-	fmt.Println(sum)
-	for i := 1; i <= n; i++ {
-		if boal[i] == 1 {
-			fmt.Println(i)
-		}
+	fmt.Println(len(result))
+	for _, v := range result {
+		fmt.Println(v)
 	}
 }
 
