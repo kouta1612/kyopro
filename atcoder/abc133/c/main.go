@@ -21,19 +21,13 @@ func main() {
 
 	a, b := ni2()
 
-	if b+1-a >= 2019 {
+	if b-a+1 >= 2019 {
 		fmt.Println(0)
 		return
 	}
 
-	a %= MOD
-	b %= MOD
-	if a > b {
-		b += MOD
-	}
-
 	result := INF
-	for i := a; i <= b; i++ {
+	for i := a; i < b; i++ {
 		for j := i + 1; j <= b; j++ {
 			result = min(result, i*j%MOD)
 		}
