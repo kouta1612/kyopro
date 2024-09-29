@@ -24,17 +24,7 @@ func main() {
 
 	reverse(a)
 
-	dp := make([]int, n)
-	for i := 0; i < n; i++ {
-		dp[i] = INF
-	}
-
-	for i := 0; i < n; i++ {
-		it := upperBound(dp, a[i])
-		dp[it] = a[i]
-	}
-
-	fmt.Println(lowerBound(dp, INF))
+	fmt.Println(lis(a, false))
 }
 
 func reverse(a []int) {
@@ -224,7 +214,7 @@ func upperBound(a []int, v int) int {
 
 /*
 単調増加部分列の長さを返す
-strict: 広義単調増加の場合はtrue, 狭義単調増加の場合はfalse
+strict = falseのとき、同じ値が連続することを許す
 */
 func lis(a []int, strict bool) int {
 	dp := make([]int, len(a))
@@ -235,9 +225,9 @@ func lis(a []int, strict bool) int {
 	for i := 0; i < len(a); i++ {
 		var it int
 		if strict {
-			it = upperBound(dp, a[i])
-		} else {
 			it = lowerBound(dp, a[i])
+		} else {
+			it = upperBound(dp, a[i])
 		}
 		dp[it] = a[i]
 	}
