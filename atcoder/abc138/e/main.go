@@ -41,12 +41,13 @@ func main() {
 	result, cur := 0, 0
 	for i := range t {
 		c := t[i] - 'a'
-		if len(smap[c]) == 0 {
+
+		it := lowerBound(smap[c], cur)
+		if it >= len(smap[c]) {
 			fmt.Println(-1)
 			return
 		}
 
-		it := lowerBound(smap[c], cur)
 		cur = smap[c][it] + 1
 		if cur >= sn {
 			cur -= sn
