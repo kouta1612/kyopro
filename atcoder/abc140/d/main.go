@@ -39,25 +39,7 @@ func main() {
 		}
 	}
 
-	diff := 0
-	for i := range s {
-		if i == len(s)-1 {
-			continue
-		}
-		if s[i] != s[i+1] {
-			diff++
-		}
-	}
-
-	for i := 0; i < k && result+2 <= n && diff > 0; i++ {
-		if diff == 1 {
-			result++
-			diff--
-		} else {
-			result += 2
-			diff -= 2
-		}
-	}
+	result = min(n-1, result+2*k)
 
 	fmt.Println(result)
 }
