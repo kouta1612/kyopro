@@ -35,7 +35,7 @@ func factorize(n int) map[int]int {
 			continue
 		}
 
-		result[i] = 1
+		result[i] = 0
 		for n%i == 0 {
 			result[i]++
 			n /= i
