@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"sort"
 	"strconv"
 )
 
@@ -24,32 +23,30 @@ func main() {
 
 	g := gcd(a, b)
 
-	divisors := make([]int, 0)
-	for i := 1; i*i <= g; i++ {
-		if i == g {
-			divisors = append(divisors, i)
-		} else if g%i == 0 {
-			divisors = append(divisors, i)
-			divisors = append(divisors, g/i)
+	fmt.Println(len(factorize(g)) + 1)
+}
+
+// nを素因数分解 => map[素因数]個数
+func factorize(n int) map[int]int {
+	result := make(map[int]int)
+
+	for i := 2; i*i <= n; i++ {
+		if n%i != 0 {
+			continue
+		}
+
+		result[i] = 1
+		for n%i == 0 {
+			result[i]++
+			n /= i
 		}
 	}
 
-	sort.Ints(divisors)
-
-	result := 0
-	for i := len(divisors) - 1; i >= 0; i-- {
-		ok := true
-		for j := i - 1; j >= 0; j-- {
-			if gcd(divisors[i], divisors[j]) != 1 {
-				ok = false
-			}
-		}
-		if ok {
-			result++
-		}
+	if n != 1 {
+		result[n] = 1
 	}
 
-	fmt.Println(result)
+	return result
 }
 
 func init() {
