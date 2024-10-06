@@ -22,7 +22,7 @@ func main() {
 	n := ni()
 
 	result := INF
-	for i := 1; i*i <= 1000000000000; i++ {
+	for i := 1; i*i <= n; i++ {
 		if n%i == 0 {
 			chmin(&result, i+n/i-2)
 		}
