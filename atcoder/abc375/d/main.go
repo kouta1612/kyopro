@@ -30,13 +30,11 @@ func main() {
 
 	result := 0
 	for i := 0; i < n; i++ {
-		if i != 0 {
-			lcnt[int(s[i-1]-'A')]++
-		}
 		rcnt[int(s[i]-'A')]--
 		for i := 0; i < 26; i++ {
 			result += lcnt[i] * rcnt[i]
 		}
+		lcnt[int(s[i]-'A')]++
 	}
 	fmt.Println(result)
 }
