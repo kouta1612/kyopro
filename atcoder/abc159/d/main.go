@@ -28,18 +28,13 @@ func main() {
 		freq[a[i]]++
 	}
 
-	combs := make([]int, n+1)
-	for i := 0; i < n+1; i++ {
-		combs[i] = combination(i, 2)
-	}
-
 	sum := 0
 	for _, v := range freq {
-		sum += combs[v]
+		sum += v * (v - 1) / 2
 	}
 	var builder strings.Builder
 	for i := 0; i < n; i++ {
-		result := sum - combs[freq[a[i]]] + combs[freq[a[i]]-1]
+		result := sum - (freq[a[i]] * (freq[a[i]] - 1) / 2) + ((freq[a[i]] - 1) * (freq[a[i]] - 2) / 2)
 		builder.WriteString(itoa(result))
 		builder.WriteByte('\n')
 	}
