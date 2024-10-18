@@ -20,30 +20,32 @@ func main() {
 	defer out.Flush()
 
 	n, k := ni2()
-
-	// next[d][j]: jから2^d回で到達する場所
-	next := make([][]int, 61)
-	for i := 0; i < 61; i++ {
-		next[i] = make([]int, n)
-	}
+	a := make([]int, n)
 	for i := 0; i < n; i++ {
-		next[0][i] = ni() - 1
+		a[i] = ni() - 1
 	}
 
-	for d := 0; d < 60; d++ {
-		for j := 0; j < n; j++ {
-			next[d+1][j] = next[d][next[d][j]]
-		}
+	vs := make([]int, 0, n)
+	ord := make([]int, n)
+	for i := 0; i < n; i++ {
+		ord[i] = -1
 	}
 
 	v := 0
-	for i := 0; i < 61; i++ {
-		if k&(1<<i) > 0 {
-			v = next[i][v]
-		}
+	for ord[v] == -1 {
+		ord[v] = len(vs)
+		vs = append(vs, v)
+		v = a[v]
 	}
+	cycle, remain := len(vs)-ord[v], ord[v]
 
-	fmt.Println(v + 1)
+	if k < remain {
+		fmt.Println(vs[k] + 1)
+	} else {
+		k -= remain
+		k %= cycle
+		fmt.Println(vs[remain+k] + 1)
+	}
 }
 
 func init() {
