@@ -26,23 +26,23 @@ func main() {
 	sort.Ints(a)
 	reverse(a)
 
-	result := a[0]
-	cnt := 2
-	for i := 1; i < n; i++ {
-		if cnt == n {
-			fmt.Println(result)
-			return
-		} else if cnt+1 == n {
-			fmt.Println(result + a[i])
-			return
-		} else if cnt+2 == n {
-			fmt.Println(result + a[i]*2)
-			return
-		} else {
-			cnt += 2
-			result += a[i] * 2
+	result := 0
+	t := n - 1
+	for i := 0; i < n; i++ {
+		lim := 2
+		if i == 0 {
+			lim = 1
+		}
+
+		for j := 0; j < lim; j++ {
+			if t > 0 {
+				result += a[i]
+				t--
+			}
 		}
 	}
+
+	fmt.Println(result)
 }
 
 func init() {
