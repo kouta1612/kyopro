@@ -22,11 +22,10 @@ func main() {
 	n := ni()
 
 	// 10^n-(9^n+9^n-8^n)
-	s := mpow(10, n, MOD)
-	t := mpow(9, n, MOD) + mpow(9, n, MOD) - mpow(8, n, MOD)
-	result := mint(s).sub(t)
+	result := mpow(10, n, MOD)
+	sub := mpow(9, n, MOD) + mpow(9, n, MOD) - mpow(8, n, MOD)
 
-	fmt.Println(result)
+	fmt.Println((result - sub + 2*MOD) % MOD)
 }
 
 func init() {
