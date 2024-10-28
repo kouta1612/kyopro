@@ -22,7 +22,7 @@ func main() {
 	n, q := ni2()
 	a := ni1d(n)
 
-	seg := newSegmentTree(a)
+	seg := newRXQ(a)
 	for i := 0; i < q; i++ {
 		t, x, y := ni3()
 		x--
@@ -34,29 +34,32 @@ func main() {
 	}
 }
 
-type SegmentTree struct {
-	n     int
-	nodes []int
+// Range XOR Query
+type rxq struct {
+	n     int   // 元データの要素数以上の2冪の最下段の要素数に対応するサイズ.
+	nodes []int // セグ木を構成するデータリスト.
 }
 
-func newSegmentTree(vs []int) *SegmentTree {
-	_n := 1
-	for _n < len(vs) {
-		_n *= 2
+// RXQ初期化
+func newRXQ(vs []int) *rxq {
+	n := 1
+	for n < len(vs) {
+		n *= 2
 	}
 
-	res := &SegmentTree{n: _n, nodes: make([]int, 2*_n-1)}
+	res := &rxq{n: n, nodes: make([]int, 2*n-1)}
 	for i := 0; i < len(vs); i++ {
-		res.nodes[_n-1+i] = vs[i]
+		res.nodes[n-1+i] = vs[i]
 	}
-	for i := _n - 2; i >= 0; i-- {
+	for i := n - 2; i >= 0; i-- {
 		res.nodes[i] = res.nodes[2*i+1] ^ res.nodes[2*i+2]
 	}
 
 	return res
 }
 
-func (seg *SegmentTree) update(n, v int) {
+// n番目の要素をvに更新
+func (seg *rxq) update(n, v int) {
 	n += seg.n - 1
 
 	seg.nodes[n] = v
@@ -66,11 +69,17 @@ func (seg *SegmentTree) update(n, v int) {
 	}
 }
 
-func (seg *SegmentTree) query(x, y int) int {
+// 区間[x,y)の要素のxor和を取得
+func (seg *rxq) query(x, y int) int {
 	return seg.getsum(x, y, 0, 0, seg.n)
 }
 
-func (seg *SegmentTree) getsum(x, y, k, l, r int) int {
+/*
+要求区間 [x, y) 中の要素のxor和を取得
+k := 自分がいるノードのインデックス
+対象区間は [l, r) にあたる
+*/
+func (seg *rxq) getsum(x, y, k, l, r int) int {
 	if y <= l || r <= x {
 		return 0
 	} else if x <= l && r <= y {
