@@ -148,7 +148,7 @@ func atoi(s string) int {
 }
 
 func atof(s string) float64 {
-	res, err := strconv.ParseFloat(sc.Text(), 64)
+	res, err := strconv.ParseFloat(s, 64)
 	if err != nil {
 		panic(err)
 	}
@@ -296,20 +296,24 @@ func ceil(a, b int) int {
 	return (a + b - 1) / b
 }
 
-func min(a, b int) int {
-	if a <= b {
-		return a
+func min(vs ...int) int {
+	result := INF
+	for i := 0; i < len(vs); i++ {
+		if result > vs[i] {
+			result = vs[i]
+		}
 	}
-
-	return b
+	return result
 }
 
-func max(a, b int) int {
-	if a >= b {
-		return a
+func max(vs ...int) int {
+	result := -INF
+	for i := 0; i < len(vs); i++ {
+		if result < vs[i] {
+			result = vs[i]
+		}
 	}
-
-	return b
+	return result
 }
 
 func chmax(x *int, y int) {
