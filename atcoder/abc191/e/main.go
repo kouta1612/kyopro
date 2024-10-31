@@ -26,13 +26,13 @@ func main() {
 	defer out.Flush()
 
 	n, m := ni2()
-	g := make([][]edge, n)
+	es := make([][]edge, n)
 	for i := 0; i < n; i++ {
-		g[i] = make([]edge, 0)
+		es[i] = make([]edge, 0)
 	}
 	for i := 0; i < m; i++ {
 		a, b, c := ni()-1, ni()-1, ni()
-		g[a] = append(g[a], edge{to: b, cost: c})
+		es[a] = append(es[a], edge{to: b, cost: c})
 	}
 
 	q := priorityqueue.New(func(a, b edge) int {
@@ -51,27 +51,29 @@ func main() {
 			dist[j] = INF
 		}
 
-		for _, e := range g[i] {
-			dist[e.to] = min(dist[e.to], e.cost)
+		for _, e := range es[i] {
+			if dist[e.to] <= e.cost {
+				continue
+			}
+			dist[e.to] = e.cost
 			q.Push(e)
 		}
 		for q.Size() > 0 {
-			e := q.Pop()
-			now := e.to
-			if kakutei[now] {
+			now := q.Pop()
+			if kakutei[now.to] {
 				continue
 			}
-			kakutei[now] = true
+			kakutei[now.to] = true
 
-			for _, ne := range g[now] {
-				next := ne.to
-				if kakutei[next] {
+			for _, e := range es[now.to] {
+				if kakutei[e.to] {
 					continue
 				}
-				if dist[next] > dist[now]+ne.cost {
-					dist[next] = dist[now] + ne.cost
-					q.Push(edge{to: next, cost: dist[next]})
+				if dist[e.to] <= dist[now.to]+e.cost {
+					continue
 				}
+				dist[e.to] = dist[now.to] + e.cost
+				q.Push(edge{to: e.to, cost: dist[e.to]})
 			}
 		}
 
@@ -81,6 +83,10 @@ func main() {
 			fmt.Println(dist[i])
 		}
 	}
+}
+
+func newDijkstra(n int) {
+
 }
 
 func init() {
