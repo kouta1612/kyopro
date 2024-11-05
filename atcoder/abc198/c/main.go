@@ -21,7 +21,7 @@ func main() {
 
 	r, x, y := nf(), nf(), nf()
 
-	d := math.Sqrt(x*x + y + y)
+	d := math.Sqrt(x*x + y*y)
 	if d == r {
 		fmt.Println(1)
 	} else if d < r {
