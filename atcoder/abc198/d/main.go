@@ -24,21 +24,29 @@ func main() {
 		s[i] = ns()
 	}
 
-	freq := make(map[byte]int)
+	freq := make([]int, 26)
 	for i := 0; i < 3; i++ {
 		for j := 0; j < len(s[i]); j++ {
-			freq[s[i][j]]++
+			freq[s[i][j]-'a']++
 		}
 	}
 
-	if len(freq) > 10 {
-		fmt.Println("UNSOLVABLE")
-		return
+	cnt := 0
+	for i := 0; i < 26; i++ {
+		if freq[i] > 0 {
+			cnt++
+		}
+		if cnt > 10 {
+			fmt.Println("UNSOLVABLE")
+			return
+		}
 	}
 
-	cs := make([]byte, 0, len(freq))
-	for k := range freq {
-		cs = append(cs, k)
+	cs := make([]int, 0, cnt)
+	for k, v := range freq {
+		if v > 0 {
+			cs = append(cs, k)
+		}
 	}
 
 	vs := make([]int, 10)
@@ -47,39 +55,45 @@ func main() {
 	}
 
 	for {
-		mp := make(map[byte]string)
+		mp := make([]string, 26)
 		for i := 0; i < len(cs); i++ {
-			mp[cs[i]] = string(vs[i])
+			mp[cs[i]] = itoa(vs[i])
 		}
 
 		ok := true
 		ts := make([]string, 3)
 		for i := 0; i < 3; i++ {
 			for j := 0; j < len(s[i]); j++ {
-				if j == 0 && mp[s[i][j]] == "0" {
+				if j == 0 && mp[int(s[i][j]-'a')] == "0" {
 					ok = false
+					break
 				}
-				ts[i] += mp[s[i][j]]
+				ts[i] += mp[int(s[i][j]-'a')]
+			}
+			if !ok {
+				break
 			}
 		}
-		if !ok {
-			continue
-		}
+		if ok {
+			ns := make([]int, 3)
+			for i := 0; i < 3; i++ {
+				ns[i] = atoi(ts[i])
+			}
 
-		ns := make([]int, 3)
-		for i := 0; i < 3; i++ {
-			ns[i] = atoi(ts[i])
-		}
-
-		if ns[0]+ns[1] == ns[2] {
-			printIntLn(ns)
-			return
+			if ns[0]+ns[1] == ns[2] {
+				for i := 0; i < 3; i++ {
+					fmt.Println(ns[i])
+				}
+				return
+			}
 		}
 
 		if !next_permutation(vs) {
 			break
 		}
 	}
+
+	fmt.Println("UNSOLVABLE")
 }
 
 func init() {
