@@ -1,5 +1,5 @@
 module kyopro
 
-go 1.20
+go 1.23.3
 
-require github.com/liyue201/gostl v1.2.0 // indirect
+require github.com/liyue201/gostl v1.2.0
