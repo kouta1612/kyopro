@@ -6,7 +6,6 @@ import (
 	"math"
 	"os"
 	"slices"
-	"sort"
 	"strconv"
 )
 
@@ -27,18 +26,27 @@ func main() {
 		a[i], b[i] = ni2()
 	}
 
-	x, y := make([]int, n), make([]int, n)
-	copy(x, a)
-	copy(y, b)
-
-	sort.Ints(a)
-	sort.Ints(b)
-	x = slices.Compact(x)
-	y = slices.Compact(y)
+	x, y := compress(a), compress(b)
 
 	for i := 0; i < n; i++ {
-		fmt.Println(lowerBound(x, a[i])+1, lowerBound(y, b[i])+1)
+		fmt.Println(x[i]+1, y[i]+1)
 	}
+}
+
+func compress(a []int) []int {
+	n := len(a)
+	uniq := make([]int, n)
+
+	copy(uniq, a)
+	slices.Sort(uniq)
+	uniq = slices.Compact(uniq)
+
+	res := make([]int, n)
+	for i := 0; i < n; i++ {
+		res[i] = lowerBound(uniq, a[i])
+	}
+
+	return res
 }
 
 func init() {
