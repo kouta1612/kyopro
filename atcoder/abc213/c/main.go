@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"slices"
+	"sort"
 	"strconv"
 )
 
@@ -34,16 +34,29 @@ func main() {
 }
 
 func compress(a []int) []int {
+	uq := uniq(a)
+	sort.Ints(uq)
+
 	n := len(a)
-	uniq := make([]int, n)
-
-	copy(uniq, a)
-	slices.Sort(uniq)
-	uniq = slices.Compact(uniq)
-
 	res := make([]int, n)
 	for i := 0; i < n; i++ {
-		res[i] = lowerBound(uniq, a[i])
+		res[i] = lowerBound(uq, a[i])
+	}
+
+	return res
+}
+
+func uniq(a []int) []int {
+	mp := make(map[int]bool)
+
+	res := make([]int, 0)
+	for i := 0; i < len(a); i++ {
+		if mp[a[i]] {
+			continue
+		}
+
+		mp[a[i]] = true
+		res = append(res, a[i])
 	}
 
 	return res
