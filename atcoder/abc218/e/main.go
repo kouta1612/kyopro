@@ -7,6 +7,8 @@ import (
 	"os"
 	"sort"
 	"strconv"
+
+	"golang.org/x/exp/constraints"
 )
 
 const (
@@ -152,12 +154,6 @@ func atof(s string) float64 {
 	return res
 }
 
-func reverse(a []int) {
-	for i := 0; i < len(a)/2; i++ {
-		a[i], a[len(a)-1-i] = a[len(a)-1-i], a[i]
-	}
-}
-
 /*
 指定したスライスの順列を生成する。（要素が重複していてもOK）
 全候補を試したい場合は、事前にスライスをソートしておく。
@@ -200,37 +196,6 @@ func next_permutation(a []int) bool {
 	}
 
 	return true
-}
-
-// 座標圧縮: [3,1,5,2] -> [2,0,3,1]
-func compress(a []int) []int {
-	uq := uniq(a)
-	sort.Ints(uq)
-
-	n := len(a)
-	res := make([]int, n)
-	for i := 0; i < n; i++ {
-		res[i] = lowerBound(uq, a[i])
-	}
-
-	return res
-}
-
-// 重複を削除したスライスを返す
-func uniq(a []int) []int {
-	mp := make(map[int]bool)
-
-	res := make([]int, 0)
-	for i := 0; i < len(a); i++ {
-		if mp[a[i]] {
-			continue
-		}
-
-		mp[a[i]] = true
-		res = append(res, a[i])
-	}
-
-	return res
 }
 
 // a[i] >= v を満たす最小のインデックスを取得する
@@ -324,18 +289,8 @@ func ceil(a, b int) int {
 	return (a + b - 1) / b
 }
 
-func min(vs ...int) int {
-	result := INF
-	for i := 0; i < len(vs); i++ {
-		if result > vs[i] {
-			result = vs[i]
-		}
-	}
-	return result
-}
-
-func max(vs ...int) int {
-	result := -INF
+func max[T constraints.Ordered](vs ...T) T {
+	result := vs[0]
 	for i := 0; i < len(vs); i++ {
 		if result < vs[i] {
 			result = vs[i]
@@ -344,16 +299,63 @@ func max(vs ...int) int {
 	return result
 }
 
-func chmax(x *int, y int) {
+func min[T constraints.Ordered](vs ...T) T {
+	result := vs[0]
+	for i := 0; i < len(vs); i++ {
+		if result > vs[i] {
+			result = vs[i]
+		}
+	}
+	return result
+}
+
+func chmax[T constraints.Ordered](x *T, y T) {
 	*x = max(*x, y)
 }
 
-func chmin(x *int, y int) {
+func chmin[T constraints.Ordered](x *T, y T) {
 	*x = min(*x, y)
 }
 
-func abs(a int) int {
-	return int(math.Abs(float64(a)))
+func abs[T constraints.Integer | constraints.Float](x T) T {
+	return max(x, -x)
+}
+
+func reverse[T any](x []T) {
+	for i := 0; i < len(x)/2; i++ {
+		x[i], x[len(x)-1-i] = x[len(x)-1-i], x[i]
+	}
+}
+
+// 重複を削除したスライスを返す
+func uniq[T constraints.Ordered](x []T) []T {
+	mp := make(map[T]bool)
+
+	res := make([]T, 0)
+	for i := 0; i < len(x); i++ {
+		if mp[x[i]] {
+			continue
+		}
+
+		mp[x[i]] = true
+		res = append(res, x[i])
+	}
+
+	return res
+}
+
+// 座標圧縮: [3,1,5,2] -> [2,0,3,1]
+func compress(a []int) []int {
+	uq := uniq(a)
+	sort.Ints(uq)
+
+	n := len(a)
+	res := make([]int, n)
+	for i := 0; i < n; i++ {
+		res[i] = lowerBound(uq, a[i])
+	}
+
+	return res
 }
 
 func sqrt(x int) int {
