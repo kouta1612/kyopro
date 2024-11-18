@@ -8,15 +8,13 @@ import (
 )
 
 func main() {
-	m := treemap.New[string, string](comparator.StringComparator, treemap.WithGoroutineSafe())
+	mp := treemap.New[int, int](comparator.IntComparator)
 
-	m.Insert("a", "aaa")
-	m.Insert("b", "bbb")
+	mp.Insert(1, 50)
+	n, _ := mp.Get(100)
+	mp.Insert(100, n+1)
 
-	a, _ := m.Get("a")
-	b, _ := m.Get("b")
-	fmt.Printf("a = %v\n", a)
-	fmt.Printf("b = %v\n", b)
-
-	m.Erase("b")
+	for it := mp.Begin(); it.IsValid(); it.Next() {
+		fmt.Println(it.Key(), it.Value())
+	}
 }

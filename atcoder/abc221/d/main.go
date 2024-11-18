@@ -32,17 +32,10 @@ func main() {
 
 	mp := treemap.New[int, int](comparator.IntComparator)
 	for i := 0; i < n; i++ {
-		if mp.Contains(a[i]) {
-			mp.Insert(a[i], mp.Find(a[i]).Value()+1)
-		} else {
-			mp.Insert(a[i], 1)
-		}
-
-		if mp.Contains(a[i] + b[i]) {
-			mp.Insert(a[i]+b[i], mp.Find(a[i]+b[i]).Value()-1)
-		} else {
-			mp.Insert(a[i]+b[i], -1)
-		}
+		np, _ := mp.Get(a[i])
+		nm, _ := mp.Get(a[i] + b[i])
+		mp.Insert(a[i], np+1)
+		mp.Insert(a[i]+b[i], nm-1)
 	}
 
 	ans := make([]int, n+1)
