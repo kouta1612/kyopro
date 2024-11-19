@@ -42,7 +42,7 @@ func main() {
 
 	for i := 0; i < m; i++ {
 		for j := 0; j < len(ps); j += 2 {
-			v := f(j, i)
+			v := f(i, ps[j].p, ps[j+1].p)
 			if v == -1 {
 				continue
 			}
@@ -66,32 +66,20 @@ func main() {
 	}
 }
 
-func f(i, j int) int {
-	if a[ps[i].p][j] == 'G' {
-		if a[ps[i+1].p][j] == 'C' {
-			return ps[i].p
-		} else if a[ps[i+1].p][j] == 'P' {
-			return ps[i+1].p
-		} else {
-			return -1
-		}
-	} else if a[ps[i].p][j] == 'C' {
-		if a[ps[i+1].p][j] == 'P' {
-			return ps[i].p
-		} else if a[ps[i+1].p][j] == 'G' {
-			return ps[i+1].p
-		} else {
-			return -1
-		}
-	} else {
-		if a[ps[i+1].p][j] == 'G' {
-			return ps[i].p
-		} else if a[ps[i+1].p][j] == 'C' {
-			return ps[i+1].p
-		} else {
-			return -1
-		}
+func f(round, userA, userB int) int {
+	if a[userA][round] == a[userB][round] {
+		return -1
 	}
+	if a[userA][round] == 'G' && a[userB][round] == 'C' {
+		return userA
+	}
+	if a[userA][round] == 'C' && a[userB][round] == 'P' {
+		return userA
+	}
+	if a[userA][round] == 'P' && a[userB][round] == 'G' {
+		return userA
+	}
+	return userB
 }
 
 func init() {
