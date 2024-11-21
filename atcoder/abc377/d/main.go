@@ -34,8 +34,8 @@ func main() {
 	ans := 0
 	l := 1
 	for r := 1; r <= m; r++ {
-		for l <= maxL[r] {
-			l++
+		if l <= maxL[r] {
+			l = maxL[r] + 1
 		}
 		ans += r - l + 1
 	}
