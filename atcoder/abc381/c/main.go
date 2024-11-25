@@ -7,6 +7,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 
 	"golang.org/x/exp/constraints"
 )
@@ -19,21 +20,16 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 var out = bufio.NewWriter(os.Stdout)
 
-type e struct {
-	s string
-	n int
-}
-
 func main() {
 	defer out.Flush()
 
-	n := ni()
+	ni()
 	s := ns()
 
-	rs := rle(n, s)
+	rs := run_length_encoding(strings.Split(s, ""))
 	ans := 1
 	for i := 0; i < len(rs)-2; i++ {
-		if rs[i].s == "1" && rs[i+1].s == "/" && rs[i+2].s == "2" && rs[i+1].n == 1 {
+		if rs[i].v == "1" && rs[i+1].v == "/" && rs[i+2].v == "2" && rs[i+1].n == 1 {
 			ans = max(ans, min(rs[i].n, rs[i+2].n)*2+1)
 		}
 	}
@@ -41,8 +37,14 @@ func main() {
 	fmt.Println(ans)
 }
 
-func rle(n int, s string) []e {
-	res := make([]e, 0)
+type rle[t constraints.Ordered] struct {
+	v t
+	n int
+}
+
+func run_length_encoding[t constraints.Ordered](s []t) []rle[t] {
+	n := len(s)
+	res := make([]rle[t], 0)
 
 	l := 0
 	for l < n {
@@ -52,7 +54,7 @@ func rle(n int, s string) []e {
 			r++
 		}
 
-		res = append(res, e{s: string(c), n: r - l})
+		res = append(res, rle[t]{v: c, n: r - l})
 
 		l = r
 	}
