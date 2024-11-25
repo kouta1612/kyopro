@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"reflect"
 	"sort"
 	"strconv"
 
@@ -25,58 +24,46 @@ func main() {
 
 	n, m := ni2()
 
-	gt := make([][]int, n)
+	gt := make([][]bool, n)
 	for i := 0; i < n; i++ {
-		gt[i] = make([]int, 0)
+		gt[i] = make([]bool, n)
 	}
 	for i := 0; i < m; i++ {
-		a, b := ni2()
-		a--
-		b--
-		gt[a] = append(gt[a], b)
-		gt[b] = append(gt[b], a)
+		a, b := ni()-1, ni()-1
+		gt[a][b] = true
+		gt[b][a] = true
 	}
 
-	ga := make([][]int, n)
+	ga := make([][]bool, n)
 	for i := 0; i < n; i++ {
-		ga[i] = make([]int, 0)
+		ga[i] = make([]bool, n)
 	}
 	for i := 0; i < m; i++ {
-		a, b := ni2()
-		a--
-		b--
-		ga[a] = append(ga[a], b)
-		ga[b] = append(ga[b], a)
+		a, b := ni()-1, ni()-1
+		ga[a][b] = true
+		ga[b][a] = true
 	}
 
-	for i := 0; i < n; i++ {
-		sort.Ints(gt[i])
-		sort.Ints(ga[i])
-	}
-
-	ids, pids := make([]int, n), make([]int, n)
+	ids := make([]int, n)
 	for i := 0; i < n; i++ {
 		ids[i] = i
-		pids[i] = i
 	}
 
 	for {
-		g := make([][]int, n)
+		ok := true
 		for i := 0; i < n; i++ {
-			g[i] = make([]int, 0)
-		}
-		for i := 0; i < n; i++ {
-			for j := 0; j < len(ga[i]); j++ {
-				g[pids[i]] = append(g[pids[i]], pids[ga[i][j]])
+			for j := 0; j < n; j++ {
+				if gt[i][j] != ga[ids[i]][ids[j]] {
+					ok = false
+				}
 			}
-			sort.Ints(g[pids[i]])
 		}
-		if reflect.DeepEqual(gt, g) {
+		if ok {
 			fmt.Println("Yes")
 			return
 		}
 
-		if !next_permutation(pids) {
+		if !next_permutation(ids) {
 			break
 		}
 	}
