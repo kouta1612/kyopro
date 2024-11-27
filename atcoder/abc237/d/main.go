@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"container/list"
 	"fmt"
 	"math"
 	"os"
@@ -19,58 +20,25 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 var out = bufio.NewWriter(os.Stdout)
 
-type node struct {
-	v         int
-	pre, next *node
-}
-
 func main() {
 	defer out.Flush()
 
 	n := ni()
 	s := ns()
 
-	nd := make([]*node, 0)
-	for i := 0; i < n+1; i++ {
-		nd = append(nd, &node{v: i})
-	}
+	list := list.New()
+	now := list.PushBack(0)
 	for i := 0; i < n; i++ {
 		if s[i] == 'L' {
-			if nd[i].pre == nil {
-				nd[i].pre = nd[i+1]
-				nd[i+1].next = nd[i]
-			} else {
-				tmp := nd[i].pre
-				nd[i].pre = nd[i+1]
-				nd[i+1].next = nd[i]
-				nd[i+1].pre = tmp
-				tmp.next = nd[i+1]
-			}
+			now = list.InsertBefore(i+1, now)
 		} else {
-			if nd[i].next == nil {
-				nd[i].next = nd[i+1]
-				nd[i+1].pre = nd[i]
-			} else {
-				tmp := nd[i].next
-				nd[i].next = nd[i+1]
-				nd[i+1].pre = nd[i]
-				nd[i+1].next = tmp
-				tmp.pre = nd[i+1]
-			}
-		}
-	}
-
-	st := -1
-	for i := 0; i < n+1; i++ {
-		if nd[i].pre == nil {
-			st = i
-			break
+			now = list.InsertAfter(i+1, now)
 		}
 	}
 
 	ans := make([]int, 0)
-	for node := nd[st]; node != nil; node = node.next {
-		ans = append(ans, node.v)
+	for v := list.Front(); v != nil; v = v.Next() {
+		ans = append(ans, v.Value.(int))
 	}
 
 	printIntLn(ans)
