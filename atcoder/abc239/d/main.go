@@ -25,17 +25,7 @@ func main() {
 	a, b := ni2()
 	c, d := ni2()
 
-	isprime := make([]bool, 10001)
-	for i := 2; i < 10001; i++ {
-		isprime[i] = true
-	}
-	for i := 2; i*i < 10001; i++ {
-		if isprime[i] {
-			for j := i * 2; j < 10001; j += i {
-				isprime[j] = false
-			}
-		}
-	}
+	isprime := eratosu(1000)
 
 	for x := a; x <= b; x++ {
 		exist := false
@@ -52,6 +42,23 @@ func main() {
 	}
 
 	fmt.Println("Aoki")
+}
+
+func eratosu(n int) []bool {
+	isprime := make([]bool, n)
+	for i := 0; i < n; i++ {
+		isprime[i] = true
+	}
+
+	for i := 2; i*i < n; i++ {
+		if isprime[i] {
+			for j := i * 2; j < n; j += i {
+				isprime[j] = false
+			}
+		}
+	}
+
+	return isprime
 }
 
 func init() {
