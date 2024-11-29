@@ -19,41 +19,32 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 var out = bufio.NewWriter(os.Stdout)
 
+type boal struct {
+	id, cnt int
+}
+
 func main() {
 	defer out.Flush()
 
 	n := ni()
 	a := ni1d(n)
 
-	stack := make([]int, 0)
-	cnt := 0
+	stack := make([]boal, 0)
+	ans := 0
 	for i := 0; i < n; i++ {
-		stack = append(stack, a[i])
-		if cnt == 0 {
-			cnt++
+		if len(stack) > 0 && stack[len(stack)-1].id == a[i] {
+			stack[len(stack)-1].cnt++
+			ans++
+			if stack[len(stack)-1].cnt == a[i] {
+				stack = stack[:len(stack)-1]
+				ans -= a[i]
+			}
+		} else {
+			stack = append(stack, boal{id: a[i], cnt: 1})
+			ans++
 		}
 
-		if len(stack) >= 2 {
-			if stack[len(stack)-2] == a[i] {
-				cnt++
-			} else {
-				cnt = 1
-			}
-		}
-
-		if a[i] == cnt {
-			stack = stack[:len(stack)-cnt]
-			cnt = 0
-			c := -1
-			if len(stack) > 0 {
-				c = stack[len(stack)-1]
-			}
-			for r := len(stack) - 1; r >= 0 && c == stack[r]; r-- {
-				cnt++
-			}
-		}
-
-		fmt.Println(len(stack))
+		fmt.Println(ans)
 	}
 }
 
