@@ -61,7 +61,7 @@ func main() {
 			if s[nx][ny] == "#" {
 				continue
 			}
-			if dist[nx][ny] == INF {
+			if dist[nx][ny] != INF {
 				continue
 			}
 
