@@ -30,46 +30,25 @@ func main() {
 	}
 
 	ans := 0
-	for i := 0; i < h; i++ {
-		for j := 0; j < w; j++ {
-			if s[i][j] == "#" {
+	for i1 := 0; i1 < h; i1++ {
+		for j1 := 0; j1 < w; j1++ {
+			if s[i1][j1] == "#" {
 				continue
 			}
+
 			for i2 := 0; i2 < h; i2++ {
 				for j2 := 0; j2 < w; j2++ {
 					if s[i2][j2] == "#" {
 						continue
 					}
-					if i == i2 && j == j2 {
-						continue
-					}
-
-					t := make([][]string, h)
-					for x := 0; x < h; x++ {
-						t[x] = make([]string, w)
-						for y := 0; y < w; y++ {
-							t[x][y] = s[x][y]
-						}
-					}
-
-					for x := 0; x < h; x++ {
-						for y := 0; y < w; y++ {
-							if s[x][y] == "#" {
-								continue
-							}
-							if abs(i-x)+abs(j-y) <= d {
-								t[x][y] = "$"
-							}
-							if abs(i2-x)+abs(j2-y) <= d {
-								t[x][y] = "$"
-							}
-						}
-					}
 
 					sum := 0
-					for x := 0; x < h; x++ {
-						for y := 0; y < w; y++ {
-							if t[x][y] == "$" {
+					for i := 0; i < h; i++ {
+						for j := 0; j < w; j++ {
+							if s[i][j] == "#" {
+								continue
+							}
+							if abs(i-i1)+abs(j-j1) <= d || abs(i-i2)+abs(j-j2) <= d {
 								sum++
 							}
 						}
