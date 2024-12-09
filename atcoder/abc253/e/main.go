@@ -33,44 +33,33 @@ func main() {
 		return
 	}
 
-	dp := make([][]int, n+1)
-	for i := 0; i < n+1; i++ {
-		dp[i] = make([]int, m+1)
-	}
-	dp[0][0] = 1
-
-	sum := make([][]int, n+1)
-	for i := 0; i < n+1; i++ {
-		sum[i] = make([]int, m+2)
-	}
-	for i := 0; i < m+2; i++ {
-		sum[0][i] = 1
-	}
-
-	for i := 1; i <= m; i++ {
-		dp[1][i] = 1
-		sum[1][i+1] = (sum[1][i] + dp[1][i]) % MOD
+	dp := make([]int, m)
+	for i := 0; i < m; i++ {
+		dp[i] = 1
 	}
 
 	for i := 1; i < n; i++ {
-		for j := 0; j < m+1; j++ {
-			sum[i][j+1] = (sum[i][j] + dp[i][j]) % MOD
+		p := make([]int, m)
+		dp, p = p, dp
+		sum := make([]int, m+1)
+		for j := 0; j < m; j++ {
+			sum[j+1] = (sum[j] + p[j]) % MOD
 		}
-		for j := 1; j <= m; j++ {
+		for j := 0; j < m; j++ {
 			if j-K+1 >= 0 {
-				dp[i+1][j] += sum[i][j-K+1]
-				dp[i+1][j] %= MOD
+				dp[j] += sum[j-K+1]
+				dp[j] %= MOD
 			}
-			if j+K < m+2 {
-				dp[i+1][j] += (sum[i][m+1] - sum[i][j+K]) % MOD
-				dp[i+1][j] %= MOD
+			if j+K < m+1 {
+				dp[j] += (sum[m] - sum[j+K]) % MOD
+				dp[j] %= MOD
 			}
 		}
 	}
 
 	ans := mint(0)
-	for i := 1; i <= m; i++ {
-		ans = ans.add(dp[n][i])
+	for i := 0; i < m; i++ {
+		ans = ans.add(dp[i])
 	}
 	fmt.Println(ans)
 }
