@@ -8,8 +8,12 @@ import (
 )
 
 func main() {
+	// キーに順序をもたせたMap
+	// HashMapと同様に重複したキーは値が上書きされることに注意
+	// 重複したキーを持ちたい場合はrbtreeを利用すること
 	mp := treemap.New[int, int](comparator.IntComparator)
 
+	mp.Insert(1, 50)
 	mp.Insert(1, 50)
 	n, _ := mp.Get(100)
 	mp.Insert(100, n+1)
