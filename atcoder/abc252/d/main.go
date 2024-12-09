@@ -30,12 +30,14 @@ func main() {
 		cnt[a[i]]++
 	}
 
-	sum := []int{0}
+	s := make([]int, 0)
 	for _, v := range cnt {
-		sum = append(sum, v)
+		s = append(s, v)
 	}
-	for i := 1; i < len(sum); i++ {
-		sum[i] += sum[i-1]
+
+	sum := make([]int, len(s)+1)
+	for i := 0; i < len(s); i++ {
+		sum[i+1] = sum[i] + s[i]
 	}
 
 	ans := 0
