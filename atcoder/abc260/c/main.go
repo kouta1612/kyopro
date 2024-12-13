@@ -33,11 +33,9 @@ func solve() int {
 	for i := n; i >= 2; i-- {
 		cntR[i-1] += cntR[i]
 		cntB[i] += cntR[i] * x
-		cntR[i] = 0
 
 		cntR[i-1] += cntB[i]
 		cntB[i-1] += cntB[i] * y
-		cntB[i] = 0
 	}
 
 	return cntB[1]
