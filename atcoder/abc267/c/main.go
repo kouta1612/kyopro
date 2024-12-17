@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	INF = 1 << 60
+	INF = math.MaxInt
 	MOD = int(1e9) + 7
 )
 
@@ -34,12 +34,8 @@ func main() {
 	for i := 0; i < m; i++ {
 		t[0] += a[i] * (i + 1)
 	}
-	for i := 0; i <= n-m; i++ {
-		if i+m < n {
-			t = append(t, t[len(t)-1]-(s[i+m]-s[i])+a[i+m]*m)
-		} else {
-			t = append(t, t[len(t)-1]-(s[i+m]-s[i]))
-		}
+	for i := 0; i < n-m; i++ {
+		t = append(t, t[len(t)-1]-(s[i+m]-s[i])+a[i+m]*m)
 	}
 
 	ans := -INF
