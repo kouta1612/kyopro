@@ -44,37 +44,28 @@ func main() {
 
 	ans = make([]int, 0)
 
-	q := make([]int, 0)
-	q = append(q, x)
-	dist := make([]int, n)
-	for len(q) > 0 {
-		v := q[0]
-		q = q[1:]
-
-		for _, nv := range g[v] {
-			if dist[nv] > 0 || nv == x {
-				continue
-			}
-			dist[nv] = dist[v] + 1
-			q = append(q, nv)
-		}
-	}
-
-	now := y
-	ans = append(ans, now+1)
-	for now != x {
-		for _, v := range g[now] {
-			if dist[v] == dist[now]-1 {
-				now = v
-				ans = append(ans, now+1)
-				break
-			}
-		}
-	}
+	dfs(x, -1)
 
 	reverse(ans)
 
 	printIntLn(ans)
+}
+
+func dfs(v, p int) bool {
+	if v == y {
+		ans = append(ans, v+1)
+		return true
+	}
+	for _, nv := range g[v] {
+		if nv == p {
+			continue
+		}
+		if dfs(nv, v) {
+			ans = append(ans, v+1)
+			return true
+		}
+	}
+	return false
 }
 
 func init() {
