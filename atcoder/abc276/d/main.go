@@ -25,26 +25,30 @@ func main() {
 	n := ni()
 	a := ni1d(n)
 
-	g := 0
+	cnt2, cnt3, mp := make([]int, n), make([]int, n), make(map[int]bool)
 	for i := 0; i < n; i++ {
-		g = gcd(g, a[i])
-	}
-
-	ans := 0
-	for i := 0; i < n; i++ {
-		a[i] /= g
 		for a[i]%2 == 0 {
 			a[i] /= 2
-			ans++
+			cnt2[i]++
 		}
 		for a[i]%3 == 0 {
 			a[i] /= 3
-			ans++
+			cnt3[i]++
 		}
-		if a[i] != 1 {
-			fmt.Println(-1)
-			return
-		}
+		mp[a[i]] = true
+	}
+	if len(mp) != 1 {
+		fmt.Println(-1)
+		return
+	}
+
+	sort.Ints(cnt2)
+	sort.Ints(cnt3)
+
+	ans := 0
+	for i := 0; i < n; i++ {
+		ans += cnt2[i] - cnt2[0]
+		ans += cnt3[i] - cnt3[0]
 	}
 
 	fmt.Println(ans)
