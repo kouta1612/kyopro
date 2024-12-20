@@ -25,31 +25,8 @@ func main() {
 	n := ni()
 	p := ni1d(n)
 
-	if sort.IsSorted(sort.IntSlice(p)) {
+	if !prev_permutation(p) {
 		reverse(p)
-		printIntLn(p)
-		return
-	}
-
-	for i := n - 1; i >= 1; i-- {
-		if p[i-1] <= p[i] {
-			continue
-		}
-		mi := -1
-		for j := n - 1; j >= i; j-- {
-			if p[i-1] > p[j] {
-				mi = j
-				break
-			}
-		}
-		p[i-1], p[mi] = p[mi], p[i-1]
-		l, r := i, n
-		for l < r {
-			p[l], p[r-1] = p[r-1], p[l]
-			l++
-			r--
-		}
-		break
 	}
 
 	printIntLn(p)
@@ -159,6 +136,48 @@ func atof(s string) float64 {
 		panic(err)
 	}
 	return res
+}
+
+/*
+指定したスライスの順列を逆順に生成する。（要素が重複していてもOK）
+全候補を試したい場合は、事前にスライスをソートしておく。
+ex:
+
+	for {
+		// aの処理
+
+		if !prev_permutation(a) {
+			break
+		}
+	}
+*/
+func prev_permutation(a []int) bool {
+	// a[l] > a[l+1]を満たす最大のlを求める
+	l, n := -1, len(a)
+	for i := n - 2; i >= 0; i-- {
+		if a[i] > a[i+1] {
+			l = i
+			break
+		}
+	}
+
+	if l == -1 {
+		return false
+	}
+
+	// a[l] > a[r]を満たす最大のrを求める
+	r := len(a) - 1
+	for a[l] <= a[r] {
+		r--
+	}
+
+	a[l], a[r] = a[r], a[l]
+	// [l+1,n-1]が降順なので逆順にする
+	for i := l + 1; i <= (l+len(a))/2; i++ {
+		a[i], a[len(a)-(i-l)] = a[len(a)-(i-l)], a[i]
+	}
+
+	return true
 }
 
 /*
