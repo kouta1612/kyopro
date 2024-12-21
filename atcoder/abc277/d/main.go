@@ -23,17 +23,13 @@ func main() {
 	defer out.Flush()
 
 	n, m := ni2()
-	a := make([]int, n)
+	a, tot := make([]int, n), 0
 	for i := 0; i < n; i++ {
 		a[i] = ni()
+		tot += a[i]
 	}
 
 	sort.Ints(a)
-
-	s := make([]int, n+1)
-	for i := 0; i < n; i++ {
-		s[i+1] = s[i] + a[i]
-	}
 
 	b := make([]int, 2*n)
 	for i := 0; i < n; i++ {
@@ -41,24 +37,20 @@ func main() {
 		b[i+n] = a[i]
 	}
 
-	bs := make([]int, 2*n+1)
-	for i := 0; i < 2*n; i++ {
-		bs[i+1] = bs[i] + b[i]
-	}
-
-	ans, l, r := INF, 0, 0
-	for l < n {
-		for r < 2*n && r-l < n && (r-l == 0 || (r-1 >= 0 && (b[r-1] == b[r] || (b[r-1]+1)%m == b[r]))) {
+	l, r, sum, x, mx := 0, 0, 0, b[0], 0
+	for l < 2*n {
+		x = b[l]
+		for r < 2*n && r-l < n && (x == b[r] || (x+1)%m == b[r]) {
+			x = b[r]
+			sum += b[r]
 			r++
 		}
-
-		sum := bs[r] - bs[l]
-		ans = min(ans, s[n]-sum)
-
+		mx = max(mx, sum)
+		sum = 0
 		l = r
 	}
 
-	fmt.Println(ans)
+	fmt.Println(tot - mx)
 }
 
 func init() {
