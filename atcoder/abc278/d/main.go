@@ -23,35 +23,25 @@ func main() {
 	defer out.Flush()
 
 	n := ni()
-	a := ni1d(n)
+	diff := make(map[int]int)
+	for i := 0; i < n; i++ {
+		diff[i] = ni()
+	}
 
 	q := ni()
-	base, mp, diff := -1, make(map[int]bool), make([]int, n)
+	base := 0
 	for qi := 0; qi < q; qi++ {
 		t := ni()
 		if t == 1 {
 			x := ni()
-			for k := range mp {
-				diff[k] = 0
-				delete(mp, k)
-			}
 			base = x
+			diff = make(map[int]int)
 		} else if t == 2 {
-			i, x := ni2()
-			i--
-			if base == -1 {
-				a[i] += x
-			} else {
-				diff[i] += x
-				mp[i] = true
-			}
+			i, x := ni()-1, ni()
+			diff[i] += x
 		} else {
 			i := ni() - 1
-			if base == -1 {
-				fmt.Println(a[i])
-			} else {
-				fmt.Println(base + diff[i])
-			}
+			fmt.Println(base + diff[i])
 		}
 	}
 }
