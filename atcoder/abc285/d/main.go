@@ -21,7 +21,7 @@ var out = bufio.NewWriter(os.Stdout)
 
 var n int
 var g map[string]string
-var used map[string]bool
+var seen, finished map[string]bool
 
 func main() {
 	defer out.Flush()
@@ -34,13 +34,13 @@ func main() {
 		g[s[i]] = t[i]
 	}
 
-	used = make(map[string]bool)
+	seen, finished = make(map[string]bool), make(map[string]bool)
 	for i := 0; i < n; i++ {
-		if used[s[i]] {
+		if seen[s[i]] {
 			continue
 		}
 
-		if dfs(s[i], s[i]) {
+		if dfs(s[i]) {
 			fmt.Println("No")
 			return
 		}
@@ -50,18 +50,22 @@ func main() {
 }
 
 // 再帰してサイクルがあればtrue
-func dfs(s, t string) bool {
-	used[t] = true
-	nt := g[t]
-	if nt == "" {
-		return false
+func dfs(s string) bool {
+	seen[s] = true
+
+	ns := g[s]
+
+	if len(ns) > 0 {
+		if seen[ns] && !finished[ns] {
+			return true
+		}
+		if dfs(ns) {
+			return true
+		}
 	}
-	if nt == s {
-		return true
-	}
-	if dfs(s, nt) {
-		return true
-	}
+
+	finished[s] = true
+
 	return false
 }
 
