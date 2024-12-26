@@ -19,54 +19,32 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 var out = bufio.NewWriter(os.Stdout)
 
-var n int
-var g map[string]string
-var seen, finished map[string]bool
-
 func main() {
 	defer out.Flush()
 
-	n = ni()
-	g = make(map[string]string)
+	n := ni()
+
+	mp := make(map[string]int)
 	s, t := make([]string, n), make([]string, n)
 	for i := 0; i < n; i++ {
 		s[i], t[i] = ns(), ns()
-		g[s[i]] = t[i]
+		if _, exist := mp[s[i]]; !exist {
+			mp[s[i]] = len(mp)
+		}
+		if _, exist := mp[t[i]]; !exist {
+			mp[t[i]] = len(mp)
+		}
 	}
 
-	seen, finished = make(map[string]bool), make(map[string]bool)
+	uf := newUnionFind(len(mp))
 	for i := 0; i < n; i++ {
-		if seen[s[i]] {
-			continue
-		}
-
-		if dfs(s[i]) {
+		if !uf.unite(mp[s[i]], mp[t[i]]) {
 			fmt.Println("No")
 			return
 		}
 	}
 
 	fmt.Println("Yes")
-}
-
-// 再帰してサイクルがあればtrue
-func dfs(s string) bool {
-	seen[s] = true
-
-	ns := g[s]
-
-	if len(ns) > 0 {
-		if seen[ns] && !finished[ns] {
-			return true
-		}
-		if dfs(ns) {
-			return true
-		}
-	}
-
-	finished[s] = true
-
-	return false
 }
 
 func init() {
