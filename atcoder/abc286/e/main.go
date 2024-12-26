@@ -37,12 +37,12 @@ func main() {
 			dist[i][j] = INF
 			if s[i][j] == 'Y' {
 				dist[i][j] = 1
-				val[i][j] = a[j]
+				val[i][j] = a[i] + a[j]
 			}
 		}
 	}
 	for i := 0; i < n; i++ {
-		dist[i][i] = 0
+		dist[i][i], val[i][i] = 0, a[i]
 	}
 
 	for k := 0; k < n; k++ {
@@ -50,9 +50,9 @@ func main() {
 			for j := 0; j < n; j++ {
 				if dist[i][j] > dist[i][k]+dist[k][j] {
 					dist[i][j] = dist[i][k] + dist[k][j]
-					val[i][j] = val[i][k] + val[k][j]
-				} else if dist[i][j] == dist[i][k]+dist[k][j] && val[i][j] < val[i][k]+val[k][j] {
-					val[i][j] = val[i][k] + val[k][j]
+					val[i][j] = val[i][k] + val[k][j] - val[k][k]
+				} else if dist[i][j] == dist[i][k]+dist[k][j] && val[i][j] < val[i][k]+val[k][j]-val[k][k] {
+					val[i][j] = val[i][k] + val[k][j] - val[k][k]
 				}
 			}
 		}
@@ -64,7 +64,7 @@ func main() {
 		if dist[u][v] == INF {
 			fmt.Println("Impossible")
 		} else {
-			fmt.Printf("%v %v\n", dist[u][v], val[u][v]+a[u])
+			fmt.Printf("%v %v\n", dist[u][v], val[u][v])
 		}
 	}
 }
