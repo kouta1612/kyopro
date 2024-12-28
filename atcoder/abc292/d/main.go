@@ -31,13 +31,16 @@ func main() {
 		uf.unite(u[i], v[i])
 	}
 
-	en := make([]int, n)
+	vs, es := make([]int, n), make([]int, n)
+	for i := 0; i < n; i++ {
+		vs[uf.root(i)]++
+	}
 	for i := 0; i < m; i++ {
-		en[uf.root(u[i])]++
+		es[uf.root(u[i])]++
 	}
 
 	for i := 0; i < n; i++ {
-		if uf.size(i) != en[uf.root(i)] {
+		if vs[i] != es[i] {
 			fmt.Println("No")
 			return
 		}
