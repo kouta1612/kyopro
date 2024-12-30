@@ -25,18 +25,13 @@ func main() {
 	s := ns()
 	n := len(s)
 
-	x := make([][10]int, n+1)
+	x := make([]int, n+1)
 	for i := 0; i < n; i++ {
-		for j := 0; j < 10; j++ {
-			if int(s[i]-'0') == j {
-				x[i+1][j] = (x[i][j] + 1) % 2
-			} else {
-				x[i+1][j] = x[i][j]
-			}
-		}
+		c := s[i] - '0'
+		x[i+1] = x[i] ^ 1<<c
 	}
 
-	freq := make(map[[10]int]int)
+	freq := make(map[int]int)
 	for i := 0; i < n+1; i++ {
 		freq[x[i]]++
 	}
