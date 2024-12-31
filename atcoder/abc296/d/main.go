@@ -24,8 +24,7 @@ func main() {
 
 	n, m := ni2()
 
-	ans := INF
-	c := int(math.Ceil(math.Sqrt(float64(m))))
+	ans, c := INF, int(math.Ceil(math.Sqrt(float64(m))))
 	for a := 1; a <= c; a++ {
 		b := ceil(m, a)
 		if a <= n && b <= n {
