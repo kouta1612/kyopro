@@ -20,9 +20,6 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 var out = bufio.NewWriter(os.Stdout)
 
-var di []int = []int{0, 1, 0, -1, 1, 1, -1, -1}
-var dj []int = []int{1, 0, -1, 0, 1, -1, 1, -1}
-
 type point struct {
 	x, y int
 }
@@ -37,6 +34,8 @@ func main() {
 	}
 
 	t := strings.Split("snuke", "")
+
+	di, dj := dij()
 
 	for i := 0; i < h; i++ {
 		for j := 0; j < w; j++ {
@@ -63,6 +62,14 @@ func main() {
 			}
 		}
 	}
+}
+
+// 方向ベクトル
+func dij() ([]int, []int) {
+	// → ↓ ← ↑ ↘ ↙ ↗ ↖
+	var di []int = []int{0, 1, 0, -1, 1, 1, -1, -1}
+	var dj []int = []int{1, 0, -1, 0, 1, -1, 1, -1}
+	return di, dj
 }
 
 func init() {
