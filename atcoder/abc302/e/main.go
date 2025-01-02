@@ -23,37 +23,39 @@ func main() {
 	defer out.Flush()
 
 	n, q := ni2()
-	deg, zero := make([]int, n), make(map[int]bool)
 	g := make([]map[int]bool, n)
 	for i := 0; i < n; i++ {
 		g[i] = make(map[int]bool)
-		zero[i] = true
 	}
 
+	ans := n
 	for qi := 0; qi < q; qi++ {
 		t := ni()
 		if t == 1 {
 			u, v := ni()-1, ni()-1
-			deg[u]++
-			deg[v]++
+			if len(g[u]) == 0 {
+				ans--
+			}
+			if len(g[v]) == 0 {
+				ans--
+			}
 			g[u][v] = true
 			g[v][u] = true
-			delete(zero, u)
-			delete(zero, v)
 		} else {
 			v := ni() - 1
-			zero[v] = true
-			deg[v] = 0
-			for k := range g[v] {
-				deg[k]--
-				if deg[k] == 0 {
-					zero[k] = true
+			if len(g[v]) > 0 {
+				for k := range g[v] {
+					delete(g[k], v)
+					if len(g[k]) == 0 {
+						ans++
+					}
 				}
-				delete(g[v], k)
-				delete(g[k], v)
+				g[v] = make(map[int]bool)
+				ans++
 			}
 		}
-		fmt.Println(len(zero))
+
+		fmt.Println(ans)
 	}
 }
 
