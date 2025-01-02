@@ -37,20 +37,17 @@ func main() {
 
 	for i := 0; i < n; i++ {
 		for j := 0; j < 2; j++ {
-			for k := 0; k < 2; k++ {
-				if j == k {
-					if (j == 0 && s[i] == 'a') || (j == 1 && s[i] == 'A') {
-						chmin(&dp[i+1][k], dp[i][j]+x)
-					} else if (j == 0 && s[i] == 'A') || (j == 1 && s[i] == 'a') {
-						chmin(&dp[i+1][k], dp[i][j]+y)
-					}
-				} else {
-					if (j == 0 && s[i] == 'a') || (j == 1 && s[i] == 'A') {
-						chmin(&dp[i+1][k], dp[i][j]+z+y)
-					} else if (j == 0 && s[i] == 'A') || (j == 1 && s[i] == 'a') {
-						chmin(&dp[i+1][k], dp[i][j]+z+x)
-					}
+			for nj := 0; nj < 2; nj++ {
+				cost := 0
+				if j != nj {
+					cost += z
 				}
+				if (s[i] == 'a' && nj == 0) || (s[i] == 'A' && nj == 1) {
+					cost += x
+				} else {
+					cost += y
+				}
+				chmin(&dp[i+1][nj], dp[i][j]+cost)
 			}
 		}
 	}
