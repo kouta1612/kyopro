@@ -7,6 +7,8 @@ import (
 	"os"
 	"sort"
 	"strconv"
+
+	"github.com/liyue201/gostl/ds/priorityqueue"
 )
 
 const (
@@ -21,36 +23,70 @@ func main() {
 	defer out.Flush()
 
 	n := ni()
-	s, t := make([]int, 2*n), make([]int, 2*n)
+	s := ni1d(n)
+	t := ni1d(n)
+
+	g := make(map[int][]edge)
 	for i := 0; i < n; i++ {
-		s[i] = ni()
-		s[i+n] = s[i]
+		g[i] = make([]edge, 0)
 	}
 	for i := 0; i < n; i++ {
-		t[i] = ni()
-		t[i+n] = t[i]
+		ni := (i + 1) % n
+		g[i] = append(g[i], edge{ni, s[i]})
+		g[n] = append(g[n], edge{i, t[i]})
 	}
 
-	now := 0
-	ans := make([]int, 0)
-	for i := 0; i < 2*n; i++ {
-		if i == 0 {
-			ans = append(ans, t[i])
-			now = t[i] + s[i]
-		} else {
-			if now < t[i] {
-				ans = append(ans, now)
-				now += s[i]
-			} else {
-				ans = append(ans, t[i])
-				now = t[i] + s[i]
+	ans := newDijkstra(g, map[int]int{n: 0})
+	for i := 0; i < n; i++ {
+		fmt.Println(ans[i])
+	}
+}
+
+type edge struct {
+	v, c int
+}
+
+func edgeAscCmp(a, b edge) int {
+	if a.c == b.c {
+		return 0
+	} else if a.c < b.c {
+		return -1
+	} else {
+		return 1
+	}
+}
+
+func newDijkstra(graph map[int][]edge, starts map[int]int) map[int]int {
+	dists := make(map[int]int)
+
+	for node := range graph {
+		dists[node] = INF
+	}
+	for v, c := range starts {
+		dists[v] = c
+	}
+
+	q := priorityqueue.New(edgeAscCmp)
+	for v, c := range starts {
+		q.Push(edge{v, c})
+	}
+	for q.Size() > 0 {
+		cur := q.Pop()
+
+		if cur.c != dists[cur.v] {
+			continue
+		}
+
+		for _, e := range graph[cur.v] {
+			newDist := cur.c + e.c
+			if newDist < dists[e.v] {
+				dists[e.v] = newDist
+				q.Push(edge{e.v, newDist})
 			}
 		}
 	}
 
-	for i := 0; i < n; i++ {
-		fmt.Println(min(ans[i], ans[i+n]))
-	}
+	return dists
 }
 
 func init() {
