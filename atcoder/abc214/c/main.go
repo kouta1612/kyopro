@@ -26,27 +26,71 @@ func main() {
 	s := ni1d(n)
 	t := ni1d(n)
 
-	g := make(map[int][]edge)
-	for i := 0; i < n; i++ {
-		g[i] = make([]edge, 0)
-	}
+	g := newGraph(0, true, true)
 	for i := 0; i < n; i++ {
 		ni := (i + 1) % n
-		g[i] = append(g[i], edge{ni, s[i]})
-		g[n] = append(g[n], edge{i, t[i]})
+		g.addEdge(i, ni, s[i])
+		g.addEdge(n, i, t[i])
 	}
 
-	ans := newDijkstra(g, map[int]int{n: 0})
+	ans := g.dijkstra(map[int]int{n: 0})
 	for i := 0; i < n; i++ {
 		fmt.Println(ans[i])
 	}
 }
 
 type edge struct {
-	v, c int
+	// 頂点
+	v int
+
+	// コスト
+	c int
 }
 
-func edgeAscCmp(a, b edge) int {
+type graph struct {
+	// 隣接リスト
+	datas map[int][]edge
+
+	// 重さがあるか
+	weighted bool
+
+	// 辺に向きがあるか
+	directed bool
+}
+
+/*
+グラフの構築
+入力に辺情報が与えられる場合のみmに辺数を指定する(それ以外は0を入れる)
+有向辺の場合はdirectedをtrueに、そうでない場合falseを指定する
+*/
+func newGraph(m int, weighted, directed bool) *graph {
+	g := &graph{make(map[int][]edge), weighted, directed}
+
+	if m == 0 {
+		return g
+	}
+
+	for i := 0; i < m; i++ {
+		u, v, c := ni()-1, ni()-1, 1
+		if weighted {
+			c = ni()
+		}
+		g.addEdge(u, v, c)
+	}
+
+	return g
+}
+
+// グラフに辺を追加する
+func (g *graph) addEdge(u, v, c int) {
+	g.datas[u] = append(g.datas[u], edge{v, c})
+	if !g.directed {
+		g.datas[v] = append(g.datas[v], edge{u, c})
+	}
+}
+
+// priorityqueue用にコストの昇順にソートするcomparatorを作成
+func (g *graph) dijkstraComparator(a, b edge) int {
 	if a.c == b.c {
 		return 0
 	} else if a.c < b.c {
@@ -56,17 +100,18 @@ func edgeAscCmp(a, b edge) int {
 	}
 }
 
-func newDijkstra(graph map[int][]edge, starts map[int]int) map[int]int {
+// ダイクストラを実行して始点からの最短距離を取得
+func (g *graph) dijkstra(starts map[int]int) map[int]int {
 	dists := make(map[int]int)
 
-	for node := range graph {
+	for node := range g.datas {
 		dists[node] = INF
 	}
 	for v, c := range starts {
 		dists[v] = c
 	}
 
-	q := priorityqueue.New(edgeAscCmp)
+	q := priorityqueue.New(g.dijkstraComparator)
 	for v, c := range starts {
 		q.Push(edge{v, c})
 	}
@@ -77,7 +122,7 @@ func newDijkstra(graph map[int][]edge, starts map[int]int) map[int]int {
 			continue
 		}
 
-		for _, e := range graph[cur.v] {
+		for _, e := range g.datas[cur.v] {
 			newDist := cur.c + e.c
 			if newDist < dists[e.v] {
 				dists[e.v] = newDist
