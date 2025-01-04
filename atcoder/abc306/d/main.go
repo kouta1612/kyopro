@@ -23,10 +23,7 @@ func main() {
 	defer out.Flush()
 
 	n := ni()
-	x, y := make([]int, n), make([]int, n)
-	for i := 0; i < n; i++ {
-		x[i], y[i] = ni2()
-	}
+	x, y := ni1d2(n)
 
 	dp := make([][]int, n+1)
 	for i := 0; i < n+1; i++ {
@@ -82,6 +79,22 @@ func ni1d(n int) []int {
 		res[i] = ni()
 	}
 	return res
+}
+
+func ni1d2(n int) ([]int, []int) {
+	res1, res2 := make([]int, n), make([]int, n)
+	for i := 0; i < n; i++ {
+		res1[i], res2[i] = ni2()
+	}
+	return res1, res2
+}
+
+func ni1d3(n int) ([]int, []int, []int) {
+	res1, res2, res3 := make([]int, n), make([]int, n), make([]int, n)
+	for i := 0; i < n; i++ {
+		res1[i], res2[i], res3[i] = ni3()
+	}
+	return res1, res2, res3
 }
 
 func ni2d(n, m int) [][]int {
