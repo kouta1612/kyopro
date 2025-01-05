@@ -24,11 +24,6 @@ type point struct {
 	i, j int
 }
 
-type pointdir struct {
-	i, j int
-	yoko bool
-}
-
 func main() {
 	defer out.Flush()
 
@@ -38,89 +33,65 @@ func main() {
 		s[i] = ns()
 	}
 
-	q := make([]pointdir, 0)
-	yokodist, tatedist := make([][]int, h), make([][]int, h)
+	q := make([]point, 0)
 	start, goal := point{-1, -1}, point{-1, -1}
 	for i := 0; i < h; i++ {
-		yokodist[i], tatedist[i] = make([]int, w), make([]int, w)
-		for j := 0; j < w; j++ {
-			yokodist[i][j] = INF
-			tatedist[i][j] = INF
-		}
 		for j := 0; j < w; j++ {
 			if s[i][j] == 'S' {
-				yokodist[i][j] = 0
-				tatedist[i][j] = 0
 				start = point{i, j}
 			} else if s[i][j] == 'G' {
 				goal = point{i, j}
 			}
 		}
 	}
-	q = append(q, pointdir{start.i, start.j, true})
+	q = append(q, point{start.i, start.j})
 
 	di, dj := dij()
 
-	// はじめが横方向に移動
-	for len(q) > 0 {
-		now := q[0]
-		q = q[1:]
-
-		for i := 0; i < 4; i++ {
-			ni, nj := now.i+di[i], now.j+dj[i]
-			if ni < 0 || nj < 0 || ni >= h || nj >= w {
-				continue
-			}
-			if s[ni][nj] == '#' {
-				continue
-			}
-			if yokodist[ni][nj] != INF {
-				continue
-			}
-
-			if now.yoko && i%2 == 0 {
-				yokodist[ni][nj] = yokodist[now.i][now.j] + 1
-				q = append(q, pointdir{ni, nj, !now.yoko})
-			} else if !now.yoko && i%2 == 1 {
-				yokodist[ni][nj] = yokodist[now.i][now.j] + 1
-				q = append(q, pointdir{ni, nj, !now.yoko})
+	ans := INF
+	for p := 0; p < 2; p++ {
+		dist := make([][]int, h)
+		for i := 0; i < h; i++ {
+			dist[i] = make([]int, w)
+			for j := 0; j < w; j++ {
+				dist[i][j] = INF
 			}
 		}
-	}
+		dist[start.i][start.j] = 0
+		q = append(q, point{start.i, start.j})
 
-	q = make([]pointdir, 0)
-	q = append(q, pointdir{start.i, start.j, false})
-	for len(q) > 0 {
-		now := q[0]
-		q = q[1:]
+		for len(q) > 0 {
+			now := q[0]
+			q = q[1:]
 
-		for i := 0; i < 4; i++ {
-			ni, nj := now.i+di[i], now.j+dj[i]
-			if ni < 0 || nj < 0 || ni >= h || nj >= w {
-				continue
-			}
-			if s[ni][nj] == '#' {
-				continue
-			}
-			if tatedist[ni][nj] != INF {
-				continue
-			}
+			for i := 0; i < 4; i++ {
+				ni, nj := now.i+di[i], now.j+dj[i]
+				if ni < 0 || nj < 0 || ni >= h || nj >= w {
+					continue
+				}
+				if s[ni][nj] == '#' {
+					continue
+				}
+				if dist[ni][nj] != INF {
+					continue
+				}
+				if (now.i+now.j+p)%2 != i%2 {
+					continue
+				}
 
-			if !now.yoko && i%2 == 1 {
-				tatedist[ni][nj] = tatedist[now.i][now.j] + 1
-				q = append(q, pointdir{ni, nj, !now.yoko})
-			} else if now.yoko && i%2 == 0 {
-				tatedist[ni][nj] = tatedist[now.i][now.j] + 1
-				q = append(q, pointdir{ni, nj, !now.yoko})
+				dist[ni][nj] = dist[now.i][now.j] + 1
+				q = append(q, point{ni, nj})
 			}
 		}
+
+		chmin(&ans, dist[goal.i][goal.j])
 	}
 
-	if yokodist[goal.i][goal.j] == INF && tatedist[goal.i][goal.j] == INF {
-		fmt.Println(-1)
-	} else {
-		fmt.Println(min(yokodist[goal.i][goal.j], tatedist[goal.i][goal.j]))
+	if ans == INF {
+		ans = -1
 	}
+
+	fmt.Println(ans)
 }
 
 func init() {
