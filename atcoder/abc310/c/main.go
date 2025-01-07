@@ -28,7 +28,7 @@ func main() {
 	s, rs, mp := make([]string, n), make([]string, n), make(map[string]bool)
 	for i := 0; i < n; i++ {
 		s[i] = ns()
-		rs[i] = getReverseString(s[i])
+		rs[i] = reverseString(s[i])
 		mp[s[i]] = true
 	}
 
@@ -44,10 +44,12 @@ func main() {
 	fmt.Println(len(ans))
 }
 
-func getReverseString(s string) string {
-	res := strings.Split(s, "")
-	reverse(res)
-	return strings.Join(res, "")
+func reverseString(s string) string {
+	res := []rune(s)
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		res[i], res[j] = res[j], res[i]
+	}
+	return string(res)
 }
 
 func init() {
