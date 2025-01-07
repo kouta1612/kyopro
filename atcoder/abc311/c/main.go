@@ -21,56 +21,33 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 var out = bufio.NewWriter(os.Stdout)
 
-var n, cycleV int
-var vis []bool
-var g [][]int
-var ans []int
-
 func main() {
 	defer out.Flush()
 
-	n = ni()
-	g = make([][]int, n)
-	for i := 0; i < n; i++ {
-		g[i] = make([]int, 0)
-	}
-	for i := 0; i < n; i++ {
-		u, v := i, ni()-1
-		g[u] = append(g[u], v)
+	n := ni()
+	a := make([]int, n+1)
+	for i := 1; i <= n; i++ {
+		a[i] = ni()
 	}
 
-	vis = make([]bool, n)
-	for i := 0; i < n; i++ {
-		if vis[i] {
+	s, mp := make([]int, 0), make(map[int]bool)
+	v := 1
+	for !mp[v] {
+		s = append(s, v)
+		mp[v] = true
+		v = a[v]
+	}
+
+	for i := 0; i < len(s); i++ {
+		if v != s[i] {
 			continue
 		}
-		if dfs(i, false) {
-			// cycleが検出された
-			vis = make([]bool, n)
-			ans = make([]int, 0)
-			dfs(cycleV, true)
-			fmt.Println(len(ans))
-			printIntLn(ans)
-			return
-		}
+		s = s[i:]
+		break
 	}
-}
 
-func dfs(v int, history bool) bool {
-	if history && !vis[v] {
-		ans = append(ans, v+1)
-	}
-	vis[v] = true
-	for _, nv := range g[v] {
-		if vis[nv] {
-			cycleV = nv
-			return true
-		}
-		if dfs(nv, history) {
-			return true
-		}
-	}
-	return false
+	fmt.Println(len(s))
+	printIntLn(s)
 }
 
 func init() {
