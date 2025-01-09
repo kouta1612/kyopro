@@ -35,10 +35,11 @@ func main() {
 
 	ans := make([]byte, n)
 	for i := 1; i <= m; i++ {
-		for j := 0; j < len(cpos[i])-1; j++ {
-			ans[cpos[i][j+1]] = s[cpos[i][j]]
+		l := len(cpos[i])
+		for j := 0; j < l; j++ {
+			ans[cpos[i][(j+1)%l]] = s[cpos[i][j]]
 		}
-		ans[cpos[i][0]] = s[cpos[i][len(cpos[i])-1]]
+		ans[cpos[i][0]] = s[cpos[i][l-1]]
 	}
 
 	fmt.Println(string(ans))
