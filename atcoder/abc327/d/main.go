@@ -53,7 +53,6 @@ func main() {
 				}
 				continue
 			}
-			num[nv] = 1 - num[v]
 			if !dfs(nv, 1-x) {
 				return false
 			}
