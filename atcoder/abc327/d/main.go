@@ -38,17 +38,20 @@ func main() {
 		g[v] = append(g[v], u)
 	}
 
-	num := make([]int, n)
+	color := make([]int, n)
 	for i := 0; i < n; i++ {
-		num[i] = -1
+		color[i] = -1
 	}
 
 	var dfs func(v, x int) bool
 	dfs = func(v, x int) bool {
-		num[v] = x
+		if color[v] != -1 {
+			return color[v] == x
+		}
+		color[v] = x
 		for _, nv := range g[v] {
-			if num[nv] != -1 {
-				if num[v] == num[nv] {
+			if color[nv] != -1 {
+				if color[v] == color[nv] {
 					return false
 				}
 				continue
@@ -61,7 +64,7 @@ func main() {
 	}
 
 	for i := 0; i < n; i++ {
-		if num[i] == -1 {
+		if color[i] == -1 {
 			if !dfs(i, 0) {
 				fmt.Println("No")
 				return
