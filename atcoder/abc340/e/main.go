@@ -28,7 +28,7 @@ func main() {
 	a := ni1d(n)
 	b := ni1d(m)
 
-	seg := newLazySegmentTree(a)
+	seg := newLazySegmentTree(a, sum, sum, sum, prod, 0, 0)
 	for i := 0; i < m; i++ {
 		pos := b[i]
 		s := seg.getsum(pos, pos+1)
@@ -55,12 +55,22 @@ func main() {
 
 // 遅延評価セグメント木
 type lazySegmentTree struct {
-	n          int
-	node, lazy []int
+	n              int
+	node, lazy     []int
+	fx, fa, fm, fp func(a, b int) int
+	ex, em         int
+}
+
+func sum(a, b int) int {
+	return a + b
+}
+
+func prod(a, b int) int {
+	return a * b
 }
 
 // 遅延評価セグメント木の構築
-func newLazySegmentTree(vs []int) *lazySegmentTree {
+func newLazySegmentTree(vs []int, fx, fa, fm, fp func(a, b int) int, ex, em int) *lazySegmentTree {
 	n := 1
 	for n < len(vs) {
 		n *= 2
@@ -71,10 +81,10 @@ func newLazySegmentTree(vs []int) *lazySegmentTree {
 		node[n-1+i] = vs[i]
 	}
 	for i := n - 2; i >= 0; i-- {
-		node[i] = node[i*2+1] + node[i*2+2]
+		node[i] = fx(node[i*2+1], node[i*2+2])
 	}
 
-	return &lazySegmentTree{n, node, lazy}
+	return &lazySegmentTree{n, node, lazy, fx, fa, fm, fp, ex, em}
 }
 
 // 区間[a,b)にxを加算
@@ -89,18 +99,18 @@ func (m *lazySegmentTree) getsum(a, b int) int {
 
 // 遅延評価
 func (m *lazySegmentTree) eval(k, l, r int) {
-	if m.lazy[k] == 0 {
+	if m.lazy[k] == m.em {
 		return
 	}
 
-	m.node[k] += m.lazy[k]
-
 	if r-l > 1 {
-		m.lazy[2*k+1] += m.lazy[k] / 2
-		m.lazy[2*k+2] += m.lazy[k] / 2
+		m.lazy[2*k+1] = m.fm(m.lazy[2*k+1], m.lazy[k])
+		m.lazy[2*k+2] = m.fm(m.lazy[2*k+2], m.lazy[k])
 	}
 
-	m.lazy[k] = 0
+	m.node[k] = m.fa(m.node[k], m.fp(m.lazy[k], r-l))
+
+	m.lazy[k] = m.em
 }
 
 /*
@@ -118,7 +128,7 @@ func (m *lazySegmentTree) mutate(a, b, x, k, l, r int) {
 
 	// 完全に被覆している
 	if a <= l && r <= b {
-		m.lazy[k] += x * (r - l)
+		m.lazy[k] = m.fm(m.lazy[k], x)
 		m.eval(k, l, r)
 		return
 	}
@@ -126,7 +136,7 @@ func (m *lazySegmentTree) mutate(a, b, x, k, l, r int) {
 	// それ以外
 	m.mutate(a, b, x, 2*k+1, l, (l+r)/2)
 	m.mutate(a, b, x, 2*k+2, (l+r)/2, r)
-	m.node[k] = m.node[2*k+1] + m.node[2*k+2]
+	m.node[k] = m.fx(m.node[2*k+1], m.node[2*k+2])
 }
 
 /*
@@ -139,7 +149,7 @@ func (m *lazySegmentTree) query(a, b, k, l, r int) int {
 
 	// 範囲外
 	if b <= l || r <= a {
-		return 0
+		return m.ex
 	}
 
 	// 完全に被覆している
@@ -150,7 +160,7 @@ func (m *lazySegmentTree) query(a, b, k, l, r int) int {
 	// それ以外
 	vl := m.query(a, b, 2*k+1, l, (l+r)/2)
 	vr := m.query(a, b, 2*k+2, (l+r)/2, r)
-	return vl + vr
+	return m.fx(vl, vr)
 }
 
 func init() {
