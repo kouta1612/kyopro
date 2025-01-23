@@ -25,7 +25,8 @@ func main() {
 		a[i] = 1<<31 - 1
 	}
 
-	seg := newLazySegmentTree(a, min_, change, change, no, 1<<31-1, 1<<31-1)
+	o := lazySegmentTreeOption{}
+	seg := newLazySegmentTree(a, o.min, o.change, o.change, o.nofp, 1<<31-1, 1<<31-1)
 	for qi := 0; qi < q; qi++ {
 		t := ni()
 		if t == 0 {
@@ -46,26 +47,35 @@ type lazySegmentTree struct {
 	ex, em         int
 }
 
-func sum(a, b int) int {
+type lazySegmentTreeOption struct{}
+
+func (m *lazySegmentTreeOption) sum(a, b int) int {
 	return a + b
 }
 
-func prod(a, b int) int {
-	return a * b
-}
-
-func min_(a, b int) int {
+func (m *lazySegmentTreeOption) min(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func change(a, b int) int {
+func (m *lazySegmentTreeOption) max(a, b int) int {
+	if a < b {
+		return b
+	}
+	return a
+}
+
+func (m *lazySegmentTreeOption) change(a, b int) int {
 	return b
 }
 
-func no(a, b int) int {
+func (m *lazySegmentTreeOption) fp(a, b int) int {
+	return a * b
+}
+
+func (m *lazySegmentTreeOption) nofp(a, b int) int {
 	return a
 }
 
