@@ -53,11 +53,13 @@ func main() {
 	printIntLn(ans)
 }
 
+// 遅延評価セグメント木
 type lazySegmentTree struct {
 	n          int
 	node, lazy []int
 }
 
+// 遅延評価セグメント木の構築
 func newLazySegmentTree(vs []int) *lazySegmentTree {
 	n := 1
 	for n < len(vs) {
@@ -75,6 +77,17 @@ func newLazySegmentTree(vs []int) *lazySegmentTree {
 	return &lazySegmentTree{n, node, lazy}
 }
 
+// 区間[a,b)にxを加算
+func (m *lazySegmentTree) add(a, b, x int) {
+	m.mutate(a, b, x, 0, 0, m.n)
+}
+
+// 区間[a,b)の総和を取得
+func (m *lazySegmentTree) getsum(a, b int) int {
+	return m.query(a, b, 0, 0, m.n)
+}
+
+// 遅延評価
 func (m *lazySegmentTree) eval(k, l, r int) {
 	if m.lazy[k] == 0 {
 		return
@@ -90,14 +103,11 @@ func (m *lazySegmentTree) eval(k, l, r int) {
 	m.lazy[k] = 0
 }
 
-func (m *lazySegmentTree) add(a, b, x int) {
-	m.mutate(a, b, x, 0, 0, m.n)
-}
-
-func (m *lazySegmentTree) getsum(a, b int) int {
-	return m.query(a, b, 0, 0, m.n)
-}
-
+/*
+内部データの区間にxだけ加算を行う
+区間[a,b): 要求区間(クエリで与えられる区間)
+区間[l,r): 対象区間(自ノードが管理する区間)
+*/
 func (m *lazySegmentTree) mutate(a, b, x, k, l, r int) {
 	m.eval(k, l, r)
 
@@ -119,6 +129,11 @@ func (m *lazySegmentTree) mutate(a, b, x, k, l, r int) {
 	m.node[k] = m.node[2*k+1] + m.node[2*k+2]
 }
 
+/*
+内部データから区間の総和を取得する
+区間[a,b): 要求区間(クエリで与えられる区間)
+区間[l,r): 対象区間(自ノードが管理する区間)
+*/
 func (m *lazySegmentTree) query(a, b, k, l, r int) int {
 	m.eval(k, l, r)
 
