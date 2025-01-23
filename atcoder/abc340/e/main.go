@@ -31,23 +31,23 @@ func main() {
 	seg := newLazySegmentTree(a)
 	for i := 0; i < m; i++ {
 		pos := b[i]
-		s := seg.getsum(pos, pos+1, 0, 0, seg.n)
-		seg.add(pos, pos+1, -s, 0, 0, seg.n)
+		s := seg.getsum(pos, pos+1)
+		seg.add(pos, pos+1, -s)
 
 		pos++
-		seg.add(0, seg.n, s/n, 0, 0, seg.n)
+		seg.add(0, seg.n, s/n)
 		s = s % n
 		if pos+s <= n {
-			seg.add(pos, pos+s, 1, 0, 0, seg.n)
+			seg.add(pos, pos+s, 1)
 		} else {
-			seg.add(pos, seg.n, 1, 0, 0, seg.n)
-			seg.add(0, pos+s-n, 1, 0, 0, seg.n)
+			seg.add(pos, seg.n, 1)
+			seg.add(0, pos+s-n, 1)
 		}
 	}
 
 	ans := make([]int, 0)
 	for i := 0; i < n; i++ {
-		ans = append(ans, seg.getsum(i, i+1, 0, 0, seg.n))
+		ans = append(ans, seg.getsum(i, i+1))
 	}
 
 	printIntLn(ans)
@@ -90,7 +90,15 @@ func (m *lazySegmentTree) eval(k, l, r int) {
 	m.lazy[k] = 0
 }
 
-func (m *lazySegmentTree) add(a, b, x, k, l, r int) {
+func (m *lazySegmentTree) add(a, b, x int) {
+	m.mutate(a, b, x, 0, 0, m.n)
+}
+
+func (m *lazySegmentTree) getsum(a, b int) int {
+	return m.query(a, b, 0, 0, m.n)
+}
+
+func (m *lazySegmentTree) mutate(a, b, x, k, l, r int) {
 	m.eval(k, l, r)
 
 	// 範囲外
@@ -106,12 +114,12 @@ func (m *lazySegmentTree) add(a, b, x, k, l, r int) {
 	}
 
 	// それ以外
-	m.add(a, b, x, 2*k+1, l, (l+r)/2)
-	m.add(a, b, x, 2*k+2, (l+r)/2, r)
+	m.mutate(a, b, x, 2*k+1, l, (l+r)/2)
+	m.mutate(a, b, x, 2*k+2, (l+r)/2, r)
 	m.node[k] = m.node[2*k+1] + m.node[2*k+2]
 }
 
-func (m *lazySegmentTree) getsum(a, b, k, l, r int) int {
+func (m *lazySegmentTree) query(a, b, k, l, r int) int {
 	m.eval(k, l, r)
 
 	// 範囲外
@@ -125,8 +133,8 @@ func (m *lazySegmentTree) getsum(a, b, k, l, r int) int {
 	}
 
 	// それ以外
-	vl := m.getsum(a, b, 2*k+1, l, (l+r)/2)
-	vr := m.getsum(a, b, 2*k+2, (l+r)/2, r)
+	vl := m.query(a, b, 2*k+1, l, (l+r)/2)
+	vr := m.query(a, b, 2*k+2, (l+r)/2, r)
 	return vl + vr
 }
 
