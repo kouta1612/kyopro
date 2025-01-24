@@ -31,23 +31,23 @@ func main() {
 	seg := newLazySegmentTree(a, sum, sum, sum, prod, 0, 0)
 	for i := 0; i < m; i++ {
 		pos := b[i]
-		s := seg.getsum(pos, pos+1)
-		seg.add(pos, pos+1, -s)
+		s := seg.query(pos, pos+1)
+		seg.update(pos, pos+1, -s)
 
 		pos++
-		seg.add(0, seg.n, s/n)
+		seg.update(0, seg.n, s/n)
 		s = s % n
 		if pos+s <= n {
-			seg.add(pos, pos+s, 1)
+			seg.update(pos, pos+s, 1)
 		} else {
-			seg.add(pos, seg.n, 1)
-			seg.add(0, pos+s-n, 1)
+			seg.update(pos, seg.n, 1)
+			seg.update(0, pos+s-n, 1)
 		}
 	}
 
 	ans := make([]int, 0)
 	for i := 0; i < n; i++ {
-		ans = append(ans, seg.getsum(i, i+1))
+		ans = append(ans, seg.query(i, i+1))
 	}
 
 	printIntLn(ans)
@@ -87,14 +87,14 @@ func newLazySegmentTree(vs []int, fx, fa, fm, fp func(a, b int) int, ex, em int)
 	return &lazySegmentTree{n, node, lazy, fx, fa, fm, fp, ex, em}
 }
 
-// 区間[a,b)にxを加算
-func (m *lazySegmentTree) add(a, b, x int) {
-	m.mutate(a, b, x, 0, 0, m.n)
+// 区間[a,b)にxだけ更新を行う
+func (m *lazySegmentTree) update(a, b, x int) {
+	m.update_sub(a, b, x, 0, 0, m.n)
 }
 
-// 区間[a,b)の総和を取得
-func (m *lazySegmentTree) getsum(a, b int) int {
-	return m.query(a, b, 0, 0, m.n)
+// 区間[a,b)の取得を行う
+func (m *lazySegmentTree) query(a, b int) int {
+	return m.query_sub(a, b, 0, 0, m.n)
 }
 
 // 遅延評価
@@ -114,11 +114,11 @@ func (m *lazySegmentTree) eval(k, l, r int) {
 }
 
 /*
-内部データの区間にxだけ加算を行う
+内部データの区間にxだけ更新を行う
 区間[a,b): 要求区間(クエリで与えられる区間)
 区間[l,r): 対象区間(自ノードが管理する区間)
 */
-func (m *lazySegmentTree) mutate(a, b, x, k, l, r int) {
+func (m *lazySegmentTree) update_sub(a, b, x, k, l, r int) {
 	m.eval(k, l, r)
 
 	// 範囲外
@@ -134,17 +134,17 @@ func (m *lazySegmentTree) mutate(a, b, x, k, l, r int) {
 	}
 
 	// それ以外
-	m.mutate(a, b, x, 2*k+1, l, (l+r)/2)
-	m.mutate(a, b, x, 2*k+2, (l+r)/2, r)
+	m.update_sub(a, b, x, 2*k+1, l, (l+r)/2)
+	m.update_sub(a, b, x, 2*k+2, (l+r)/2, r)
 	m.node[k] = m.fx(m.node[2*k+1], m.node[2*k+2])
 }
 
 /*
-内部データから区間の総和を取得する
+内部データから区間取得する
 区間[a,b): 要求区間(クエリで与えられる区間)
 区間[l,r): 対象区間(自ノードが管理する区間)
 */
-func (m *lazySegmentTree) query(a, b, k, l, r int) int {
+func (m *lazySegmentTree) query_sub(a, b, k, l, r int) int {
 	m.eval(k, l, r)
 
 	// 範囲外
@@ -158,8 +158,8 @@ func (m *lazySegmentTree) query(a, b, k, l, r int) int {
 	}
 
 	// それ以外
-	vl := m.query(a, b, 2*k+1, l, (l+r)/2)
-	vr := m.query(a, b, 2*k+2, (l+r)/2, r)
+	vl := m.query_sub(a, b, 2*k+1, l, (l+r)/2)
+	vr := m.query_sub(a, b, 2*k+2, (l+r)/2, r)
 	return m.fx(vl, vr)
 }
 
