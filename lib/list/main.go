@@ -1,17 +1,23 @@
 package main
 
 import (
-	"container/list"
 	"fmt"
+
+	"github.com/liyue201/gostl/ds/list/bidlist"
 )
 
 func main() {
-	list := list.New()
+	l := bidlist.New[int]()
+	l.PushBack(1)
+	l.PushFront(2)
+	l.PushFront(3)
+	l.PushBack(4)
+	for n := l.FrontNode(); n != nil; n = n.Next() {
+		fmt.Printf("%v ", n.Value)
+	}
+	fmt.Printf("\n")
 
-	now := list.PushBack(0)
-	_ = list.InsertAfter(1, now)
-
-	for v := list.Front(); v != nil; v = v.Next() {
-		fmt.Println(v.Value)
+	for n := l.BackNode(); n != nil; n = n.Prev() {
+		fmt.Printf("%v ", n.Value)
 	}
 }
