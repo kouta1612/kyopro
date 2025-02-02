@@ -49,7 +49,7 @@ func main() {
 				old[i][j] = INF
 			}
 		}
-		dp, old = old, dp
+		swap(&old, &dp)
 
 		for l := 0; l < len(old); l += 3 {
 			for i := 0; i < 8; i++ {
@@ -70,6 +70,10 @@ func main() {
 
 	ans := max(dp[0][0], dp[0][1])
 	fmt.Println(ans)
+}
+
+func swap[T any](a, b *T) {
+	*a, *b = *b, *a
 }
 
 func init() {
