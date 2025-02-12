@@ -17,6 +17,7 @@ func main() {
 
 	s.Erase(4)
 
+	// iter.Next()を実行するとiter内部のポインタが移動することに注意
 	for iter := s.Begin(); iter.IsValid(); iter.Next() {
 		fmt.Printf("%v\n", iter.Value())
 	}
