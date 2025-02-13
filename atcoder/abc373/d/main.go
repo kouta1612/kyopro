@@ -25,37 +25,16 @@ func main() {
 	defer out.Flush()
 
 	n, m := ni2()
-	g := newGraph(0, true, true)
+
+	uf := newUnionFind(n)
 	for i := 0; i < m; i++ {
 		u, v, c := ni()-1, ni()-1, ni()
-		g.addEdge(u, v, c)
-		g.addEdge(v, u, -c)
+		uf.unite(u, v, c)
 	}
 
 	ans := make([]int, n)
 	for i := 0; i < n; i++ {
-		ans[i] = INF
-	}
-
-	var dfs func(v int)
-	dfs = func(v int) {
-		if ans[v] == INF {
-			ans[v] = 0
-		}
-		for _, e := range g.datas[v] {
-			if ans[e.v] != INF {
-				continue
-			}
-			ans[e.v] = ans[v] + e.c
-			dfs(e.v)
-		}
-	}
-
-	for i := 0; i < n; i++ {
-		if ans[i] != INF {
-			continue
-		}
-		dfs(i)
+		ans[i] = uf.weight(i)
 	}
 
 	printIntLn(ans)
@@ -699,42 +678,52 @@ type unionfind struct {
 	// par[x]: 要素 x の親頂点の番号 (自身が根の場合は −1)
 	// rank[x]: 要素 x の属する根付き木の高さ
 	// siz[x]: 要素 x の属する根付き木に含まれる頂点数
-	par, rank, siz []int
+	// diff_weight[x]: 要素 x の親ノードとの値の差分
+	par, rank, siz, diff_weight []int
 }
 
 func newUnionFind(n int) *unionfind {
 	result := new(unionfind)
-	result.par, result.rank, result.siz = make([]int, n), make([]int, n), make([]int, n)
+	result.par, result.rank, result.siz, result.diff_weight = make([]int, n), make([]int, n), make([]int, n), make([]int, n)
 	for i := 0; i < n; i++ {
 		result.par[i] = -1
 		result.rank[i] = 0
 		result.siz[i] = 1
+		result.diff_weight[i] = 0
 	}
 	return result
 }
 
+// ノード x のグループID を取得
 func (u *unionfind) root(x int) int {
 	if u.par[x] == -1 {
 		return x
 	}
 	// 経路圧縮
-	u.par[x] = u.root(u.par[x])
-	return u.par[x]
+	rx := u.root(u.par[x])
+	u.diff_weight[x] += u.diff_weight[u.par[x]]
+	u.par[x] = rx
+	return rx
 }
 
+// ノード x とノード y が同じグループに存在するか判定
 func (u *unionfind) same(x, y int) bool {
 	return u.root(x) == u.root(y)
 }
 
-func (u *unionfind) unite(x, y int) bool {
+// weight(y) - weight(x) = w となるように merge する
+func (u *unionfind) unite(x, y, w int) bool {
 	rx, ry := u.root(x), u.root(y)
 	if rx == ry {
 		return false
 	}
 
+	w += u.weight(x) - u.weight(y)
+
 	// union by rank
 	if u.rank[x] < u.rank[y] {
 		rx, ry = ry, rx
+		w = -w
 	}
 	u.par[ry] = rx
 	if u.rank[rx] == u.rank[ry] {
@@ -742,9 +731,24 @@ func (u *unionfind) unite(x, y int) bool {
 	}
 	u.siz[rx] += u.siz[ry]
 
+	// rx が ry の親になるので diff_weight[ry]を更新
+	u.diff_weight[ry] = w
+
 	return true
 }
 
+// ノード x の重みを取得
+func (u *unionfind) weight(x int) int {
+	u.root(x)
+	return u.diff_weight[x]
+}
+
+// ノード x を基準にしたときのノード y の重みを取得
+func (u *unionfind) diff(x, y int) int {
+	return u.weight(y) - u.weight(x)
+}
+
+// ノード x が含まれるグループのサイズを取得
 func (u *unionfind) size(x int) int {
 	return u.siz[u.root(x)]
 }
