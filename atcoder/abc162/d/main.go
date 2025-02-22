@@ -51,9 +51,7 @@ func main() {
 			if s[j-d] == s[j] || s[j-d] == s[j+d] || s[j] == s[j+d] {
 				continue
 			}
-			if j-(j-d) == j+d-j {
-				ans--
-			}
+			ans--
 		}
 	}
 
