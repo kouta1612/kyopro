@@ -24,9 +24,16 @@ var out = bufio.NewWriter(os.Stdout)
 func main() {
 	defer out.Flush()
 
-	a, b, n := ni3()
-	c := min(b-1, n)
-	fmt.Println(a * c / b)
+	x := ni()
+
+	for i := -200; i <= 200; i++ {
+		for j := -200; j <= 200; j++ {
+			if i*i*i*i*i-j*j*j*j*j == x {
+				fmt.Printf("%v %v\n", i, j)
+				return
+			}
+		}
+	}
 }
 
 func init() {
