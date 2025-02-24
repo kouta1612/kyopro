@@ -30,27 +30,29 @@ func main() {
 		a[i]--
 	}
 
-	his, ord := make([]int, 0), make([]int, n)
+	to := make([][]int, 60)
+	for i := 0; i < 60; i++ {
+		to[i] = make([]int, n)
+	}
 	for i := 0; i < n; i++ {
-		ord[i] = -1
+		to[0][i] = a[i]
+	}
+
+	for i := 0; i < 59; i++ {
+		for j := 0; j < n; j++ {
+			to[i+1][j] = to[i][to[i][j]]
+		}
 	}
 
 	v := 0
-	for ord[v] == -1 {
-		ord[v] = len(his)
-		his = append(his, v)
-		v = a[v]
+	for i := 0; i < 60; i++ {
+		if k>>i&1 == 1 {
+			v = to[i][v]
+			k -= 1 << i
+		}
 	}
 
-	c, l := len(his)-ord[v], ord[v]
-
-	if k < l {
-		fmt.Println(his[k] + 1)
-	} else {
-		k -= l
-		k %= c
-		fmt.Println(his[l+k] + 1)
-	}
+	fmt.Println(v + 1)
 }
 
 func init() {
