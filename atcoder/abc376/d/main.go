@@ -25,10 +25,20 @@ func main() {
 	defer out.Flush()
 
 	n, m := ni2()
-	g := newGraph(m, false, true)
-
-	q, dist := make([]int, 0), make([]int, n)
+	g := make([][]int, n+1)
 	for i := 0; i < n; i++ {
+		g[i] = make([]int, 0)
+	}
+	for i := 0; i < m; i++ {
+		u, v := ni()-1, ni()-1
+		if v == 0 {
+			v = n
+		}
+		g[u] = append(g[u], v)
+	}
+
+	q, dist := make([]int, 0), make([]int, n+1)
+	for i := 0; i < n+1; i++ {
 		dist[i] = INF
 	}
 	q = append(q, 0)
@@ -37,24 +47,16 @@ func main() {
 	for len(q) > 0 {
 		v := q[0]
 		q = q[1:]
-		for _, e := range g.datas[v] {
-			if dist[e.v] != INF {
+		for _, nv := range g[v] {
+			if dist[nv] != INF {
 				continue
 			}
-			q = append(q, e.v)
-			dist[e.v] = dist[v] + 1
+			q = append(q, nv)
+			dist[nv] = dist[v] + 1
 		}
 	}
 
-	ans := INF
-	for i := 0; i < n; i++ {
-		for _, e := range g.datas[i] {
-			if e.v == 0 {
-				chmin(&ans, dist[i]+1)
-			}
-		}
-	}
-
+	ans := dist[n]
 	if ans == INF {
 		ans = -1
 	}
