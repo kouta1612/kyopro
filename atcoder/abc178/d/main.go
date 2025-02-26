@@ -24,32 +24,17 @@ var out = bufio.NewWriter(os.Stdout)
 func main() {
 	defer out.Flush()
 
-	s := ni()
+	n := ni()
 
-	mp := make(map[int]int)
-
-	var dfs func(rem int) int
-	dfs = func(rem int) int {
-		if _, ok := mp[rem]; ok {
-			return mp[rem]
+	dp := make([]mint, n+1)
+	dp[0] = 1
+	for i := 0; i < n+1; i++ {
+		for j := 0; j <= i-3; j++ {
+			dp[i] = dp[i].add(int(dp[j]))
 		}
-		if rem == 0 {
-			return 1
-		}
-
-		sum := mint(0)
-		for x := 3; x <= rem; x++ {
-			sum = sum.add(dfs(rem - x))
-		}
-
-		mp[rem] = int(sum)
-
-		return mp[rem]
 	}
 
-	dfs(s)
-
-	fmt.Println(mp[s])
+	fmt.Println(dp[n])
 }
 
 func init() {
