@@ -28,11 +28,14 @@ func main() {
 	a := ni1d(n)
 	sort.Ints(a)
 
-	ans, s := 0, 0
+	s := make([]int, n+1)
 	for i := 0; i < n; i++ {
-		ans += a[i] * i
-		ans -= s
-		s += a[i]
+		s[i+1] = s[i] + a[i]
+	}
+
+	ans := 0
+	for i := 0; i < n-1; i++ {
+		ans += (s[n] - s[i+1]) - (n-1-i)*a[i]
 	}
 
 	fmt.Println(ans)
