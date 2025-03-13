@@ -21,11 +21,26 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 var out = bufio.NewWriter(os.Stdout)
 
+type town struct {
+	i, c int
+}
+
 func main() {
 	defer out.Flush()
 
 	n, m := ni2()
-	a := ni1d(n)
+	a := make([]int, n)
+	for i := 0; i < n; i++ {
+		a[i] = ni()
+	}
+	ts := make([]town, n)
+	for i := 0; i < n; i++ {
+		ts[i] = town{i, a[i]}
+	}
+	sort.Slice(ts, func(i, j int) bool {
+		return ts[i].c < ts[j].c
+	})
+
 	g := make([][]int, n)
 	for i := 0; i < n; i++ {
 		g[i] = make([]int, 0)
@@ -35,20 +50,26 @@ func main() {
 		g[x] = append(g[x], y)
 	}
 
-	dp := make([]int, n)
-	for i := 0; i < n; i++ {
-		dp[i] = INF
-	}
-	for i := 0; i < n; i++ {
-		for _, v := range g[i] {
-			chmin(&dp[v], a[i])
-			chmin(&dp[v], dp[i])
-		}
-	}
-
 	ans := -INF
-	for i := 0; i < n; i++ {
-		chmax(&ans, a[i]-dp[i])
+	visited := make([]bool, n)
+	for _, t := range ts {
+		if visited[t.i] {
+			continue
+		}
+		q := []int{t.i}
+		for len(q) > 0 {
+			v := q[0]
+			q = q[1:]
+
+			for _, nv := range g[v] {
+				if visited[nv] {
+					continue
+				}
+				chmax(&ans, -t.c+a[nv])
+				visited[nv] = true
+				q = append(q, nv)
+			}
+		}
 	}
 
 	fmt.Println(ans)
