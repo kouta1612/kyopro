@@ -16,10 +16,13 @@ func isBalanced(root *TreeNode) bool {
 	if root == nil {
 		return true
 	}
-	if isBalanced(root.Left) && isBalanced(root.Right) && abs(dfs(root.Left)-dfs(root.Right)) <= 1 {
-		return true
+
+	left, right := dfs(root.Left), dfs(root.Right)
+	if abs(left-right) > 1 {
+		return false
 	}
-	return false
+
+	return isBalanced(root.Left) && isBalanced(root.Right)
 }
 
 func dfs(root *TreeNode) int {
