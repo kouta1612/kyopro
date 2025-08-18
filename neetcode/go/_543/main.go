@@ -16,15 +16,17 @@ func diameterOfBinaryTree(root *TreeNode) int {
 	if root == nil {
 		return 0
 	}
-	left, right := dfs(root.Left), dfs(root.Right)
-	res := left + right + 2
-	sub := max(diameterOfBinaryTree(root.Left), diameterOfBinaryTree(root.Right))
-	return max(res, sub)
+
+	res := 0
+	dfs(root, &res)
+	return res
 }
 
-func dfs(root *TreeNode) int {
+func dfs(root *TreeNode, res *int) int {
 	if root == nil {
 		return -1
 	}
-	return max(dfs(root.Left), dfs(root.Right)) + 1
+	left, right := dfs(root.Left, res), dfs(root.Right, res)
+	*res = max(*res, left+right+2)
+	return max(left, right) + 1
 }
