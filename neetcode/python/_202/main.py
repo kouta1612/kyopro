@@ -2,13 +2,13 @@ class Solution:
     def isHappy(self, n: int) -> bool:
         memo = set()
 
-        while n != 1:
-            n = digitSquareSum(n)
-            if n in memo:
-                return False
+        while n not in memo:
             memo.add(n)
+            n = digitSquareSum(n)
+            if n == 1:
+                return True
 
-        return True
+        return False
 
 
 def digitSquareSum(n: int) -> int:
@@ -18,6 +18,6 @@ def digitSquareSum(n: int) -> int:
         res += (n%10)**2
         n //= 10
 
-    return res    
+    return res 
 
 print(Solution().isHappy(19))
