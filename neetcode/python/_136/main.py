@@ -2,17 +2,12 @@ from typing import List
 
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
-        counts = dict()
+        keys = set()
         for num in nums:
-            if num not in counts.keys():
-                counts[num] = 1
+            if num in keys:
+                keys.remove(num)
             else:
-                counts[num] += 1
-
-        res = -1
-        for key, val in counts.items():
-            if val == 1:
-                return key
-        return -1
+                keys.add(num)
+        return list(keys)[0]
 
 print(Solution().singleNumber([4,1,2,1,2]))
