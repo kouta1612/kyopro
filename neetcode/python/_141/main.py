@@ -7,12 +7,13 @@ class ListNode:
 
 class Solution:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
-        mp = dict()
-        while head:
-            if head in mp:
+        seen = set()
+        cur = head
+        while cur:
+            if cur in seen:
                 return True
-            mp[head] = True
-            head = head.next
+            seen.add(cur)
+            cur = cur.next
         return False
 
 print(Solution().hasCycle(ListNode(3, ListNode(2, ListNode(0, ListNode(-4))))))
