@@ -7,22 +7,20 @@ class Node:
         self.random = random
 
 class Solution:
+    def __init__(self):
+        self.map = {None: None}
+
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
-        cur, mp = head, {None: None}
+        if head is None:
+            return None
+        if head in self.map:
+            return self.map[head]
 
-        while cur:
-            mp[cur] = Node(cur.val)
-            cur = cur.next
-        
-        cur = head
-        while cur:
-            copy = mp[cur]
-            copy.next = mp[cur.next]
-            copy.random = mp[cur.random]
-            cur = cur.next
+        copy = Node(head.val)
+        self.map[head] = copy
+        copy.next = self.copyRandomList(head.next)
+        copy.random = self.map[head.random]
 
-        return mp[head]
-
-
+        return self.map[head]
 
 print(Solution().copyRandomList(Node(1, Node(2, Node(3, Node(4, Node(5)))))))
