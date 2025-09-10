@@ -6,30 +6,23 @@ class Node:
         self.next = next
         self.random = random
 
-
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
-        if not head:
-            return None
+        cur, mp = head, {None: None}
 
-        origin = head
+        while cur:
+            mp[cur] = Node(cur.val)
+            cur = cur.next
+        
+        cur = head
+        while cur:
+            copy = mp[cur]
+            copy.next = mp[cur.next]
+            copy.random = mp[cur.random]
+            cur = cur.next
 
-        mp = dict()
-        while origin:
-            mp[origin] = Node(origin.val, origin.next, origin.random)
-            origin = origin.next
-        
-        origin = head
-        cur = mp[origin]
-        dummy = Node(0, cur)
-        while origin:
-            if origin.next in mp:
-                cur.next = mp[origin.next]
-            if origin.random in mp:
-                cur.random = mp[origin.random]
-            cur, origin = cur.next, origin.next
-        
-        return dummy.next
+        return mp[head]
+
 
 
 print(Solution().copyRandomList(Node(1, Node(2, Node(3, Node(4, Node(5)))))))
