@@ -7,21 +7,16 @@ class ListNode:
 
 class Solution:
     def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        pre, cur = ListNode(0, head), head
-        now = ListNode()
-        dummy = now
+        res = cur = head
         seen = set()
-
         while cur:
-            if cur.val in seen:
-                pre.next = cur.next
-            else:
-                seen.add(cur.val)
-                now.next = ListNode(cur.val)
-                now = now.next
-            pre = cur
+            seen.add(cur.val)
+            nxt = cur.next
+            while nxt and nxt.val in seen:
+                nxt = nxt.next
+            cur.next = nxt
             cur = cur.next
 
-        return dummy.next
+        return res
 
 print(Solution().deleteDuplicates(ListNode(1, ListNode(1, ListNode(2, ListNode(3, ListNode(3)))))))
