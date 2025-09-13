@@ -3,9 +3,8 @@ class Solution:
         stack = []
         mp = {'}': '{', ']': '[', ')': '(', '(': None, '[': None, '{': None}
         for char in s:
-            n = len(stack)
-            if n > 0 and mp[char] == stack[n-1]:
-                stack = stack[:n-1]
+            if stack and mp[char] == stack[-1]:
+                stack.pop()
             else:
                 stack.append(char)
         return len(stack) == 0
