@@ -1,3 +1,4 @@
+import queue
 from typing import Optional
 
 class TreeNode:
@@ -10,8 +11,19 @@ class Solution:
     def minDepth(self, root: Optional[TreeNode]) -> int:
         if not root:
             return 0
-        if not root.left or not root.right:
-            return 1 + max(self.minDepth(root.left), self.minDepth(root.right))
-        return 1 + min(self.minDepth(root.left), self.minDepth(root.right))
+        depth, q = 1, queue.Queue()
+        q.put(root)
+        while not q.empty():
+            num = q.qsize()
+            for i in range(num):
+                now = q.get()
+                if not now.left and not now.right:
+                    return depth
+                if now.left:
+                    q.put(now.left)
+                if now.right:
+                    q.put(now.right)
+            depth += 1
+        return depth
 
 print(Solution().minDepth(TreeNode(3, TreeNode(9), TreeNode(20, TreeNode(15), TreeNode(7)))))
