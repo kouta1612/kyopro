@@ -8,14 +8,12 @@ class TreeNode:
 
 class Solution:
     def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
-        def helper(root: Optional[TreeNode], cursum: int) -> bool:
-            if root and not root.left and not root.right:
-                return targetSum == cursum
-            left = helper(root.left, cursum + root.left.val) if root.left else False
-            right = helper(root.right, cursum + root.right.val) if root.right else False
-            return left or right
         if not root:
             return False
-        return helper(root, root.val)
+        if not root.left and not root.right:
+            return targetSum == root.val
+        left = self.hasPathSum(root.left, targetSum - root.val)
+        right = self.hasPathSum(root.right, targetSum - root.val)
+        return left or right
 
 print(Solution().hasPathSum(TreeNode(5, TreeNode(4, TreeNode(11, TreeNode(7), TreeNode(2))), TreeNode(8, TreeNode(13), TreeNode(4, None, TreeNode(1)))), 22))
