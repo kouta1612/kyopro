@@ -1,13 +1,12 @@
 from typing import List
 
-
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        res, buy = 0, prices[0]
-        for sell in prices:
-            res = max(res, sell-buy)
-            buy = min(buy, sell)
-
+        best = prices[0]
+        res = 0
+        for i in range(1, len(prices)):
+            res = max(res, prices[i] - best)
+            best = min(best, prices[i])
         return res
 
 print(Solution().maxProfit([7,1,5,3,6,4]))
