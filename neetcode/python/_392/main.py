@@ -1,18 +1,11 @@
 class Solution:
     def isSubsequence(self, s: str, t: str) -> bool:
-        if s == t:
-            return True
-        ti = 0
-        for i in range(len(s)):
-            found = False
-            for j in range(ti, len(t)):
-                if s[i] == t[j]:
-                    ti = j + 1
-                    found = True
-                    break
-            if not found:
-                return False
-        return True
+        si, ti = 0, 0
+        while si < len(s) and ti < len(t):
+            if s[si] == t[ti]:
+                si += 1
+            ti += 1
+        return si == len(s)
 
 print(Solution().isSubsequence("abc", "ahbgdc"))
 print(Solution().isSubsequence("axc", "ahbgdc"))
