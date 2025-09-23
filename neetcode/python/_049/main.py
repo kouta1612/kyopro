@@ -6,9 +6,6 @@ class Solution:
         for s in strs:
             v = ''.join(sorted(s))
             mp[v] = mp.get(v, []) + [s]
-        res = []
-        for v in mp.values():
-            res.append(v)
-        return res
+        return list(mp.values())
 
 print(Solution().groupAnagrams(["eat", "tea", "tan", "ate", "nat", "bat"]))
