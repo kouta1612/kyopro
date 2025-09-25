@@ -1,4 +1,5 @@
 from typing import Optional, List
+from collections import deque
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -8,19 +9,22 @@ class TreeNode:
 
 class Solution:
     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        mapLevelToValue = dict()
+        if not root:
+            return []
 
-        def dfs(root: Optional[TreeNode], level: int):
-            if not root:
-                return
-            mapLevelToValue[level] = mapLevelToValue.get(level, []) + [root.val]
-            dfs(root.left, level + 1)
-            dfs(root.right, level + 1)
+        mp, q = dict(), deque()
+        q.append([root, 0])
 
-        dfs(root, 0)
-        res = [[]] * len(mapLevelToValue)
-        print(mapLevelToValue)
-        for k, v in mapLevelToValue.items():
+        while len(q) > 0:
+            now = q.popleft()
+            mp[now[1]] = mp.get(now[1], []) + [now[0].val]
+            if now[0].left:
+                q.append([now[0].left, now[1] + 1])
+            if now[0].right:
+                q.append([now[0].right, now[1] + 1])
+
+        res = [[]] * len(mp)
+        for k, v in mp.items():
             res[k] = v
         return res
         
