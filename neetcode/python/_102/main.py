@@ -13,10 +13,7 @@ class Solution:
         def dfs(root: Optional[TreeNode], level: int):
             if not root:
                 return
-            if level in mapLevelToValue:
-                mapLevelToValue[level].append(root.val)
-            else:
-                mapLevelToValue[level] = [root.val]
+            mapLevelToValue[level] = mapLevelToValue.get(level, []) + [root.val]
             dfs(root.left, level + 1)
             dfs(root.right, level + 1)
 
