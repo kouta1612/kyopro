@@ -12,20 +12,17 @@ class Solution:
         if not root:
             return []
 
-        mp, q = dict(), deque()
-        q.append([root, 0])
+        res, q = [], deque()
+        q.append(root)
 
         while len(q) > 0:
-            now = q.popleft()
-            mp[now[1]] = mp.get(now[1], []) + [now[0].val]
-            if now[0].left:
-                q.append([now[0].left, now[1] + 1])
-            if now[0].right:
-                q.append([now[0].right, now[1] + 1])
-
-        res = [[]] * len(mp)
-        for k, v in mp.items():
-            res[k] = v
+            vs = []
+            for _ in range(len(q)):
+                now = q.popleft()
+                vs.append(now.val)
+                q.append(now.left) if now.left else None
+                q.append(now.right) if now.right else None
+            res.append(vs)
         return res
         
 print(Solution().levelOrder(None))
