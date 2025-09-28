@@ -6,10 +6,9 @@ class Solution:
         dp[0] = True
         for i in range(len(s) + 1):
             for w in wordDict:
-                if i - len(w) >= 0 and s[i-len(w):i] == w:
-                    dp[i] = dp[i-len(w)]
-                if dp[i]:
-                    break
+                if i + len(w) <= len(s) and s[i:i+len(w)] == w and dp[i]:
+                    dp[i+len(w)] = dp[i]
         return dp[len(s)]
+
 
 print(Solution().wordBreak("leetcode", ["leet", "code"]))
