@@ -5,10 +5,13 @@ class Solution:
         l, r = 0, len(nums) - 1
         while l < r:
             mid = (l + r) // 2
-            if nums[mid] <= nums[r]:
-                r = mid
+            if nums[l] <= nums[mid]:
+                if nums[l] <= nums[r]:
+                    return nums[l]
+                else:
+                    l = mid + 1
             else:
-                l = mid + 1
+                r = mid
         return nums[l]
 print(Solution().findMin([3,4,5,1,2]))
 print(Solution().findMin([4,5,6,7,0,1,2]))
