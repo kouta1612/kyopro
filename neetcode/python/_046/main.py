@@ -2,16 +2,15 @@ from typing import List
 
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        if len(nums) == 0:
-            return [[]]
-
-        res = []
-        perms = self.permute(nums[1:])
-        for p in perms:
-            for i in range(len(p) + 1):
-                pcopy  = p[:]
-                pcopy.insert(i, nums[0])
-                res.append(pcopy)
-        return res
+        perms = [[]]
+        for num in nums:
+            newPerms = []
+            for p in perms:
+                for i in range(len(p) + 1):
+                    copyPerm = p[:]
+                    copyPerm.insert(i, num)
+                    newPerms.append(copyPerm)
+            perms = newPerms
+        return perms
 
 print(Solution().permute([1,2,3]))
