@@ -14,13 +14,13 @@ class Solution:
             i += 1
             sign = -1
 
-        res = 0
+        res, MIN, MAX = 0, -2**31, 2**31-1
         while i < len(s) and s[i].isdigit():
             res = res * 10 + int(s[i])
-            if sign * res < -2**31:
-                return -2**31
-            if sign * res > 2**31-1:
-                return 2**31-1
+            if sign * res < MIN:
+                return MIN
+            if sign * res > MAX:
+                return MAX
             i += 1
         
         return res * sign
