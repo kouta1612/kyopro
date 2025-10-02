@@ -7,16 +7,13 @@ class ListNode:
 
 class Solution:
     def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        if head == None:
-            return None
+        pre, cur = None, head
 
-        now, nxt = None, head
-        while nxt != None:
-            tmp = nxt.next
-            nxt.next = now
-            now = nxt
-            nxt = tmp
+        while cur:
+            tmp = cur.next
+            cur.next = pre
+            pre, cur = cur, tmp
 
-        return now
+        return pre
 
 print(Solution().reverseList(ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))))
