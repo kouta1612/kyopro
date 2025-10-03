@@ -8,14 +8,12 @@ class TreeNode:
 
 class Solution:
     def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:
-        def helper(left, right: int) -> Optional[TreeNode]:
-            if left == right:
-                return None
-            mid = (left + right) // 2
-            root = TreeNode(nums[mid])
-            root.left = helper(left, mid)
-            root.right = helper(mid + 1, right)
-            return root
-        return helper(0, len(nums))
+        if len(nums) == 0: return None
+
+        mid = len(nums) // 2
+        node = TreeNode(nums[mid])
+        left, right = self.sortedArrayToBST(nums[:mid]), self.sortedArrayToBST(nums[mid + 1:])
+        node.left, node.right = left, right
+        return node
 
 print(Solution().sortedArrayToBST([-10,-3,0,5,9]))
