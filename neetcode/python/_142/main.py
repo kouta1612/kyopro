@@ -14,8 +14,9 @@ class Solution:
         if not (fast and fast.next): return None
 
         slow = head
-        while True:
-            if slow is fast: return slow
+        while slow != fast:
             slow, fast = slow.next, fast.next
+        
+        return slow
 
 print(Solution().detectCycle(ListNode(3, ListNode(2, ListNode(0, ListNode(-4))))))
