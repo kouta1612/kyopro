@@ -7,19 +7,18 @@ class ListNode:
 
 class Solution:
     def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        if not head:
-            return None
+        if not head or not head.next: return None
 
-        slow = fast = head
-        while True:
-            if not fast.next or not fast.next.next:
-                return None
+        slow, fast = head, head
+        while fast and fast.next:
             slow, fast = slow.next, fast.next.next
-            if slow == fast:
-                break
-        fast = head
-        while fast != slow:
+            if slow is fast: break
+
+        if slow is not fast: return None
+
+        slow = head
+        while True:
+            if slow is fast: return slow
             slow, fast = slow.next, fast.next
-        return slow
 
 print(Solution().detectCycle(ListNode(3, ListNode(2, ListNode(0, ListNode(-4))))))
