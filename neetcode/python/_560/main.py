@@ -2,13 +2,11 @@ from typing import List
 
 class Solution:
     def subarraySum(self, nums: List[int], k: int) -> int:
-        res, counters = 0, {0: 1}
-        sums = 0
+        res, sums, counters = 0, 0, {0: 1}
 
         for i in range(len(nums)):
             sums += nums[i]
-            key = sums - k
-            res += counters.get(key, 0)
+            res += counters.get(sums - k, 0)
             counters[sums] = counters.get(sums, 0) + 1
 
         return res
