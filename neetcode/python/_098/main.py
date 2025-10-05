@@ -8,12 +8,10 @@ class TreeNode:
 
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        def valid(node: Optional[TreeNode], left, right: int) -> bool:
-            if not node:
-                return True
-            if not (left < node.val < right):
-                return False
-            return valid(node.left, left, node.val) and valid(node.right, node.val, right)
-        return valid(root, -1e32, 1e32)
+        def helper(node: Optional[TreeNode], left, right: int) -> bool:
+            if not node: return True
+            if not (left < node.val < right): return False
+            return helper(node.left, left, node.val) and helper(node.right, node.val, right)
+        return helper(root, -1<<32, 1<<32)
 
 print(Solution().isValidBST(None))
