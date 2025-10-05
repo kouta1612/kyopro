@@ -11,9 +11,9 @@ class Solution:
         if not preorder or not inorder: return None
         
         res = TreeNode(preorder[0])
-        i = inorder.index(preorder[0])
-        res.left = self.buildTree(preorder[1:1+i], inorder[:i])
-        res.right = self.buildTree(preorder[1+i:], inorder[i + 1:])
+        mid = inorder.index(preorder[0])
+        res.left = self.buildTree(preorder[1:1+mid], inorder[:mid])
+        res.right = self.buildTree(preorder[1+mid:], inorder[mid + 1:])
         return res
 
 print(Solution().buildTree([3,9,20,15,7], [9,3,15,20,7]))
