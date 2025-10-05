@@ -6,12 +6,8 @@ class Solution:
         res = []
         for num in nums:
             if res and res[-1] >= num:
-                l, r = 0, len(res) - 1
-                while l < r:
-                    mid = (l + r) // 2
-                    if res[mid] >= num: r = mid
-                    else: l = mid + 1
-                res[l] = num
+                key = bisect_left(res, num)
+                res[key] = num
             else: res.append(num)
         return len(res)
 
