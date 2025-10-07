@@ -2,13 +2,22 @@ from typing import List
 
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        dp = [amount + 1] * (amount + 1)
-        dp[0] = 0
-        for i in range(1, amount + 1):
+        memo = {}
+
+        def helper(amount: int) -> int:
+            if amount == 0: return 0
+            if amount < 0 : return -1
+            if amount in memo: return memo[amount]
+
+            res = 1<<32
             for coin in coins:
-                if i-coin >= 0:
-                    dp[i] = min(dp[i], dp[i-coin] + 1)
-        return dp[amount] if dp[amount] != amount + 1 else -1
+                num = helper(amount - coin)
+                if num == -1: continue
+                res = min(res, 1 + num)
+            memo[amount] = res if res != 1<<32 else -1
+            return memo[amount]
+        return helper(amount)
+
 print(Solution().coinChange([1,2,5], 11))
 print(Solution().coinChange([2], 3))
 print(Solution().coinChange([1], 0))
