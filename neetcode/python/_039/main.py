@@ -10,13 +10,14 @@ class Solution:
                 return
             if sum > target:
                 return
-            if i > len(candidates):
+            if i >= len(candidates):
                 return
             
-            for j in range(i, len(candidates)):
-                comb.append(candidates[j])
-                helper(j, sum + candidates[j], comb)
-                comb.pop()
+            helper(i + 1, sum, comb)
+
+            comb.append(candidates[i])
+            helper(i, sum + candidates[i], comb)
+            comb.pop()
         helper(0, 0, [])
         return res
 
