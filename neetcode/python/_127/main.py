@@ -3,24 +3,23 @@ from collections import deque
 
 class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
-        uniq, visited, q = set(wordList), set([beginWord]), deque([beginWord])
-        res = 1
-        if endWord not in uniq:
-            return 0
-        
+        if endWord not in wordList: return 0
+
+        wordSet, seen, q, res = set(wordList), set(), deque([beginWord]), 1
         while len(q) > 0:
             size = len(q)
             for _ in range(size):
-                word = q.popleft()
-                if word == endWord: return res
-                for i in range(len(word)):
-                    for j in range(ord('a'), ord('z') + 1):
-                        w = word[:i] + chr(j) + word[i + 1:]
-                        if w in uniq and w not in visited:
-                            q.append(w)
-                            visited.add(w)
+                v = q.popleft()
+                if v == endWord: return res
+                for i in range(len(v)):
+                    for o in range(ord('a'), ord('z') + 1):
+                        s = v[:i] + chr(o) + v[i+1:]
+                        if s in wordSet and s not in seen:
+                            q.append(s)
+                            seen.add(s)
             res += 1
         return 0
+
 print(Solution().ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"]))
 print(Solution().ladderLength("hit", "cog", ["hot","dot","dog","lot","log"]))
 print(Solution().ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"]))
