@@ -10,13 +10,12 @@ class Solution:
         slow, fast = head, head
         while fast and fast.next:
             slow, fast = slow.next, fast.next.next
-            if slow is fast: break
+            if slow == fast: break
         else: return None
 
         slow = head
         while slow != fast:
             slow, fast = slow.next, fast.next
-        
         return slow
 
 print(Solution().detectCycle(ListNode(3, ListNode(2, ListNode(0, ListNode(-4))))))
