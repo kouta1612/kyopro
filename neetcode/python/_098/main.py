@@ -11,7 +11,10 @@ class Solution:
         def helper(node: Optional[TreeNode], left, right: int) -> bool:
             if not node: return True
             if not (left < node.val < right): return False
-            return helper(node.left, left, node.val) and helper(node.right, node.val, right)
-        return helper(root, -1<<32, 1<<32)
+
+            lt = helper(node.left, left, node.val)
+            rt = helper(node.right, node.val, right)
+            return lt and rt
+        return helper(root, float(-inf), float(inf))
 
 print(Solution().isValidBST(None))
