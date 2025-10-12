@@ -2,11 +2,15 @@ from typing import List
 
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        return max(nums[0], self.helper(nums[1:]), self.helper(nums[:len(nums)-1]))
+        def helper(moneys: List[int]) -> int:
+            if not moneys: return 0
+            if len(moneys) == 1: return moneys[0]
 
-    def helper(self, nums: List[int]) -> int:
-        rob1, rob2 = 0, 0
-        for num in nums:
-            rob1, rob2 = rob2, max(num + rob1, rob2)
-        return rob2
+            dp = [0] * (len(moneys) + 1)
+            dp[1] = moneys[0]
+            for i in range(1, len(moneys)):
+                dp[i + 1] = max(dp[i], dp[i-1] + moneys[i])
+            return dp[len(moneys)]
+        return max(nums[0], helper(nums[1:]), helper(nums[:-1]))
+
 print(Solution().rob([1,2,3,1]))
