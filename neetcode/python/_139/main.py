@@ -4,9 +4,12 @@ class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         dp = [False] * (len(s) + 1)
         dp[0] = True
-        for i in range(len(s) + 1):
+
+        wordSet = set(wordDict)
+        for i in range(1, len(s) + 1):
             for word in wordDict:
-                if i - len(word) >= 0 and s[i-len(word):i] == word and dp[i-len(word)]:
+                size = i - len(word)
+                if size >= 0 and dp[size] and s[size:i] in wordSet: 
                     dp[i] = True
                     break
         return dp[len(s)]
