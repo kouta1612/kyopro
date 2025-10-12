@@ -15,6 +15,6 @@ class Solution:
             lt = helper(node.left, left, node.val)
             rt = helper(node.right, node.val, right)
             return lt and rt
-        return helper(root, float(-inf), float(inf))
+        return helper(root, -1<<32, 1<<32)
 
 print(Solution().isValidBST(None))
