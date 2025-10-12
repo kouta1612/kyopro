@@ -1,3 +1,4 @@
+import string
 from typing import List
 from collections import deque
 
@@ -11,8 +12,8 @@ class Solution:
                 now = q.popleft()
                 if now == endWord: return res
                 for i in range(len(now)):
-                    for o in range(ord('a'), ord('z') + 1):
-                        s = now[:i] + chr(o) + now[i + 1:]
+                    for c in string.ascii_lowercase:
+                        s = now[:i] + c + now[i + 1:]
                         if s in wordSet and s not in seen:
                             q.append(s)
                             seen.add(s)
