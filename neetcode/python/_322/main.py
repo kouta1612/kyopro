@@ -2,14 +2,18 @@ from typing import List
 
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        dp = [1<<15] * (amount + 1)
-        dp[0] = 0
+        self.memo = {0: 0}
+        def helper(rem: int) -> int:
+            if rem < 0: return 1<<32
+            if rem in self.memo: return self.memo[rem]
 
-        for i in range(1, amount + 1):
+            best = 1<<32
             for coin in coins:
-                if i-coin < 0: continue
-                dp[i] = min(dp[i], 1 + dp[i-coin])
-        return dp[amount] if dp[amount] != 1<<15 else -1
+                num = helper(rem - coin)
+                best = min(best, num + 1)
+            self.memo[rem] = best
+            return self.memo[rem]
+        return -1 if helper(amount) == 1<<32 else self.memo[amount]
 
 print(Solution().coinChange([1,2,5], 11))
 print(Solution().coinChange([2], 3))
