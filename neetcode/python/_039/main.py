@@ -2,21 +2,15 @@ from typing import List
 
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
-        res = []
-        def helper(i, sum: int, comb: List[int]):
-            if sum == target:
-                res.append(comb[:])
-                return
-            if sum > target: return
-            if i >= len(candidates): return
-
-            helper(i + 1, sum, comb)
-
-            comb.append(candidates[i])
-            helper(i, sum + candidates[i], comb)
-            comb.pop()
-        helper(0, 0, [])
-        return res
+        dp = [[] for _ in range(target + 1)]
+        dp[0] = [[]]
+        for c in candidates:
+            for i in range(c, target + 1):
+                for comb in dp[i - c]:
+                    newComb = comb[:]
+                    newComb.append(c)
+                    dp[i].append(newComb)
+        return dp[target]
 
 print(Solution().combinationSum([2,3,6,7], 7))
 print(Solution().combinationSum([2,3,5], 8))
