@@ -7,14 +7,17 @@ class Solution:
         freq = defaultdict(int)
         for num in nums:
             freq[num] += 1
-        q = []
-        for key, v in freq.items():
-            heappush(q, (-v, key))
+        counters = [[] for _ in range(len(nums) + 1)]
+        for v, c in freq.items():
+            counters[c].append(v)
 
         res = []
-        while len(res) < k:
-            v = heappop(q)
-            res.append(v[1])
-        return res
+        for c in range(len(nums), -1, -1):
+            if not counters[c]: continue
+            for v in counters[c]:
+                res.append(v)
+                if len(res) >= k:
+                    return res
+        
 
 print(Solution().topKFrequent([1, 1, 1, 2, 2, 3], 2))
