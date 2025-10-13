@@ -12,9 +12,6 @@ class ListNode:
 #         self.next = next
 class Solution:
     def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
-        if not list1: return list2
-        if not list2: return list1
-
         dummy = ListNode()
         cur = dummy
         
@@ -26,7 +23,7 @@ class Solution:
                 cur.next = list2
                 list2 = list2.next
             cur = cur.next
-        cur.next = list1 if not list2 else list2
+        cur.next = list1 or list2
 
         return dummy.next
 
