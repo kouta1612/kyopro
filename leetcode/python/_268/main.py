@@ -2,11 +2,11 @@ from typing import List
 
 class Solution:
     def missingNumber(self, nums: List[int]) -> int:
-        xor, n = len(nums), len(nums)
-
-        for i in range(n):
-            xor ^= i ^ nums[i]
-        
-        return xor
+        res = 0
+        for i in range(len(nums) + 1):
+            res ^= i
+        for num in nums:
+            res ^= num
+        return res
 
 print(Solution().missingNumber([3,0,1]))
