@@ -1,22 +1,19 @@
 from heapq import heappush, heappop
 from typing import List
+from collections import defaultdict
 
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        mp = dict()
+        freq = defaultdict(int)
         for num in nums:
-            if num in mp:
-                mp[num] += 1
-            else:
-                mp[num] = 1
-        
-        heap = []
-        for key, c in mp.items():
-            heappush(heap, (-c, key))
-        
+            freq[num] += 1
+        q = []
+        for key, v in freq.items():
+            heappush(q, (-v, key))
+
         res = []
-        for i in range(k):
-            v = heappop(heap)
+        while len(res) < k:
+            v = heappop(q)
             res.append(v[1])
         return res
 
