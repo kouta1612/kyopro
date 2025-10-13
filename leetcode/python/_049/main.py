@@ -1,15 +1,13 @@
 from typing import List
+from collections import defaultdict
 
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-        wordDict = dict()
+        dic = defaultdict(list)
         for s in strs:
-            anagram = ''.join(sorted(s))
-            if anagram not in wordDict: wordDict[anagram] = []
-            wordDict[anagram].append(s)
-        res = []
-        for v in wordDict.values():
-            res.append(v)
-        return res
+            freq = [0] * 26
+            for c in s: freq[ord(c) - ord('a')] += 1
+            dic[tuple(freq)].append(s)
+        return list(dic.values())
 
 print(Solution().groupAnagrams(["eat", "tea", "tan", "ate", "nat", "bat"]))
