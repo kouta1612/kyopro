@@ -4,7 +4,6 @@ class Solution:
         for c in s:
             if c.isalnum(): alnum += c
         alnum = alnum.lower()
-        alnum.replace(" ", "")
 
         i, j = 0, len(alnum) - 1
         while i < j:
