@@ -1,9 +1,8 @@
 class Solution:
     def hammingWeight(self, n: int) -> int:
-        cnt = 0
+        res = 0
         for i in range(32):
-            if n & 1<<i > 0:
-                cnt += 1
-        return cnt
+            if n & 1<<i > 0: res += 1
+        return res
 
 print(Solution().hammingWeight(11))
