@@ -7,13 +7,10 @@ class ListNode:
 
 class Solution:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
-        seen = set()
-        cur = head
-        while cur:
-            if cur in seen:
-                return True
-            seen.add(cur)
-            cur = cur.next
-        return False
+        slow, fast = head, head
+        while fast and fast.next:
+            slow, fast = slow.next, fast.next.next
+            if slow == fast: return True
+        else: return False
 
 print(Solution().hasCycle(ListNode(3, ListNode(2, ListNode(0, ListNode(-4))))))
