@@ -7,23 +7,23 @@ class ListNode:
 
 class Solution:
     def reorderList(self, head: Optional[ListNode]) -> None:
-        if head is None:
-            return
+        slow, fast = head, head.next
+        while fast and fast.next:
+            slow, fast = slow.next, fast.next.next
+        
+        second = slow.next
+        slow.next = None
+        pre = None
+        while second:
+            tmp = second.next
+            second.next = pre
+            pre, second = second, tmp
 
-        nodes, cur = [], head
-        while cur:
-            nodes.append(cur)
-            cur = cur.next
-        
-        i, j = 0, len(nodes)-1
-        while i < j:
-            nodes[i].next = nodes[j]
-            i += 1
-            if i == j:
-                break
-            nodes[j].next = nodes[i]
-            j -= 1
-        
-        nodes[i].next = None
+        first, second = head, pre
+        while second:
+            tmp1, tmp2 = first.next, second.next
+            first.next, second.next = second, tmp1
+            first, second = tmp1, tmp2
+
 
 print(Solution().reorderList(ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))))
