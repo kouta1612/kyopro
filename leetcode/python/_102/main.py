@@ -9,20 +9,18 @@ class TreeNode:
 
 class Solution:
     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        if not root:
-            return []
-
-        res, q = [], deque()
-        q.append(root)
-
-        while len(q) > 0:
-            vs = []
-            for _ in range(len(q)):
-                now = q.popleft()
-                vs.append(now.val)
-                q.append(now.left) if now.left else None
-                q.append(now.right) if now.right else None
-            res.append(vs)
+        res = []
+        q = deque([root])
+        while q:
+            size = len(q)
+            vals = []
+            for _ in range(size):
+                node = q.popleft()
+                if node: vals.append(node.val)
+                if node and node.left: q.append(node.left)
+                if node and node.right: q.append(node.right)
+            if vals: res.append(vals)
         return res
-        
+
 print(Solution().levelOrder(None))
+print(Solution().levelOrder(TreeNode(1, TreeNode(2), TreeNode(3))))
