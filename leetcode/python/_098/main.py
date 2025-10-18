@@ -12,9 +12,7 @@ class Solution:
             if not node: return True
             if not (left < node.val < right): return False
 
-            lt = helper(node.left, left, node.val)
-            rt = helper(node.right, node.val, right)
-            return lt and rt
+            return helper(node.left, left, node.val) and helper(node.right, node.val, right)
         return helper(root, -1<<32, 1<<32)
 
 print(Solution().isValidBST(None))
