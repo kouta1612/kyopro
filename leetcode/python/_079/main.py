@@ -3,18 +3,16 @@ from typing import List
 class Solution:
     dx, dy = [1, 0, -1, 0], [0, 1, 0, -1]
     def exist(self, board: List[List[str]], word: str) -> bool:
-        seen = set()
         def dfs(r, c, i: int):
             if i >= len(word): return True
             if r < 0 or c < 0 or r >= len(board) or c >= len(board[0]):
                 return False
-            if (r, c) in seen: return False
             if word[i] != board[r][c]: return False
 
-            seen.add((r, c))
+            tmp, board[r][c] = board[r][c], "#"
             for j in range(4):
                 if dfs(r + self.dx[j], c + self.dy[j], i + 1): return True
-            seen.remove((r, c))
+            board[r][c] = tmp
             return False
         
         for i in range(len(board)):
