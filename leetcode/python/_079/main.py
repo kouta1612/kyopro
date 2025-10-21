@@ -1,3 +1,5 @@
+from typing import List
+
 class Solution:
     dx, dy = [1, 0, -1, 0], [0, 1, 0, -1]
     def exist(self, board: List[List[str]], word: str) -> bool:
@@ -9,12 +11,11 @@ class Solution:
             if (r, c) in seen: return False
             if word[i] != board[r][c]: return False
 
-            res = False
             seen.add((r, c))
             for j in range(4):
-                res |= dfs(r + self.dx[j], c + self.dy[j], i + 1)
+                if dfs(r + self.dx[j], c + self.dy[j], i + 1): return True
             seen.remove((r, c))
-            return res
+            return False
         
         for i in range(len(board)):
             for j in range(len(board[0])):
