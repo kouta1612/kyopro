@@ -5,9 +5,9 @@ class Node:
 
 from typing import Optional
 class Solution:
-    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+    def cloneGraph(self, node: Optional[Node]) -> Optional[Node]:
         mp = {}
-        def dfs(node: Optional['Node']):
+        def dfs(node: Optional[Node]):
             if node in mp: return mp[node]
             if not node: return None
             copy = Node(node.val)
