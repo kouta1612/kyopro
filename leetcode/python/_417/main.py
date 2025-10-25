@@ -19,9 +19,6 @@ class Solution:
         for c in range(COLS):
             dfs(0, c, pacific)
             dfs(ROWS-1, c, atlantic)
-        res = []
-        for v in pacific:
-            if v in atlantic: res.append(v)
-        return res
+        return list(pacific & atlantic)
 
 print(Solution().pacificAtlantic([[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]))
