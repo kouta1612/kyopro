@@ -4,11 +4,11 @@ class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
         intervals.sort()
         res = []
-        for interval in intervals:
-            if not res or res[-1][1] < interval[0]: 
-                res.append([interval[0], interval[1]])
+        for start, end in intervals:
+            if not res or res[-1][1] < start: 
+                res.append([start, end])
             else:
-                res[-1] = [min(res[-1][0], interval[0]), max(res[-1][1], interval[1])]
+                res[-1] = [min(res[-1][0], start), max(res[-1][1], end)]
         return res
 
 print(Solution().merge([[1,3],[2,6],[8,10],[15,18]]))
