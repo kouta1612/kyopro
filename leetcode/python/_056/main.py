@@ -8,7 +8,7 @@ class Solution:
             if not res or res[-1][1] < start: 
                 res.append([start, end])
             else:
-                res[-1] = [min(res[-1][0], start), max(res[-1][1], end)]
+                res[-1][1] = max(res[-1][1], end)
         return res
 
 print(Solution().merge([[1,3],[2,6],[8,10],[15,18]]))
