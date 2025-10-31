@@ -1,9 +1,10 @@
 class Solution:
     def getSum(self, a: int, b: int) -> int:
-        mask = 0xffff
-        while b&mask > 0:
+        MASK = 0xffffffff
+        INTMAX = 0x7fffffff
+        while b&MASK != 0:
             a, b = a^b, (a&b)<<1
-        return a&mask if b > 0 else a
+        return a if b <= INTMAX else ~(a^MASK)
 
 print(Solution().getSum(1, 2))
 print(Solution().getSum(2, 3))
