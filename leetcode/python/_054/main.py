@@ -2,18 +2,23 @@ from typing import List
 
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]
-        ROWS, COLS = len(matrix), len(matrix[0])
-        seen = set()
-        r, c = 0, 0
+        t, b = 0, len(matrix) - 1
+        l, r = 0, len(matrix[0]) - 1
         res = []
-        while len(seen) < ROWS * COLS - 1:
-            for dr, dc in dirs:
-                while 0 <= r + dr < ROWS and 0 <= c + dc < COLS and (r + dr, c + dc) not in seen:
-                    res.append(matrix[r][c])
-                    seen.add((r, c))
-                    r, c = r + dr, c + dc
-        res.append(matrix[r][c])
+        while t <= b and l <= r:
+            for c in range(l, r + 1):
+                res.append(matrix[t][c])
+            t += 1
+            for c in range(t, b + 1):
+                res.append(matrix[c][r])
+            r -= 1
+            if not (t <= b and l <= r): break
+            for c in range(r, l - 1, -1):
+                res.append(matrix[b][c])
+            b -= 1
+            for c in range(b, t - 1, -1):
+                res.append(matrix[c][l])
+            l += 1
         return res
 
 print(Solution().spiralOrder([[1,2,3],[4,5,6],[7,8,9]]))
