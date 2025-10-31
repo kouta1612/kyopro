@@ -2,23 +2,22 @@ from typing import List
 
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        t, b = 0, len(matrix) - 1
-        l, r = 0, len(matrix[0]) - 1
+        ROWS, COLS = len(matrix), len(matrix[0])
+        r, c = 0, 0
+        seen = set()
+        dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]
+        dirv = 0
         res = []
-        while t <= b and l <= r:
-            for c in range(l, r + 1):
-                res.append(matrix[t][c])
-            t += 1
-            for c in range(t, b + 1):
-                res.append(matrix[c][r])
-            r -= 1
-            if not (t <= b and l <= r): break
-            for c in range(r, l - 1, -1):
-                res.append(matrix[b][c])
-            b -= 1
-            for c in range(b, t - 1, -1):
-                res.append(matrix[c][l])
-            l += 1
+        for _ in range(ROWS * COLS):
+            res.append(matrix[r][c])
+            seen.add((r, c))
+            dr, dc = dirs[dirv]
+            nr, nc = r + dr, c + dc
+            if not (0 <= nr < ROWS and 0 <= nc < COLS and (nr, nc) not in seen):
+                dirv = (dirv + 1) % 4
+                dr, dc = dirs[dirv]
+                nr, nc = r + dr, c + dc
+            r, c = nr, nc
         return res
 
 print(Solution().spiralOrder([[1,2,3],[4,5,6],[7,8,9]]))
