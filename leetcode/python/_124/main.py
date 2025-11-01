@@ -7,8 +7,8 @@ class TreeNode:
         self.right = right
 
 class Solution:
-    maxSum = -1<<32
     def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        self.maxSum = float('-inf')
         def dfs(root: Optional[TreeNode]) -> int:
             if not root: return 0
             res = root.val
