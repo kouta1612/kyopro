@@ -16,8 +16,8 @@ class Solution:
                 r += 1
             if have == need and (not res or len(res) > len(s[l:r])):
                 res = s[l:r]
+            if s[l] in mapt and maps[s[l]] == mapt[s[l]]: have -= 1
             maps[s[l]] -= 1
-            if maps[s[l]] + 1 == mapt[s[l]]: have -= 1
             l += 1
         return res
 
