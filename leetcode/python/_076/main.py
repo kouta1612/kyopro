@@ -6,7 +6,7 @@ class Solution:
         for c in t: mapt[c] += 1
         have, need = 0, len(mapt)
 
-        res = ""
+        res = [0, 0]
         l, r = 0, 0
         while l < len(s):
             while r < len(s) and have < need:
@@ -14,12 +14,14 @@ class Solution:
                 maps[c] += 1
                 if c in mapt and maps[c] == mapt[c]: have += 1
                 r += 1
-            if have == need and (not res or len(res) > len(s[l:r])):
-                res = s[l:r]
+            size = res[1] - res[0]
+            if have == need and (size == 0 or size > len(s[l:r])):
+                res = [l, r]
             if s[l] in mapt and maps[s[l]] == mapt[s[l]]: have -= 1
             maps[s[l]] -= 1
             l += 1
-        return res
+        l, r = res
+        return s[l:r]
 
 print(Solution().minWindow("ADOBECODEBANC", "ABC"))
 print(Solution().minWindow("a", "a"))
