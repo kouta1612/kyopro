@@ -4,22 +4,23 @@ class Solution:
     def minWindow(self, s: str, t: str) -> str:
         maps, mapt = defaultdict(int), defaultdict(int)
         for c in t: mapt[c] += 1
+        have, need = 0, len(mapt)
 
-        l, r = 0, 0
-        num = 0
         res = ""
+        l, r = 0, 0
         while l < len(s):
-            while r < len(s) and num < len(mapt):
-                if s[r] in mapt:
-                    maps[s[r]] += 1
-                    if maps[s[r]] == mapt[s[r]]:
-                        num += 1
+            while r < len(s) and have < need:
+                c = s[r]
+                if c in mapt:
+                    maps[c] += 1
+                    if maps[c] == mapt[c]:
+                        have += 1
                 r += 1
-            if num == len(mapt):
+            if have == need:
                 if not res or len(res) > len(s[l:r]):
                     res = s[l:r]
             if s[l] in maps:
-                if maps[s[l]] == mapt[s[l]]: num -= 1
+                if maps[s[l]] == mapt[s[l]]: have -= 1
                 maps[s[l]] -= 1
             l += 1
         return res
