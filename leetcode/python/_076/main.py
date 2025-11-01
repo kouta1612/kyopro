@@ -11,17 +11,13 @@ class Solution:
         while l < len(s):
             while r < len(s) and have < need:
                 c = s[r]
-                if c in mapt:
-                    maps[c] += 1
-                    if maps[c] == mapt[c]:
-                        have += 1
+                maps[c] += 1
+                if c in mapt and maps[c] == mapt[c]: have += 1
                 r += 1
-            if have == need:
-                if not res or len(res) > len(s[l:r]):
-                    res = s[l:r]
-            if s[l] in maps:
-                if maps[s[l]] == mapt[s[l]]: have -= 1
-                maps[s[l]] -= 1
+            if have == need and (not res or len(res) > len(s[l:r])):
+                res = s[l:r]
+            maps[s[l]] -= 1
+            if maps[s[l]] + 1 == mapt[s[l]]: have -= 1
             l += 1
         return res
 
