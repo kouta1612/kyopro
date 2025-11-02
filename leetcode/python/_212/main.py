@@ -3,41 +3,40 @@ from typing import List, Optional
 class TrieNode:
     def __init__(self):
         self.children = {}
-        self.word = False
+        self.isWord = False
 
-    def add(self, word: str):
+    def addWord(self, word: str):
         cur = self
         for c in word:
             if c not in cur.children:
                 cur.children[c] = TrieNode()
             cur = cur.children[c]
-        cur.word = True
+        cur.isWord = True
 
 class Solution:
     def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
         root = TrieNode()
-        for word in words:
-            root.add(word)
+        for word in words: root.addWord(word)
         
-        res, visited = set(), set()
+        res = set()
         ROWS, COLS = len(board), len(board[0])
 
         def dfs(r, c: int, node: Optional[TrieNode], word: str):
             if r < 0 or c < 0 or r >= ROWS or c >= COLS: return
-            if (r, c) in visited: return
             if board[r][c] not in node.children: return
 
-            visited.add((r, c))
             node = node.children[board[r][c]]
             word += board[r][c]
-            if node.word: res.add(word)
-            for dr, dc in [[0, 1], [0, -1], [1, 0], [-1, 0]]:
-                dfs(r + dr, c + dc, node, word)
-            visited.remove((r, c))
+            board[r][c] = "#"
+            if node.isWord: res.add(word)
+            for dr, dc in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
+                nr, nc = r + dr, c + dc
+                dfs(nr, nc, node, word)
+            board[r][c] = word[-1]
         
-        for i in range(ROWS):
-            for j in range(COLS):
-                dfs(i, j, root, "")
+        for r in range(ROWS):
+            for c in range(COLS):
+                dfs(r, c, root, "")
         
         return list(res)
 
