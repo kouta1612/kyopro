@@ -18,7 +18,7 @@ class Solution:
         root = TrieNode()
         for word in words: root.addWord(word)
         
-        res = set()
+        res = []
         ROWS, COLS = len(board), len(board[0])
 
         def dfs(r, c: int, node: Optional[TrieNode], word: str):
@@ -28,7 +28,9 @@ class Solution:
             node = node.children[board[r][c]]
             word += board[r][c]
             board[r][c] = "#"
-            if node.isWord: res.add(word)
+            if node.isWord:
+                res.append(word)
+                node.isWord = False
             for dr, dc in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
                 nr, nc = r + dr, c + dc
                 dfs(nr, nc, node, word)
@@ -38,6 +40,6 @@ class Solution:
             for c in range(COLS):
                 dfs(r, c, root, "")
         
-        return list(res)
+        return res
 
 print(Solution().findWords([["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], ["oath","pea","eat","rain"]))
