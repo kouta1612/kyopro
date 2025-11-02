@@ -27,6 +27,7 @@ class Solution:
 
             node = node.children[board[r][c]]
             word += board[r][c]
+            tmp = board[r][c]
             board[r][c] = "#"
             if node.isWord:
                 res.append(word)
@@ -34,7 +35,7 @@ class Solution:
             for dr, dc in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
                 nr, nc = r + dr, c + dc
                 dfs(nr, nc, node, word)
-            board[r][c] = word[-1]
+            board[r][c] = tmp
         
         for r in range(ROWS):
             for c in range(COLS):
