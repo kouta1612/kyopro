@@ -2,18 +2,15 @@ from typing import List
 
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
-        res = [1] * len(nums)
-
-        left = 1
+        left, right = [1] * (len(nums) + 1), [1] * (len(nums) + 1)
         for i in range(len(nums)):
-            res[i] *= left
-            left *= nums[i]
+            left[i + 1] = left[i] * nums[i]
+        for i in range(len(nums) - 1, -1, -1):
+            right[i] = right[i + 1] * nums[i]
         
-        right = 1
-        for i in reversed(range(len(nums))):
-            res[i] *= right
-            right *= nums[i]
-        
+        res = []
+        for i in range(len(nums)):
+            res.append(left[i] * right[i + 1])
         return res
 
 print(Solution().productExceptSelf([1, 2, 3, 4]))
