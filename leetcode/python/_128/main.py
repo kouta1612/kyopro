@@ -4,8 +4,7 @@ from collections import defaultdict
 
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
-        numSet = set()
-        for num in nums: numSet.add(num)
+        numSet = set(nums)
         
         target = set()
         for num in nums:
