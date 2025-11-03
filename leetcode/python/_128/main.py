@@ -4,17 +4,17 @@ from collections import defaultdict
 
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
-        counters = defaultdict(int)
-        for num in nums: counters[num] += 1
+        numSet = set()
+        for num in nums: numSet.add(num)
         
         target = set()
         for num in nums:
-            if num - 1 not in counters: target.add(num)
+            if num - 1 not in numSet: target.add(num)
         
         res = 0
         for v in target:
             count = 0
-            while v in counters:
+            while v in numSet:
                 count += 1
                 v += 1
             res = max(res, count)
