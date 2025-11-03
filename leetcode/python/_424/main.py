@@ -5,17 +5,14 @@ class Solution:
         l, r = 0, 0
         res = 0
         counter = defaultdict(int)
-        while r <= len(s):
-            while l < len(s):
-                maxCount = 0
-                for o in range(ord('A'), ord('Z') + 1):
-                    maxCount = max(maxCount, counter[chr(o)])
-                length = r - l
-                if length - maxCount <= k: break
+        maxCount = 0
+        while r < len(s):
+            counter[s[r]] += 1
+            maxCount = max(maxCount, counter[s[r]])
+            while r - l + 1 - maxCount > k:
                 counter[s[l]] -= 1
                 l += 1
-            res = max(res, r - l)
-            if r < len(s): counter[s[r]] += 1
+            res = max(res, r - l + 1)
             r += 1
         return res
 
