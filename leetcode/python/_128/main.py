@@ -1,14 +1,24 @@
 from typing import List
+from collections import defaultdict
+
 
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
-        res, s = 0, set(nums)
-        for n in s:
-            if n - 1 not in s:
-                length = 0
-                while n + length in s:
-                    length += 1
-                res = max(res, length)
+        counters = defaultdict(int)
+        for num in nums: counters[num] += 1
+        
+        target = set()
+        for num in nums:
+            if num - 1 not in counters: target.add(num)
+        
+        res = 0
+        for v in target:
+            count = 0
+            while v in counters:
+                count += 1
+                v += 1
+            res = max(res, count)
+
         return res
 
 print(Solution().longestConsecutive([100, 4, 200, 1, 3, 2]))
