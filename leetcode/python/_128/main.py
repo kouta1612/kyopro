@@ -5,14 +5,10 @@ from collections import defaultdict
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
         numSet = set(nums)
-        
-        target = set()
-        for num in nums:
-            if num - 1 not in numSet: target.add(num)
-        
         res = 0
-        for v in target:
-            count = 0
+        for num in numSet:
+            if num - 1 in numSet: continue
+            count, v = 0, num
             while v in numSet:
                 count += 1
                 v += 1
