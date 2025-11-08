@@ -3,9 +3,9 @@ from typing import List
 class Solution:
     def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
         ROWS, COLS = len(heights), len(heights[0])
-        pat, atl = set(), set()
+        pat, atl = set[(int, int)](), set[(int, int)]()
 
-        def dfs(r, c: int, visited: set, prev: int):
+        def dfs(r, c: int, visited: set[(int, int)], prev: int):
             if (r < 0 or c < 0 or r >= ROWS or c >= COLS or
                 (r, c) in visited or heights[r][c] < prev):
                 return
