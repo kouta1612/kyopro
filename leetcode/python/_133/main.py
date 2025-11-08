@@ -1,3 +1,8 @@
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+
 from typing import Optional
 class Solution:
     def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
@@ -5,14 +10,14 @@ class Solution:
 
         nodeMap = {}
 
-        def dfs(node: Optional['Node']) -> Optional['Node']:
-            res = Node(node.val)
-            nodeMap[node] = res
-            for nei in node.neighbors:
-                if nei in nodeMap:
-                    res.neighbors.append(nodeMap[nei])
-                else:
-                    v = dfs(nei)
-                    res.neighbors.append(v)
-            return res
+        def dfs(cur: Optional['Node']) -> Optional['Node']:
+            if cur in nodeMap: return nodeMap[cur]
+            clone = Node(cur.val)
+            nodeMap[cur] = clone
+            for nei in cur.neighbors:
+                clone.neighbors.append(dfs(nei))
+            return clone
+
         return dfs(node)
+
+print(Solution().cloneGraph(None))
