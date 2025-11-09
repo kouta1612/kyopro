@@ -2,25 +2,23 @@ from typing import List
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        preMap = {i: [] for i in range(numCourses)}
-        for crs, pre in prerequisites:
-            preMap[crs].append(pre)
-        seen = set()
+        preMap = { i: [] for i in range(numCourses) }
+        for cur, pre in prerequisites:
+            preMap[cur].append(pre)
+        visit = set()
 
-        def dfs(crs: int) -> bool:
-            if crs in seen: return False
-            if not preMap[crs]: return True
-
-            seen.add(crs)
-            for pre in preMap[crs]:
+        def dfs(cur: int) -> bool:
+            if cur in visit: return False
+            if not preMap[cur]: return True
+            visit.add(cur)
+            for pre in preMap[cur]:
                 if not dfs(pre): return False
-            seen.remove(crs)
-            preMap[crs] = []
-
+            visit.remove(cur)
+            preMap[cur] = []
             return True
 
-        for n in range(numCourses):
-            if not dfs(n): return False
+        for cou in range(numCourses):
+            if not dfs(cou): return False
         return True
 
 print(Solution().canFinish(2, [[1,0]]))
