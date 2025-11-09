@@ -1,25 +1,25 @@
 from typing import List
+from collections import deque
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        preMap = { i: [] for i in range(numCourses) }
+        requireMap = {i: [] for i in range(numCourses)}
+        degins = [0] * numCourses
+
         for cur, pre in prerequisites:
-            preMap[cur].append(pre)
-        visit = set[int]()
+            requireMap[pre].append(cur)
+            degins[cur] += 1
 
-        def dfs(cur: int) -> bool:
-            if cur in visit: return False
-            if not preMap[cur]: return True
-            visit.add(cur)
-            for pre in preMap[cur]:
-                if not dfs(pre): return False
-            visit.remove(cur)
-            preMap[cur] = []
-            return True
+        deq = deque([i for i in range(numCourses) if degins[i] == 0])
+        finished = 0
+        while deq:
+            cur = deq.popleft()
+            finished += 1
+            for nxt in requireMap[cur]:
+                degins[nxt] -= 1
+                if degins[nxt] == 0: deq.append(nxt)
+        return numCourses == finished
 
-        for cou in range(numCourses):
-            if not dfs(cou): return False
-        return True
 
 print(Solution().canFinish(2, [[1,0]]))
 print(Solution().canFinish(2, [[1,0],[0,1]]))
