@@ -10,7 +10,7 @@ class Solution:
             requireMap[pre].append(cur)
             degins[cur] += 1
 
-        deq = deque([i for i in range(numCourses) if degins[i] == 0])
+        deq = deque[int]([i for i in range(numCourses) if degins[i] == 0])
         finished = 0
         while deq:
             cur = deq.popleft()
