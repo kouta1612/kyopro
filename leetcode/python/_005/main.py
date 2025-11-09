@@ -11,12 +11,10 @@ class Solution:
                 j = i + size
                 if dp[i + 1][j - 1] and s[i] == s[j - 1]:
                     dp[i][j] = True
-        res = ""
-        for i in range(n):
-            for j in range(i + 1, n + 1):
-                if dp[i][j] and len(res) < len(s[i:j]):
-                    res = s[i:j]
-        return res
+        for size in range(n + 1, -1, -1):
+            for i in range(0, n + 1 - size):
+                j = i + size
+                if dp[i][j]: return s[i:j]
 
 print(Solution().longestPalindrome("babad"))
 print(Solution().longestPalindrome("cbbd"))
