@@ -2,16 +2,16 @@ from typing import List
 
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
-        res = max(nums)
-        maxP, minP = 1, 1
-        for n in nums:
-            if n == 0: 
-                maxP, minP = 1, 1
+        n, res = len(nums), max(nums)
+        curMax, curMin = 1, 1
+        for num in nums:
+            if num == 0: 
+                curMax, curMin = 1, 1
             else:
-                tmp = n * maxP
-                maxP = max(tmp, n * minP, n)
-                minP = min(tmp, n * minP, n)
-                res = max(res, maxP)
+                tmp = curMax * num
+                curMax = max(tmp, curMin * num, num)
+                curMin = min(tmp, curMin * num, num)
+                res = max(res, curMax)
         return res
 
 print(Solution().maxProduct([2,3,-2,4]))
