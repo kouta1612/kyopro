@@ -4,7 +4,7 @@ class Solution:
     def canJump(self, nums: List[int]) -> bool:
         n = len(nums)
         maxReach = 0
-        for i, num in enumerate(nums):
+        for i, num in enumerate[int](nums):
             if i > maxReach: return False
             maxReach = max(maxReach, i + num)
             if maxReach >= n - 1: return True
