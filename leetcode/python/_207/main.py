@@ -5,7 +5,7 @@ class Solution:
         preMap = { i: [] for i in range(numCourses) }
         for cur, pre in prerequisites:
             preMap[cur].append(pre)
-        visit = set()
+        visit = set[int]()
 
         def dfs(cur: int) -> bool:
             if cur in visit: return False
