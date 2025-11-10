@@ -3,14 +3,14 @@ from typing import List
 class Solution:
     def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
         intervals.sort()
-        res = 0
-        prevEnd = intervals[0][1]
-        for start, end in intervals[1:]:
-            if prevEnd <= start: prevEnd = end
+        res, remove = [], 0
+        for start, end in intervals:
+            if not res or res[1] <= start:
+                res = [start, end]
             else:
-                prevEnd = min(prevEnd, end)
-                res += 1
-        return res
+                res = [res[0], min(res[1], end)]
+                remove += 1
+        return remove
 
 print(Solution().eraseOverlapIntervals([[1,2],[2,3],[3,4],[1,3]]))
 print(Solution().eraseOverlapIntervals([[1,2],[1,2],[1,2]]))
