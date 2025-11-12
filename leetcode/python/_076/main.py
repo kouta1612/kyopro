@@ -6,21 +6,22 @@ class Solution:
             tmap[c] = tmap.get(c, 0) + 1
         
         l, r = 0, 0
-        counter = 0
+        counter, required = 0, len(tmap)
         res = ""
         minlen = float('inf')
-        while l < len(s):
-            while r < len(s) and not (r > 0 and counter == len(tmap) and s[r-1] in smap and s[r-1] in tmap and smap[s[r-1]] == tmap[s[r-1]]):
-                smap[s[r]] = smap.get(s[r], 0) + 1
-                if smap[s[r]] == tmap.get(s[r], 0): counter += 1
-                r += 1
-            if counter == len(tmap) and minlen > r - l: 
-                res = s[l:r]
-                minlen = len(res)
-            if smap[s[l]] == tmap.get(s[l], 0): counter -= 1
-            smap[s[l]] -= 1
-            if smap[s[l]] == 0: del smap[s[l]]
-            l += 1
+        while r < len(s):
+            c = s[r]
+            smap[c] = smap.get(c, 0) + 1
+            if c in tmap and smap[c] == tmap[c]: counter += 1
+            r += 1
+            while l < len(s) and counter == required:
+                if minlen > r - l:
+                    minlen = r - l
+                    res = s[l:r]
+                if s[l] in tmap and smap[s[l]] == tmap[s[l]]:
+                    counter -= 1
+                smap[s[l]] -= 1
+                l += 1
         return res
 
 print(Solution().minWindow("ADOBECODEBANC", "ABC"))
