@@ -1,4 +1,5 @@
 from typing import List, Optional
+import heapq
 
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -7,18 +8,16 @@ class ListNode:
 
 class Solution:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        heap = []
+        for i, node in enumerate(lists):
+            if node: heapq.heappush(heap, (node.val, i, node))
+
         cur = dummy = ListNode(0)
-        while True:
-            minNode = None
-            minIndex = -1
-            for i, node in enumerate(lists):
-                if not minNode or (node and minNode.val > node.val):
-                    minNode = node
-                    minIndex = i
-            if not minNode: break
-            cur.next = ListNode(minNode.val)
+        while heap:
+            v, i, node = heapq.heappop(heap)
+            cur.next = ListNode(node.val)
             cur = cur.next
-            lists[minIndex] = minNode.next
+            if node.next: heapq.heappush(heap, (node.next.val, i, node.next))
         return dummy.next
 
 print(Solution().mergeKLists([ListNode(1, ListNode(4, ListNode(5))), ListNode(1, ListNode(3, ListNode(4))), ListNode(2, ListNode(6))]))
