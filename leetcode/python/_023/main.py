@@ -7,27 +7,18 @@ class ListNode:
 
 class Solution:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
-        if not lists: return None
-        while len(lists) > 1:
-            merges = []
-            for i in range(0, len(lists), 2):
-                l1, l2 = lists[i], lists[i+1] if i+1 < len(lists) else None
-                merges.append(self.mergeLists(l1, l2))
-            lists = merges
-        return lists[0]
-
-    def mergeLists(self, l1, l2: Optional[ListNode]) -> Optional[ListNode]:
         cur = dummy = ListNode(0)
-        while l1 and l2:
-            if l1.val < l2.val:
-                cur.next = l1
-                l1 = l1.next
-            else:
-                cur.next = l2
-                l2 = l2.next
+        while True:
+            minNode = None
+            minIndex = -1
+            for i, node in enumerate(lists):
+                if not minNode or (node and minNode.val > node.val):
+                    minNode = node
+                    minIndex = i
+            if not minNode: break
+            cur.next = ListNode(minNode.val)
             cur = cur.next
-        if l1: cur.next = l1
-        if l2: cur.next = l2
+            lists[minIndex] = minNode.next
         return dummy.next
 
 print(Solution().mergeKLists([ListNode(1, ListNode(4, ListNode(5))), ListNode(1, ListNode(3, ListNode(4))), ListNode(2, ListNode(6))]))
