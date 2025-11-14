@@ -13,8 +13,8 @@ class Solution:
         def dfs(node: Optional[TreeNode]) -> int:
             if not node: return 0
             cur = node.val
-            left, right = dfs(node.left), dfs(node.right)
-            self.res = max(self.res, cur + max(0, left) + max(0, right))
+            left, right = max(dfs(node.left), 0), max(dfs(node.right), 0)
+            self.res = max(self.res, cur + left + right)
             return cur + max(0, left, right)
         dfs(root)
         return self.res
