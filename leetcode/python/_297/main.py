@@ -1,3 +1,5 @@
+from typing import Optional
+
 class TreeNode(object):
     def __init__(self, x):
         self.val = x
@@ -8,8 +10,9 @@ class Codec:
 
     def serialize(self, root):
         res = []
-        def dfs(node):
-            if not node:
+
+        def dfs(node: Optional[TreeNode]):
+            if not node: 
                 res.append("N")
                 return
             res.append(str(node.val))
@@ -21,15 +24,15 @@ class Codec:
     def deserialize(self, data):
         vals = data.split(',')
         self.i = 0
-        def dfs():
-            if vals[self.i] == "N":
+
+        def dfs() -> Optional[TreeNode]:
+            if vals[self.i] == "N": 
                 self.i += 1
                 return None
-            res = TreeNode(int(vals[self.i]))
+            cur = TreeNode(int(vals[self.i]))
             self.i += 1
-            res.left = dfs()
-            res.right = dfs()
-            return res
+            cur.left, cur.right = dfs(), dfs()
+            return cur
         return dfs()
 
 print(Codec().serialize(TreeNode(1, TreeNode(2), TreeNode(3))))
