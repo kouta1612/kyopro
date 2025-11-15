@@ -2,18 +2,34 @@ from typing import List
 
 class Solution:
     def setZeroes(self, matrix: List[List[int]]) -> None:
-        rowSet, colSet = set(), set()
         ROWS, COLS = len(matrix), len(matrix[0])
-        for i in range(ROWS):
-            for j in range(COLS):
-                if matrix[i][j] == 0:
-                    rowSet.add(i)
-                    colSet.add(j)
-        for r in rowSet:
+        firstRowZero, firstColZero = False, False
+        
+        for r in range(ROWS):
+            if matrix[r][0] == 0:
+                firstColZero = True
+                break
+        for c in range(COLS):
+            if matrix[0][c] == 0:
+                firstRowZero = True
+                break
+        for r in range(1, ROWS):
+            for c in range(1, COLS):
+                if matrix[r][c] == 0:
+                    matrix[r][0] = matrix[0][c] = 0
+        for r in range(1, ROWS):
+            if matrix[r][0] == 0:
+                for c in range(1, COLS):
+                    matrix[r][c] = 0
+        for c in range(1, COLS):
+            if matrix[0][c] == 0:
+                for r in range(1, ROWS):
+                    matrix[r][c] = 0
+        if firstRowZero:
             for c in range(COLS):
-                matrix[r][c] = 0
-        for c in colSet:
+                matrix[0][c] = 0
+        if firstColZero:
             for r in range(ROWS):
-                matrix[r][c] = 0
+                matrix[r][0] = 0
 
 print(Solution().setZeroes([[1,1,1],[1,0,1],[1,1,1]]))
