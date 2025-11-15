@@ -3,44 +3,41 @@ from typing import List, Optional
 class TrieNode:
     def __init__(self):
         self.children = {}
-        self.isWord = False
+        self.word = False
 
-    def addWord(self, word: str):
+    def add(self, word: str):
         cur = self
         for c in word:
             if c not in cur.children:
                 cur.children[c] = TrieNode()
             cur = cur.children[c]
-        cur.isWord = True
+        cur.word = True
 
 class Solution:
     def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
-        root = TrieNode()
-        for word in words: root.addWord(word)
-        
-        res = []
         ROWS, COLS = len(board), len(board[0])
-
-        def dfs(r, c: int, node: Optional[TrieNode], word: str):
-            if r < 0 or c < 0 or r >= ROWS or c >= COLS: return
-            if board[r][c] not in node.children: return
-
-            node = node.children[board[r][c]]
-            word += board[r][c]
-            tmp = board[r][c]
-            board[r][c] = "#"
-            if node.isWord:
-                res.append(word)
-                node.isWord = False
-            for dr, dc in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
-                nr, nc = r + dr, c + dc
-                dfs(nr, nc, node, word)
-            board[r][c] = tmp
+        trie = TrieNode()
+        for word in words: trie.add(word)
         
-        for r in range(ROWS):
-            for c in range(COLS):
-                dfs(r, c, root, "")
-        
-        return res
+        res = set()
+
+        def dfs(i, j: int, node: Optional[TrieNode], word: str):
+            if i < 0 or j < 0 or i >= ROWS or j >= COLS: return
+            c = board[i][j]
+            if c == "#": return
+            if c not in node.children: return
+
+            word += c
+            node = node.children[c]
+            if node.word: res.add(word)
+            board[i][j] = "#"
+            for ni, nj in [[i + 1, j], [i - 1, j], [i, j + 1], [i, j - 1]]:
+                dfs(ni, nj, node, word)
+            board[i][j] = c
+
+        for i in range(ROWS):
+            for j in range(COLS):
+                dfs(i, j, trie, "")
+        return list(res)
 
 print(Solution().findWords([["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], ["oath","pea","eat","rain"]))
