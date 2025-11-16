@@ -18,7 +18,7 @@ class Solution:
             if self.counter == k: 
                 self.res = node.val
                 return
-            dfs(node.right)
+            if self.counter < k: dfs(node.right)
 
         dfs(root)
         return self.res
