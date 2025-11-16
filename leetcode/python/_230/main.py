@@ -8,16 +8,19 @@ class TreeNode:
 
 class Solution:
     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
-        n = 0
-        stack = []
-        cur = root
-        while True:
-            while cur:
-                stack.append(cur)
-                cur = cur.left
-            cur = stack.pop()
-            n += 1
-            if n == k: return cur.val
-            cur = cur.right
+        self.counter = 0
+        self.res = -1
+        
+        def dfs(node: Optional[TreeNode]):
+            if not node: return
+            dfs(node.left)
+            self.counter += 1
+            if self.counter == k: 
+                self.res = node.val
+                return
+            dfs(node.right)
+
+        dfs(root)
+        return self.res
 
 print(Solution().kthSmallest(TreeNode(3, TreeNode(1, None, TreeNode(2)), TreeNode(4)), 1))
