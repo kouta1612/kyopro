@@ -19,8 +19,6 @@ class WordDictionary:
         cur.isWord = True
 
     def search(self, word: str) -> bool:
-        cur = self.root
-
         def dfs(i: int, node: Optional[TrieNode]) -> bool:
             if not node: return False
             if i == len(word): return node.isWord
@@ -31,10 +29,9 @@ class WordDictionary:
                 return False
             if c not in node.children: return False
 
-            if dfs(i + 1, node.children[c]): return True
-            return False
-        
-        return dfs(0, cur)
+            return dfs(i + 1, node.children[c])
+
+        return dfs(0, self.root)
 
 print(WordDictionary().addWord("bad").search("bad"))
 print(WordDictionary().addWord("bad").search("dad"))
