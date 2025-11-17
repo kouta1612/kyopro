@@ -1,7 +1,9 @@
+from typing import Optional
+
 class TrieNode:
     def __init__(self):
         self.children = {}
-        self.endOfWord = False
+        self.isWord = False
 
 class WordDictionary:
 
@@ -11,21 +13,28 @@ class WordDictionary:
     def addWord(self, word: str) -> None:
         cur = self.root
         for c in word:
-            if c not in cur.children: cur.children[c] = TrieNode()
+            if c not in cur.children:
+                cur.children[c] = TrieNode()
             cur = cur.children[c]
-        cur.endOfWord = True
+        cur.isWord = True
 
     def search(self, word: str) -> bool:
-        def dfs(j: int, root: TrieNode) -> bool:
-            cur = root
-            for i in range(j, len(word)):
-                if word[i] == ".": 
-                    for c in cur.children.values():
-                        if dfs(i + 1, c): return True
-                if word[i] not in cur.children: return False
-                cur = cur.children[word[i]]
-            return cur.endOfWord
-        return dfs(0, self.root)
+        cur = self.root
+
+        def dfs(i: int, node: Optional[TrieNode]) -> bool:
+            if not node: return False
+            if i == len(word): return node.isWord
+            c = word[i]
+            if c == ".":
+                for nd in node.children.values():
+                    if dfs(i + 1, nd): return True
+                return False
+            if c not in node.children: return False
+
+            if dfs(i + 1, node.children[c]): return True
+            return False
+        
+        return dfs(0, cur)
 
 print(WordDictionary().addWord("bad").search("bad"))
 print(WordDictionary().addWord("bad").search("dad"))
