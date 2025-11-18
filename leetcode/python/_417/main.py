@@ -5,20 +5,20 @@ class Solution:
         ROWS, COLS = len(heights), len(heights[0])
         pac, atl = set(), set()
 
-        def dfs(r, c: int, visit: set):
+        def dfs(r, c: int, visit: set[(int, int)], pre: int):
+            if r < 0 or c < 0 or r >= ROWS or c >= COLS: return
+            if (r, c) in visit: return
+            if pre > heights[r][c]: return
             visit.add((r, c))
             for nr, nc in [[r+1, c], [r-1, c], [r, c+1], [r, c-1]]:
-                if nr < 0 or nc < 0 or nr >= ROWS or nc >= COLS: continue
-                if (nr, nc) in visit: continue
-                if heights[nr][nc] < heights[r][c]: continue
-                dfs(nr, nc, visit)
+                dfs(nr, nc, visit, heights[r][c])
 
         for r in range(ROWS):
-            if (r, 0) not in pac: dfs(r, 0, pac)
-            if (r, COLS - 1) not in atl: dfs(r, COLS - 1, atl)
+            if (r, 0) not in pac: dfs(r, 0, pac, 0)
+            if (r, COLS - 1) not in atl: dfs(r, COLS - 1, atl, 0)
         for c in range(COLS):
-            if (0, c) not in pac: dfs(0, c, pac)
-            if (ROWS - 1, c) not in atl: dfs(ROWS - 1, c, atl)
+            if (0, c) not in pac: dfs(0, c, pac, 0)
+            if (ROWS - 1, c) not in atl: dfs(ROWS - 1, c, atl, 0)
 
         res = []
         for r in range(ROWS):
