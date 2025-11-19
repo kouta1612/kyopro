@@ -7,15 +7,15 @@ class Solution:
         for t, s in prerequisites:
             mapFromTo[s].append(t)
         
-        seen, finished = set(), set()
+        visiting, visited = set(), set()
 
         def dfs(i: int) -> bool:
-            if i in seen and i not in finished: return True
-            if i in seen: return False
-            seen.add(i)
+            if i in visiting and i not in visited: return True
+            if i in visiting: return False
+            visiting.add(i)
             for ni in mapFromTo[i]:
                 if dfs(ni): return True
-            finished.add(i)
+            visited.add(i)
             return False
 
         for i in range(numCourses):
