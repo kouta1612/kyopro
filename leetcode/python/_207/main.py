@@ -3,22 +3,26 @@ from collections import deque
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        requireMap = {i: [] for i in range(numCourses)}
-        degins = [0] * numCourses
+        mapFromTo = {}
+        for i in range(numCourses):
+            mapFromTo[i] = []
+        for t, s in prerequisites:
+            mapFromTo[s].append(t)
+        
+        seen, finished = set(), set()
 
-        for cur, pre in prerequisites:
-            requireMap[pre].append(cur)
-            degins[cur] += 1
+        def dfs(i: int) -> bool:
+            if i in seen and i not in finished: return True
+            if i in seen: return False
+            seen.add(i)
+            for ni in mapFromTo[i]:
+                if dfs(ni): return True
+            finished.add(i)
+            return False
 
-        deq = deque[int]([i for i in range(numCourses) if degins[i] == 0])
-        finished = 0
-        while deq:
-            cur = deq.popleft()
-            finished += 1
-            for nxt in requireMap[cur]:
-                degins[nxt] -= 1
-                if degins[nxt] == 0: deq.append(nxt)
-        return numCourses == finished
+        for i in range(numCourses):
+            if dfs(i): return False
+        return True
 
 
 print(Solution().canFinish(2, [[1,0]]))
