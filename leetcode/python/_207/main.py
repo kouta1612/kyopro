@@ -3,9 +3,7 @@ from collections import deque
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        mapFromTo = {}
-        for i in range(numCourses):
-            mapFromTo[i] = []
+        mapFromTo = { i: [] for i in range(numCourses) }
         for t, s in prerequisites:
             mapFromTo[s].append(t)
         
@@ -23,7 +21,6 @@ class Solution:
         for i in range(numCourses):
             if dfs(i): return False
         return True
-
 
 print(Solution().canFinish(2, [[1,0]]))
 print(Solution().canFinish(2, [[1,0],[0,1]]))
