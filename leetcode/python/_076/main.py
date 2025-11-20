@@ -1,26 +1,24 @@
+from collections import defaultdict
+
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
-        if s == t: return s
-        smap, tmap = {}, {}
-        for c in t:
-            tmap[c] = tmap.get(c, 0) + 1
-        
-        l, r = 0, 0
-        counter, required = 0, len(tmap)
-        res = ""
-        minlen = float('inf')
-        while r < len(s):
-            c = s[r]
-            smap[c] = smap.get(c, 0) + 1
-            if c in tmap and smap[c] == tmap[c]: counter += 1
+        smap, tmap = defaultdict(int), defaultdict(int)
+        for c in t: tmap[c] += 1
+
+        required = len(tmap)
+        counter = 0
+        l, r, n = 0, 0, len(s)
+        res, minLen = "", len(s)
+        while r < n:
+            smap[s[r]] += 1
+            if s[r] in tmap and smap[s[r]] == tmap[s[r]]: counter += 1
             r += 1
-            while l < len(s) and counter == required:
-                if minlen > r - l:
-                    minlen = r - l
+            while l < n and required == counter:
+                if r - l <= minLen:
                     res = s[l:r]
-                if s[l] in tmap and smap[s[l]] == tmap[s[l]]:
-                    counter -= 1
+                    minLen = r - l
                 smap[s[l]] -= 1
+                if s[l] in tmap and smap[s[l]] + 1 == tmap[s[l]]: counter -= 1
                 l += 1
         return res
 
