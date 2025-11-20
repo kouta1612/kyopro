@@ -8,16 +8,18 @@ class ListNode:
 
 class Solution:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
-        heap = []
-        for i, node in enumerate(lists):
-            if node: heapq.heappush(heap, (node.val, i, node))
-
-        cur = dummy = ListNode(0)
-        while heap:
-            v, i, node = heapq.heappop(heap)
-            cur.next = node
+        cur = dummy = ListNode()
+        while True:
+            minNode, mi = None, -1
+            for i, node in enumerate(lists):
+                if not node: continue
+                if not minNode or minNode.val > node.val:
+                    minNode = node
+                    mi = i
+            if not minNode: break
+            cur.next = minNode
             cur = cur.next
-            if node.next: heapq.heappush(heap, (node.next.val, i, node.next))
+            lists[mi] = lists[mi].next
         return dummy.next
 
 print(Solution().mergeKLists([ListNode(1, ListNode(4, ListNode(5))), ListNode(1, ListNode(3, ListNode(4))), ListNode(2, ListNode(6))]))
