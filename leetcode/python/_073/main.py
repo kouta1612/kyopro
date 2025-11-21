@@ -3,15 +3,14 @@ from typing import List
 class Solution:
     def setZeroes(self, matrix: List[List[int]]) -> None:
         ROWS, COLS = len(matrix), len(matrix[0])
-        firstRowZero, firstColZero = False, False
-        
+        FIRST_ROW_ZERO, FIRST_COL_ZERO = False, False
         for r in range(ROWS):
             if matrix[r][0] == 0:
-                firstColZero = True
+                FIRST_COL_ZERO = True
                 break
         for c in range(COLS):
             if matrix[0][c] == 0:
-                firstRowZero = True
+                FIRST_ROW_ZERO = True
                 break
         for r in range(1, ROWS):
             for c in range(1, COLS):
@@ -25,10 +24,10 @@ class Solution:
             if matrix[0][c] == 0:
                 for r in range(1, ROWS):
                     matrix[r][c] = 0
-        if firstRowZero:
+        if FIRST_ROW_ZERO:
             for c in range(COLS):
                 matrix[0][c] = 0
-        if firstColZero:
+        if FIRST_COL_ZERO:
             for r in range(ROWS):
                 matrix[r][0] = 0
 
