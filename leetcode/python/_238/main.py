@@ -5,12 +5,11 @@ class Solution:
         n = len(nums)
         res = [1] * n
         left, right = 1, 1
-        for i, num in enumerate(nums):
+        for i in range(n):
             res[i] *= left
-            left *= num
-        for i in range(n - 1, -1, -1):
-            res[i] *= right
-            right *= nums[i]
+            left *= nums[i]
+            res[n - 1 - i] *= right
+            right *= nums[n - 1 - i]
         return res
 
 print(Solution().productExceptSelf([1, 2, 3, 4]))
