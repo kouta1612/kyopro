@@ -3,18 +3,20 @@ from typing import List
 class Solution:
     def exist(self, board: List[List[str]], word: str) -> bool:
         ROWS, COLS = len(board), len(board[0])
-        seen = set()
+        n = len(word)
+        visited = set()
 
-        def dfs(i, j, k: int) -> bool:
-            if k == len(word): return True
-            if i < 0 or j < 0 or i >= ROWS or j >= COLS: return False
-            if (i, j) in seen: return False
-            if word[k] != board[i][j]: return False
+        def dfs(r, c, i: int) -> bool:
+            if r < 0 or c < 0 or r >= ROWS or c >= COLS: return False
+            if (r, c) in visited: return False
+            if board[r][c] != word[i]: return False
+            if i == n - 1: return True
 
-            seen.add((i, j))
-            for ni, nj in [[i+1, j], [i-1, j], [i, j+1], [i, j-1]]:
-                if dfs(ni, nj, k+1): return True
-            seen.remove((i, j))
+            visited.add((r, c))
+            for nr, nc in [[r+1, c], [r-1, c], [r, c+1], [r, c-1]]:
+                if dfs(nr, nc, i + 1): return True
+            visited.remove((r, c))
+            
             return False
         
         for r in range(ROWS):
