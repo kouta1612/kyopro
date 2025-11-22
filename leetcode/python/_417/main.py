@@ -5,20 +5,21 @@ class Solution:
         ROWS, COLS = len(heights), len(heights[0])
         pac, atl = set(), set()
 
-        def dfs(r, c: int, visit: set[(int, int)], pre: int):
+        def dfs(r, c: int, visited: set[(int, int)], pre: int):
             if r < 0 or c < 0 or r >= ROWS or c >= COLS: return
-            if (r, c) in visit: return
-            if pre > heights[r][c]: return
-            visit.add((r, c))
-            for nr, nc in [[r+1, c], [r-1, c], [r, c+1], [r, c-1]]:
-                dfs(nr, nc, visit, heights[r][c])
+            if (r, c) in visited: return
+            if heights[r][c] < pre: return
 
+            visited.add((r, c))
+            for nr, nc in [[r+1, c], [r-1, c], [r, c+1], [r, c-1]]:
+                dfs(nr, nc, visited, heights[r][c])
+        
         for r in range(ROWS):
-            if (r, 0) not in pac: dfs(r, 0, pac, 0)
-            if (r, COLS - 1) not in atl: dfs(r, COLS - 1, atl, 0)
+            dfs(r, 0, pac, heights[r][0])
+            dfs(r, COLS - 1, atl, heights[r][COLS - 1])
         for c in range(COLS):
-            if (0, c) not in pac: dfs(0, c, pac, 0)
-            if (ROWS - 1, c) not in atl: dfs(ROWS - 1, c, atl, 0)
+            dfs(0, c, pac, heights[0][c])
+            dfs(ROWS - 1, c, atl, heights[ROWS - 1][c])
 
         res = []
         for r in range(ROWS):
