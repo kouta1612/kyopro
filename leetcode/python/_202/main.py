@@ -1,23 +1,14 @@
 class Solution:
     def isHappy(self, n: int) -> bool:
-        memo = set()
-
-        while n not in memo:
-            memo.add(n)
-            n = digitSquareSum(n)
-            if n == 1:
-                return True
-
-        return False
-
-
-def digitSquareSum(n: int) -> int:
-    res = 0
-
-    while n != 0:
-        res += (n%10)**2
-        n //= 10
-
-    return res 
+        numberMap = {}
+        while n != 1:
+            cur, total = n, 0
+            while cur != 0:
+                total += (cur % 10) ** 2
+                cur //= 10
+            n = total
+            if n in numberMap: return False
+            numberMap[n] = True
+        return True
 
 print(Solution().isHappy(19))
