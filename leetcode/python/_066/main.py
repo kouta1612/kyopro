@@ -3,10 +3,9 @@ from typing import List
 class Solution:
     def plusOne(self, digits: List[int]) -> List[int]:
         n = len(digits)
-        carry = 0
         for i in range(n - 1, -1, -1):
             if digits[i] == 9:
-                digits[i], carry = 0, 1
+                digits[i] = 0
                 if i == 0: return [1] + digits
             else: 
                 digits[i] += 1
