@@ -11,6 +11,7 @@ class Solution:
         self.res = True
 
         def dfs(root: Optional[TreeNode]) -> int:
+            if not self.res: return 0
             if not root: return 0
             left, right = dfs(root.left), dfs(root.right)
             if abs(left - right) > 1:
