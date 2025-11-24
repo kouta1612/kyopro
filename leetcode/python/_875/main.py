@@ -2,7 +2,7 @@ from typing import List
 
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
-        ng, ok = 0, 1<<31
+        ng, ok = 0, max(piles)
         while ng + 1 < ok:
             wj = (ng + ok) // 2
             total = 0
