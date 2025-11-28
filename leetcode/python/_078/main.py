@@ -2,15 +2,15 @@ from typing import List
 
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        res = [[]]
+        res = []
 
         def dfs(i: int, vals: List[int]):
-            if i == len(nums): return
+            if i == len(nums):
+                res.append(vals[:])
+                return
 
             dfs(i + 1, vals)
-
             vals.append(nums[i])
-            res.append(vals[:])
             dfs(i + 1, vals)
             vals.pop()
 
