@@ -2,9 +2,9 @@ from typing import List
 
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
+        if sum(nums) % 2 == 1: return False
         n = len(nums)
-        target = sum(nums)
-        if target % 2 == 1: return False
+        target = sum(nums) // 2
         dp = set([0])
         for i in range(n):
             nextDP = set()
@@ -12,6 +12,6 @@ class Solution:
                 nextDP.add(v + nums[i])
                 nextDP.add(v)
             dp = nextDP
-        return True if target // 2 in dp else False
+        return True if target in dp else False
 
 print(Solution().canPartition([1,5,11,5]))
