@@ -3,15 +3,16 @@ from typing import List
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
         if sum(nums) % 2 == 1: return False
-        n = len(nums)
-        target = sum(nums) // 2
-        dp = set([0])
-        for i in range(n):
-            nextDP = set()
-            for v in dp:
-                nextDP.add(v + nums[i])
-                nextDP.add(v)
+        total = sum(nums)
+        dp = [False] * (total + 1)
+        dp[0] = True
+        for num in nums:
+            nextDP = dp.copy()
+            for i in range(total // 2 + 1):
+                if not dp[i]: continue
+                if i + num > total: continue
+                nextDP[i + num] = True
             dp = nextDP
-        return True if target in dp else False
+        return dp[total // 2]
 
 print(Solution().canPartition([1,5,11,5]))
