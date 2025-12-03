@@ -1,4 +1,4 @@
-from heapq import heappop, heappush
+from heapq import heappop, heapify
 from collections import defaultdict
 from typing import List
 
@@ -8,16 +8,15 @@ class Solution:
         
         counter = defaultdict(int)
         for num in hand: counter[num] += 1
-        heap = []
-        for key in counter.keys(): heappush(heap, key)
+        heap = list(counter.keys())
+        heapify(heap)
 
         while heap:
-            key = heappop(heap)
-            heappush(heap, key)
-            for num in range(key, key + groupSize):
-                if num not in counter: return False
-                counter[num] -= 1
-                if counter[num] == 0: 
-                    del counter[num]
-                    if heappop(heap) != num: return False
+            first = heap[0]
+            for i in range(first, first + groupSize):
+                if i not in counter: return False
+                counter[i] -= 1
+                if counter[i] == 0: 
+                    del counter[i]
+                    if heappop(heap) != i: return False
         return True
