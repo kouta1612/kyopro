@@ -3,15 +3,14 @@ from typing import List
 class Solution:
     def generateParenthesis(self, n: int) -> List[str]:
         res = []
-
-        def dfs(opened, closed: int, cur: str):
-            if opened == n and closed == n:
-                res.append(cur)
+        def dfs(cur: int, s: str, opened, closed: int):
+            if opened < closed: return
+            if cur == n * 2:
+                if opened == closed: res.append(s)
                 return
-            if opened < n: dfs(opened + 1, closed, cur + "(")
-            if closed < opened: dfs(opened, closed + 1, cur + ")")
-
-        dfs(0, 0, "")
+            dfs(cur + 1, s + "(", opened + 1, closed)
+            dfs(cur + 1, s + ")", opened, closed + 1)
+        dfs(0, "", 0, 0)
         return res
 
 
