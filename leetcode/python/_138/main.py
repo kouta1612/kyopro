@@ -7,20 +7,21 @@ class Node:
         self.random = random
 
 class Solution:
-    def __init__(self):
-        self.map = {None: None}
-
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
-        if head is None:
-            return None
-        if head in self.map:
-            return self.map[head]
+        oldToNewMap = {None: None}
+        dummy = Node(0, head)
 
-        copy = Node(head.val)
-        self.map[head] = copy
-        copy.next = self.copyRandomList(head.next)
-        copy.random = self.map[head.random]
+        def dfs(node: Optional[Node]) -> Optional[Node]:
+            if not node: return None
+            if node in oldToNewMap: return oldToNewMap[node]
 
-        return self.map[head]
+            res = Node(node.val)
+            oldToNewMap[node] = res
+            res.next = dfs(node.next)
+            res.random = dfs(node.random)
+            return res
+        
+        dfs(head)
+        return oldToNewMap[dummy.next]
 
 print(Solution().copyRandomList(Node(1, Node(2, Node(3, Node(4, Node(5)))))))
