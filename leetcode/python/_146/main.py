@@ -1,7 +1,9 @@
 class Node:
-    def __init__(self, key, value: int):
-        self.key, self.value = key, value
-        self.prev = self.next = None
+    def __init__(self, key, val: int):
+        self.key = key
+        self.val = val
+        self.prev = None
+        self.next = None
 
 class LRUCache:
 
@@ -9,29 +11,35 @@ class LRUCache:
         self.cap = capacity
         self.store = {}
         self.left, self.right = Node(0, 0), Node(0, 0)
-        self.left.next, self.right.prev = self.right, self.left
-
-    def remove(self, node: Node):
-        prev, nxt = node.prev, node.next
-        prev.next, nxt.prev = nxt, prev
+        self.left.next = self.right
+        self.right.prev = self.left
 
     def insert(self, node: Node):
-        prev, nxt = self.right.prev, self.right
-        prev.next = nxt.prev = node
-        node.prev, node.next = prev, nxt
+        prev = self.right.prev
+        prev.next = node
+        node.prev = prev
+        node.next = self.right
+        self.right.prev = node
+
+    def remove(self, node: Node):
+        prev = node.prev
+        nxt = node.next
+        prev.next, nxt.prev = nxt, prev
 
     def get(self, key: int) -> int:
-        if key in self.store: 
-            self.remove(self.store[key])
-            self.insert(self.store[key])
-            return self.store[key].value
-        return -1
+        if key not in self.store: return -1
+
+        node = self.store[key]
+        self.remove(node)
+        self.insert(node)
+
+        return self.store[key].val
 
     def put(self, key: int, value: int) -> None:
-        if key in self.store:
-            self.remove(self.store[key])
-        self.store[key] = Node(key, value)
-        self.insert(self.store[key])
+        if key in self.store: self.remove(self.store[key])
+        node = Node(key, value)
+        self.store[key] = node
+        self.insert(node)
         if len(self.store) > self.cap:
             lru = self.left.next
             self.remove(lru)
