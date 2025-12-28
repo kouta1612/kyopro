@@ -2,15 +2,23 @@ from typing import List
 
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        perms = [[]]
-        for num in nums:
-            newperms = []
-            for p in perms:
-                for i in range(len(p) + 1):
-                    pcopy = p.copy()
-                    pcopy.insert(i, num)
-                    newperms.append(pcopy)
-            perms = newperms
-        return perms
+        res = []
+        s = set()
+
+        def dfs(perm: List[int]):
+            if len(perm) == len(nums):
+                res.append(perm[:])
+                return
+
+            for j in range(len(nums)):
+                if j in s: continue
+                perm.append(nums[j])
+                s.add(j)
+                dfs(perm)
+                perm.pop()
+                s.remove(j)
+
+        dfs([])
+        return res
 
 print(Solution().permute([1,2,3]))
