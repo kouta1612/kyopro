@@ -5,21 +5,20 @@ class Solution:
         res = []
         candidates.sort()
 
-        def dfs(i: int, total: int, cur: List[int]):
-            if total == target:
-                res.append(cur.copy())
+        def dfs(start, remain: int, path: List[int]):
+            if remain == 0:
+                res.append(path[:])
                 return
-            if total > target or i == len(candidates): return
-            
-            cur.append(candidates[i])
-            dfs(i + 1, total + candidates[i], cur)
-            cur.pop()
+            if remain < 0: return
 
-            while i + 1 < len(candidates) and candidates[i] == candidates[i+1]:
-                i += 1
-            dfs(i + 1, total, cur)
-
-        dfs(0, 0, [])
+            prev = -1
+            for i in range(start, len(candidates)):
+                if prev == candidates[i]: continue
+                path.append(candidates[i])
+                dfs(i + 1, remain - candidates[i], path)
+                path.pop()
+                prev = candidates[i]
+        dfs(0, target, [])
         return res
 
 print(Solution().combinationSum2([10, 1, 2, 7, 6, 1, 5], 8))
