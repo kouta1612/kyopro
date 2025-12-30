@@ -6,12 +6,12 @@ class Solution:
         total = sum(nums)
         if total % 2 == 1: return False
 
-        dp = defaultdict(bool)
-        dp[0] = True
+        dp = {0}
         for num in nums:
             nextDP = dp.copy()
-            for key in dp.keys(): nextDP[key+num] = True
+            for key in dp: nextDP.add(key+num)
             dp = nextDP
-        return dp[total//2]
+            if total//2 in dp: return True
+        return False
 
 print(Solution().canPartition([1,5,11,5]))
