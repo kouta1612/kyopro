@@ -14,13 +14,12 @@ class Solution:
             if move > k + 1: continue
             if (start, move) in visited: continue
             if start == dst:
-                res = min(res, cost)
-                continue
+                return cost
 
             visited.add((start, move))
             for end, w in graph[start]:
                 if (end, move + 1) in visited: continue
                 heappush(heap, (cost + w, end, move + 1))
-        return res if res != float('inf') else -1
+        return -1
 
 print(Solution().findCheapestPrice(4, [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], 0, 3, 1))
