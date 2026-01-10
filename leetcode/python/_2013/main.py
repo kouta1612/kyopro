@@ -1,18 +1,22 @@
-from types import List
+from collections import defaultdict
 
 class DetectSquares:
+
     def __init__(self):
-        self.pc = {}
+        self.cnt = defaultdict(int)
+        self.points_by_x = defaultdict(set)
 
     def add(self, point: List[int]) -> None:
-        self.pc[tuple(point)] = 1 + self.pc.get(tuple(point), 0)
+        x, y = point
+        self.cnt[(x, y)] += 1
+        self.points_by_x[x].add((x, y))
 
     def count(self, point: List[int]) -> int:
-        res = 0
         x, y = point
-        for p, n in self.pc.items():
-            px, py = p
-            if abs(px - x) != abs(py - y) or px == x or py == y:
-                continue
-            res += self.pc.get((x, py), 0) * self.pc.get((px, y), 0) * self.pc.get((px, py), 0)
+        res = 0
+        for _, ny in self.points_by_x[x]:
+            if ny == y: continue
+            side = abs(ny - y)
+            res += self.cnt[(x, ny)] * self.cnt[(x + side, ny)] * self.cnt[(x + side, y)]
+            res += self.cnt[(x, ny)] * self.cnt[(x - side, ny)] * self.cnt[(x - side, y)]
         return res
