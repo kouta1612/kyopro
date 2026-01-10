@@ -1,18 +1,19 @@
 class Solution:
     def multiply(self, num1: str, num2: str) -> str:
-        if "0" in [num1, num2]: return "0"
-
-        num1, num2 = num1[::-1], num2[::-1]
-        res = [0] * (len(num1) + len(num2))
-        for i in range(len(num1)):
-            for j in range(len(num2)):
-                res[i + j] += int(num1[i]) * int(num2[j])
-                res[i + j + 1] += res[i + j] // 10
-                res[i + j] = res[i + j] % 10
-        res, base = res[::-1], 0
-        while base < len(res) and res[base] == 0:
-            base += 1
-        res = map(str, res[base:])
-        return "".join(res)
+        if num1 == "0" or num2 == "0": return "0"
+        n1, n2 = len(num1), len(num2)
+        res = [0] * (n1 + n2)
+        for i in range(n1 - 1, -1, -1):
+            for j in range(n2 - 1, -1, -1):
+                mul = (ord(num1[i]) - ord('0')) * (ord(num2[j]) - ord('0'))
+                p1, p2 = i + j, i + j + 1
+                total = mul + res[p2]
+                res[p2] = total % 10
+                res[p1] += total // 10
+        result = []
+        for digit in res:
+            if not result and digit == 0: continue
+            result.append(str(digit))
+        return "".join(result)
 
 print(Solution().multiply("123", "456"))
