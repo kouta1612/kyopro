@@ -3,17 +3,17 @@ from types import List
 class Solution:
     def trap(self, height: List[int]) -> int:
         l, r = 0, len(height) - 1
-        leftMax, rightMax = height[l], height[r]
+        lmax, rmax = 0, 0
         res = 0
         while l < r:
-            if leftMax <= rightMax:
+            if height[l] <= height[r]:
+                if lmax > height[l]: res += lmax - height[l]
+                else: lmax = height[l]
                 l += 1
-                leftMax = max(leftMax, height[l])
-                res += leftMax - height[l]
             else:
+                if rmax > height[r]: res += rmax - height[r]
+                else: rmax = height[r]
                 r -= 1
-                rightMax = max(rightMax, height[r])
-                res += rightMax - height[r]
         return res
 
 print(Solution().trap([0,1,0,2,1,0,1,3,2,1,2,1]))
