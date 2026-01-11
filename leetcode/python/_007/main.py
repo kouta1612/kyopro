@@ -2,18 +2,16 @@ from math import fmod
 
 class Solution:
     def reverse(self, x: int) -> int:
-        MIN, MAX = -1<<31, (1<<31) - 1
-        res = 0
-        while x:
-            digit = int(fmod(x, 10))
-            x = int(x / 10)
+        MAX_VALUE = 2**31 - 1
 
-            if (res > MAX // 10 or 
-                (res == MAX // 10 and digit > MAX % 10) or 
-                res < int(MIN / 10) or 
-                (res == int(MIN / 10) and digit < int(fmod(MIN, 10)))):
-                return 0
+        sign = 1 if x >= 0 else -1
+        x = abs(x)
+        res = 0
+        while x != 0:
+            digit = x % 10
+            x //= 10
+            if res > MAX_VALUE // 10 or (res == MAX_VALUE and digit > 7): return 0
             res = res * 10 + digit
-        return res
+        return res * sign
 
 print(Solution().reverse(123))
