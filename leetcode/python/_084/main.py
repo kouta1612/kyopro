@@ -7,13 +7,13 @@ class Solution:
         for i, h in enumerate(heights):
             start = i
             while stack and stack[-1][1] > h:
-                index, height = stack.pop()
-                res = max(res, height * (i - index))
-                start = index
+                idx, height = stack.pop()
+                res = max(res, height * (i - idx))
+                start = idx
             stack.append((start, h))
-        while stack:
-            i, h = stack.pop()
-            res = max(res, h * (len(heights) - i))
+        n = len(heights)
+        for i, h in stack:
+            res = max(res, h * (n - i))
         return res
 
 print(Solution().largestRectangleArea([2,1,5,6,2,3]))
