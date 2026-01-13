@@ -13,9 +13,9 @@ class Solution:
             cur = cur.next
         pre, cur = None, head
         for _ in range(k):
-            tmp = cur.next
+            nxt = cur.next
             cur.next = pre
-            pre, cur = cur, tmp
+            pre, cur = cur, nxt
         head.next = self.reverseKGroup(cur, k)
         return pre
 
