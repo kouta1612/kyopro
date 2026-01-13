@@ -2,27 +2,31 @@ from types import List
 
 class Solution:
     def solveNQueens(self, n: int) -> List[List[str]]:
-        res = []
+        col_set = set()
+        diagonal_left, diagonal_right = set(), set()
         board = [["."] * n for _ in range(n)]
-        col, dir1, dir2 = set(), set(), set()
+        res = []
 
         def dfs(r: int):
             if r == n:
-                res.append(["".join(row) for row in board])
+                res.append(["".join(board[i]) for i in range(n)])
                 return
             for c in range(n):
-                if c in col or (r + c) in dir1 or (r - c) in dir2:
-                    continue
-                col.add(c)
-                dir1.add(r + c)
-                dir2.add(r - c)
+                if c in col_set: continue
+                if r + c in diagonal_right: continue
+                if r - c in diagonal_left: continue
+
+                col_set.add(c)
+                diagonal_right.add(r + c)
+                diagonal_left.add(r - c)
                 board[r][c] = "Q"
+
                 dfs(r + 1)
-                col.remove(c)
-                dir1.remove(r + c)
-                dir2.remove(r - c)
+
+                col_set.remove(c)
+                diagonal_right.remove(r + c)
+                diagonal_left.remove(r - c)
                 board[r][c] = "."
-        
         dfs(0)
         return res
 
