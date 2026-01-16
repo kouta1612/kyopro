@@ -2,27 +2,22 @@ from types import List
 
 class Solution:
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
-        ROWS, COLS = len(matrix), len(matrix[0])
-        cache = [[0] * COLS for _ in range(ROWS)]
-        self.res = 0
+        n, m = len(matrix), len(matrix[0])
+        dp = [[0] * m for _ in range(n)]
 
-        def dfs(r, c: int) -> int:
-            if cache[r][c] != 0: return cache[r][c]
-
-            res = 0
-            for nr, nc in [[r+1, c], [r-1, c], [r, c+1], [r, c-1]]:
-                if nr < 0 or nc < 0 or nr >= ROWS or nc >= COLS: continue
-                if matrix[nr][nc] <= matrix[r][c]: continue
-                res = max(res, dfs(nr, nc))
-
-            cache[r][c] = 1 + res
-            self.res = max(self.res, cache[r][c])
-            return cache[r][c]
-
-        for r in range(ROWS):
-            for c in range(COLS):
-                if cache[r][c] > 0: continue
-                dfs(r, c)
-        return self.res
+        def dfs(i, j: int) -> int:
+            if dp[i][j] > 0: return dp[i][j]
+            res = 1
+            for ni, nj in [(i+1, j), (i, j+1), (i-1, j), (i, j-1)]:
+                if 0 <= ni < n and 0 <= nj < m and matrix[ni][nj] > matrix[i][j]:
+                   res = max(res, 1 + dfs(ni, nj)) 
+            dp[i][j] = res
+            return dp[i][j]
+        
+        res = 0
+        for i in range(n):
+            for j in range(m):
+                res = max(res, dfs(i, j))
+        return res
 
 print(Solution().longestIncreasingPath([[9,9,4],[6,6,8],[2,1,1]]))
