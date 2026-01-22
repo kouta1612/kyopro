@@ -2,18 +2,31 @@ from collections import defaultdict
 
 class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:
-        s1map, s2map = defaultdict(int), defaultdict(int)
-        for c in s1: s1map[c] += 1
-        l = 0
-        required, counter = len(s1map), 0
-        for r in range(len(s2)):
-            s2map[s2[r]] += 1
-            if s1map[s2[r]] == s2map[s2[r]]: counter += 1
-            while r - l + 1 > len(s1):
-                if s1map[s2[l]] == s2map[s2[l]]: counter -= 1
-                s2map[s2[l]] -= 1
-                l += 1
-            if required == counter: return True
+        n, m = len(s1), len(s2)
+        if n > m: return False
+        cnt1, cnt2 = [0] * 26, [0] * 26
+        for c in s1: cnt1[ord(c) - ord('a')] += 1
+        for i in range(n): cnt2[ord(s2[i]) - ord('a')] += 1
+        matches = 0
+        for i in range(26):
+            if cnt1[i] == cnt2[i]: matches += 1
+        if matches == 26: return True
+
+        left = 0
+        for right in range(n, m):
+            l, r = ord(s2[left]) - ord('a'), ord(s2[right]) - ord('a')
+
+            cnt2[r] += 1
+            if cnt1[r] == cnt2[r]: matches += 1
+            elif cnt1[r] + 1 ==  cnt2[r]: matches -= 1
+
+            cnt2[l] -= 1
+            if cnt1[l] == cnt2[l]: matches += 1
+            elif cnt1[l] - 1 ==  cnt2[l]: matches -= 1
+
+            if matches == 26: return True
+
+            left += 1
         return False
 
 print(Solution().checkInclusion("ab", "eidbaooo"))
