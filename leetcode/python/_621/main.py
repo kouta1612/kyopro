@@ -4,8 +4,9 @@ from collections import Counter
 class Solution:
     def leastInterval(self, tasks: List[str], n: int) -> int:
         counter = Counter(tasks)
-        maxFreq = max(counter.values())
-        numMaxFreq = list(counter.values()).count(maxFreq)
-        return max(len(tasks), (maxFreq - 1) * (n + 1) + numMaxFreq)
+        max_freq = max(counter.values())
+        max_count = sum(1 for v in counter.values() if v == max_freq)
+        res = (max_freq - 1) * (n + 1) + max_count
+        return max(res, len(tasks))
 
 print(Solution().leastInterval(["A","A","A","B","B","B"], 2))
