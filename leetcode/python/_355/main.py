@@ -10,25 +10,20 @@ class Twitter:
         self.follows = defaultdict(set)
 
     def postTweet(self, userId: int, tweetId: int) -> None:
-        self.timer += 1
         self.tweets[userId].append((self.timer, tweetId))
+        self.timer -= 1
 
     def getNewsFeed(self, userId: int) -> List[int]:
-        heaps = []
-        feeds = []
-
-        self.follows[userId].add(userId)
-        for followeeId in self.follows[userId]:
-            if not self.tweets[followeeId]: continue
-            timer, tweetId = self.tweets[followeeId][-1]
-            heappush(heaps, (-timer, tweetId, followeeId, len(self.tweets[followeeId]) - 1))
-        while heaps and len(feeds) < 10:
-            _, tweetId, uid, idx = heappop(heaps)
-            feeds.append(tweetId)
-            if idx - 1 >= 0:
-                timer, tweetId = self.tweets[uid][idx - 1]
-                heappush(heaps, (-timer, tweetId, uid, idx - 1))
-        return feeds
+        userIds = [userId] + list(self.follows[userId])
+        heap = []
+        for uid in userIds:
+            for timer, tweetId in self.tweets[uid]:
+                heappush(heap, (timer, tweetId))
+        res = []
+        while heap and len(res) < 10:
+            _, tweetId = heappop(heap)
+            res.append(tweetId)
+        return res
 
     def follow(self, followerId: int, followeeId: int) -> None:
         if followerId == followeeId: return
