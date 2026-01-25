@@ -17,12 +17,16 @@ class Twitter:
         userIds = [userId] + list(self.follows[userId])
         heap = []
         for uid in userIds:
-            for timer, tweetId in self.tweets[uid]:
-                heappush(heap, (timer, tweetId))
+            if self.tweets[uid]:
+                timer, tweetId = self.tweets[uid][-1]
+                heappush(heap, (timer, tweetId, uid, len(self.tweets[uid])-1))
         res = []
         while heap and len(res) < 10:
-            _, tweetId = heappop(heap)
+            timer, tweetId, uid, idx = heappop(heap)
             res.append(tweetId)
+            if idx > 0:
+                next_timer, next_tweetId = self.tweets[uid][idx-1]
+                heappush(heap, (next_timer, next_tweetId, uid, idx-1))
         return res
 
     def follow(self, followerId: int, followeeId: int) -> None:
