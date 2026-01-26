@@ -5,16 +5,13 @@ class Solution:
         nums.sort()
         res = []
 
-        def dfs(start: int, cur: List[int]):
-            res.append(cur[:])
-            if start == len(nums): return
-
+        def dfs(start: int, path: List[int]):
+            res.append(path[:])
             for i in range(start, len(nums)):
                 if i > start and nums[i] == nums[i-1]: continue
-                cur.append(nums[i])
-                dfs(i + 1, cur)
-                cur.pop()
-        
+                path.append(nums[i])
+                dfs(i+1, path)
+                path.pop()
         dfs(0, [])
         return res
 
