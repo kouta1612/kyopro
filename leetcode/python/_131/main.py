@@ -2,19 +2,27 @@ from typing import List
 
 class Solution:
     def partition(self, s: str) -> List[List[str]]:
+        n = len(s)
         res = []
-        part = []
+        path = []
 
-        def dfs(i: int):
-            if i == len(s):
-                res.append(part[:])
+        def dfs(start: int):
+            if start == n:
+                res.append(path[:])
                 return
-            for j in range(i, len(s)):
-                substr = s[i:j+1]
-                if substr == substr[::-1]:
-                    part.append(substr)
-                    dfs(j+1)
-                    part.pop()
+            for end in range(start, n):
+                if palindrome(start, end):
+                    path.append(s[start:end+1])
+                    dfs(end+1)
+                    path.pop()
+        
+        def palindrome(l, r: int):
+            while l < r:
+                if s[l] != s[r]: return False
+                l += 1
+                r -= 1
+            return True
+
         dfs(0)
         return res
 
