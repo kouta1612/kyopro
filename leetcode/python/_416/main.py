@@ -4,14 +4,14 @@ from collections import defaultdict
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
         total = sum(nums)
+        target = total // 2
         if total % 2 == 1: return False
 
-        dp = {0}
+        dp = [False] * (target+1)
+        dp[0] = True
         for num in nums:
-            nextDP = dp.copy()
-            for key in dp: nextDP.add(key+num)
-            dp = nextDP
-            if total//2 in dp: return True
-        return False
+            for i in range(target, num-1, -1):
+                dp[i] |= dp[i-num]
+        return dp[target]
 
 print(Solution().canPartition([1,5,11,5]))
