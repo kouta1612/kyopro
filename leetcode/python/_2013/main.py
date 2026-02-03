@@ -3,20 +3,22 @@ from collections import defaultdict
 class DetectSquares:
 
     def __init__(self):
-        self.cnt = defaultdict(int)
-        self.points_by_x = defaultdict(set)
+        self.xs = defaultdict(set)
+        self.xys = defaultdict(int)
 
     def add(self, point: List[int]) -> None:
-        x, y = point
-        self.cnt[(x, y)] += 1
-        self.points_by_x[x].add((x, y))
+        x,y = point
+        self.xs[x].add(y)
+        self.xys[(x,y)] += 1
 
     def count(self, point: List[int]) -> int:
-        x, y = point
         res = 0
-        for _, ny in self.points_by_x[x]:
-            if ny == y: continue
-            side = abs(ny - y)
-            res += self.cnt[(x, ny)] * self.cnt[(x + side, ny)] * self.cnt[(x + side, y)]
-            res += self.cnt[(x, ny)] * self.cnt[(x - side, ny)] * self.cnt[(x - side, y)]
+        x, y = point
+        for ny in self.xs[x]:
+            if y == ny: continue
+            side = y - ny
+            res += self.xys[(x,ny)] * self.xys[(x-side, ny)] * self.xys[(x-side, y)]
+            res += self.xys[(x,ny)] * self.xys[(x+side, ny)] * self.xys[(x+side, y)]
         return res
+
+print(DetectSquares().count([3,4]))
