@@ -6,13 +6,13 @@ class Solution:
         lmax, rmax = 0, 0
         res = 0
         while l < r:
-            if height[l] <= height[r]:
-                if lmax > height[l]: res += lmax - height[l]
-                else: lmax = height[l]
+            if height[l] < height[r]:
+                lmax = max(lmax, height[l])
+                res += lmax - height[l]
                 l += 1
             else:
-                if rmax > height[r]: res += rmax - height[r]
-                else: rmax = height[r]
+                rmax = max(rmax, height[r])
+                res += rmax - height[r]
                 r -= 1
         return res
 
