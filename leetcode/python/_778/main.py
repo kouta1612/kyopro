@@ -5,20 +5,19 @@ class Solution:
     def swimInWater(self, grid: List[List[int]]) -> int:
         n = len(grid)
         heap = [(grid[0][0], 0, 0)]
+        res = grid[0][0]
         visited = set()
+        while True:
+            v, r, c = heappop(heap)
+            visited.add((r, c))
 
-        while heap:
-            cost, i, j = heappop(heap)
-            if i == n - 1 and j == n - 1: return cost
-            if (i, j) in visited: continue
-            visited.add((i, j))
+            res = max(res, v)
+            if r == n - 1 and c == n - 1: return res
 
-            dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-            for di, dj in dirs:
-                ni, nj = di + i, dj + j
-                if ni < 0 or nj < 0 or ni >= n or nj >= n: continue
-                if (ni, nj) in visited: continue
-                next_cost = max(cost, grid[ni][nj])
-                heappush(heap, (next_cost, ni, nj))
+            for nr, nc in [[r+1, c], [r, c+1], [r-1, c], [r, c-1]]:
+                if nr < 0 or nc < 0 or nr >= n or nc >= n: continue
+                if (nr, nc) in visited: continue
+                heappush(heap, (grid[nr][nc], nr, nc))
+        return res
 
 print(Solution().swimInWater([[0,2],[1,3]]))
