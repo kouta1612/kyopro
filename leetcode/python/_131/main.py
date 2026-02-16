@@ -6,23 +6,15 @@ class Solution:
         res = []
         path = []
 
-        def dfs(start: int):
-            if start == n:
+        def dfs(i: int):
+            if i == n: 
                 res.append(path[:])
                 return
-            for end in range(start, n):
-                if palindrome(start, end):
-                    path.append(s[start:end+1])
-                    dfs(end+1)
+            for j in range(i, n):
+                if s[i:j+1] == s[i:j+1][::-1]:
+                    path.append(s[i:j+1])
+                    dfs(j+1)
                     path.pop()
-        
-        def palindrome(l, r: int):
-            while l < r:
-                if s[l] != s[r]: return False
-                l += 1
-                r -= 1
-            return True
-
         dfs(0)
         return res
 
