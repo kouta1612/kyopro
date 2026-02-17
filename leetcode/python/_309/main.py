@@ -2,12 +2,15 @@ from typing import List
 
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        hold, sold, rest = float('-inf'), float('-inf'), 0
-        for price in prices:
-            pre_hold, pre_sold, pre_rest = hold, sold, rest
-            hold = max(pre_hold, pre_rest - price)
-            sold = pre_hold + price
-            rest = max(pre_rest, pre_sold)
-        return max(sold, rest)
+        n = len(prices)
+        hold, sold, cool = float('-inf'), float('-inf'), 0
+        for i in range(n):
+            prev_hold = hold
+            prev_sold = sold
+            prev_cool = cool
+            hold = max(prev_hold, prev_cool - prices[i])
+            sold = prev_hold + prices[i]
+            cool = max(prev_sold, prev_cool)
+        return max(hold, sold, cool)
 
 print(Solution().maxProfit([1,2,3,0,2]))
