@@ -7,7 +7,7 @@ class Solution:
         if n % groupSize != 0: return False
 
         counter = Counter(hand)
-        for v in sorted(list(set(hand))):
+        for v in sorted(counter.keys()):
             if counter[v] <= 0: continue
             x = counter[v]
             for i in range(groupSize):
