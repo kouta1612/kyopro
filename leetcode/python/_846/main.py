@@ -8,11 +8,9 @@ class Solution:
 
         counter = Counter(hand)
         for v in sorted(list(set(hand))):
-            if v not in counter: continue
-            if counter[v] == 0: continue
+            if counter[v] <= 0: continue
             x = counter[v]
             for i in range(groupSize):
-                if v+i not in counter: return False
                 if counter[v+i] < x: return False
                 counter[v+i] -= x
         return True
