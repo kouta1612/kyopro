@@ -3,14 +3,18 @@ from collections import Counter
 
 class Solution:
     def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
-        if len(hand) % groupSize != 0: return False
-        count = Counter(hand)
-        for x in sorted(count):
-            if count[x] <= 0: continue
-            freq = count[x]
+        n = len(hand)
+        if n % groupSize != 0: return False
+
+        counter = Counter(hand)
+        for v in sorted(list(set(hand))):
+            if v not in counter: continue
+            if counter[v] == 0: continue
+            x = counter[v]
             for i in range(groupSize):
-                if count[x+i] < freq: return False
-                count[x+i] -= freq
+                if v+i not in counter: return False
+                if counter[v+i] < x: return False
+                counter[v+i] -= x
         return True
 
 print(Solution().isNStraightHand([1,2,3,6,2,3,4,7,8], 3))
