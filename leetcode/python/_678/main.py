@@ -1,13 +1,21 @@
 class Solution:
     def checkValidString(self, s: str) -> bool:
-        low, high = 0, 0
+        n = len(s)
+        min_open, max_open = 0, 0
         for c in s:
-            if c == "(": low, high = low + 1, high + 1
-            elif c == ")": low, high = low - 1, high - 1
-            else: low, high = low - 1, high + 1
-            if high < 0: return False
-            if low < 0: low = 0
-        return low == 0
+            if c == "(": 
+                min_open += 1
+                max_open += 1
+            elif c == ")":
+                min_open -= 1
+                max_open -= 1
+            else:
+                min_open -= 1
+                max_open += 1
+            
+            if max_open < 0: return False
+            if min_open < 0: min_open = 0
+        return min_open == 0
 
 print(Solution().checkValidString("()"))
 print(Solution().checkValidString("(*)"))
