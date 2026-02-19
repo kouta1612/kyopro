@@ -1,19 +1,15 @@
 class Solution:
     def multiply(self, num1: str, num2: str) -> str:
-        if num1 == "0" or num2 == "0": return "0"
-        n1, n2 = len(num1), len(num2)
-        res = [0] * (n1 + n2)
-        for i in range(n1 - 1, -1, -1):
-            for j in range(n2 - 1, -1, -1):
-                mul = (ord(num1[i]) - ord('0')) * (ord(num2[j]) - ord('0'))
+        if num1 == '0' or num2 == '0': return '0'
+        m, n = len(num1), len(num2)
+        res = [0] * (m + n)
+        for i in range(m-1, -1, -1):
+            for j in range(n-1, -1, -1):
                 p1, p2 = i + j, i + j + 1
+                mul = int(num1[i]) * int(num2[j])
                 total = mul + res[p2]
                 res[p2] = total % 10
                 res[p1] += total // 10
-        result = []
-        for digit in res:
-            if not result and digit == 0: continue
-            result.append(str(digit))
-        return "".join(result)
+        return ''.join(map(str, res)).lstrip('0')
 
 print(Solution().multiply("123", "456"))
