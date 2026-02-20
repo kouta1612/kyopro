@@ -2,17 +2,18 @@ from types import List
 
 class Solution:
     def trap(self, height: List[int]) -> int:
-        l, r = 0, len(height) - 1
-        lmax, rmax = 0, 0
+        n = len(height)
+        l, r = 0, n - 1
+        max_left, max_right = 0, 0
         res = 0
-        while l < r:
-            if height[l] < height[r]:
-                lmax = max(lmax, height[l])
-                res += lmax - height[l]
+        while r != l:
+            if height[l] <= height[r]:
+                res += max(max_left - height[l], 0)
+                max_left = max(max_left, height[l])
                 l += 1
             else:
-                rmax = max(rmax, height[r])
-                res += rmax - height[r]
+                res += max(max_right - height[r], 0)
+                max_right = max(max_right, height[r])
                 r -= 1
         return res
 
