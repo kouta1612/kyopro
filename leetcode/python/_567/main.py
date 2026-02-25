@@ -1,19 +1,17 @@
-from collections import defaultdict
-
 class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:
         m, n = len(s1), len(s2)
-        need, window = [0] * 26, [0] * 26
-        for c in s1: need[ord(c) - ord('a')] += 1
+        if m > n: return False
 
-        left = 0
-        for right in range(n):
-            window[ord(s2[right]) - ord('a')] += 1
-            while right - left + 1 > m:
-                window[ord(s2[left]) - ord('a')] -= 1
-                left += 1
-            if need == window: return True
-        print(need, window)
+        count1, count2 = [0] * 26, [0] * 26
+        for i in range(m):
+            count1[ord(s1[i]) - ord('a')] += 1
+            count2[ord(s2[i]) - ord('a')] += 1
+        if count1 == count2: return True
+        for i in range(m, n):
+            count2[ord(s2[i]) - ord('a')] += 1
+            count2[ord(s2[i-m]) - ord('a')] -= 1
+            if count1 == count2: return True
         return False
 
 print(Solution().checkInclusion("ab", "eidbaooo"))
