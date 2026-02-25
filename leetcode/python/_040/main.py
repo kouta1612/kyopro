@@ -4,20 +4,20 @@ class Solution:
     def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
         n = len(candidates)
         candidates.sort()
-        res, path = [], []
+        res = []
 
-        def dfs(i, rem: int):
-            if rem == 0:
+        def dfs(start, remain: int, path: List[int]):
+            if remain == 0:
                 res.append(path[:])
                 return
-            if rem < 0: return
+            if remain < 0: return
 
-            for j in range(i, n):
-                if j > i and candidates[j] == candidates[j-1]: continue
-                path.append(candidates[j])
-                dfs(j+1, rem-candidates[j])
+            for i in range(start, n):
+                if i > start and candidates[i] == candidates[i-1]: continue
+                path.append(candidates[i])
+                dfs(i + 1, remain-candidates[i], path)
                 path.pop()
-        dfs(0, target)
+        dfs(0, target, [])
         return res
 
 print(Solution().combinationSum2([10, 1, 2, 7, 6, 1, 5], 8))
