@@ -1,18 +1,20 @@
+from heapq import heappush
 from types import List
 from collections import defaultdict
 
 class Solution:
     def findItinerary(self, tickets: List[List[str]]) -> List[str]:
-        graph = defaultdict(list)
-        for src, dest in sorted(tickets, reverse=True):
-            graph[src].append(dest)
-
         res = []
-        def dfs(src: int):
-            while graph[src]:
-                dfs(graph[src].pop())
-            res.append(src)
-        
+
+        graph = defaultdict(list)
+        for start, end in tickets: heappush(graph[start], end)
+
+        def dfs(node: str):
+            while graph[node]:
+                next_node = heappop(graph[node])
+                dfs(next_node)
+            res.append(node)
+
         dfs("JFK")
         return res[::-1]
 
