@@ -1,4 +1,4 @@
-from heapq import heappush
+from heapq import heappop, heappush
 from types import List
 from collections import defaultdict
 
