@@ -5,7 +5,7 @@ from math import abs
 class UnionFind:
     def __init__(self, n: int):
         self.par = [-1] * n
-        self.rank = [1] * n
+        self.rank = [0] * n
 
     def root(self, x: int) -> int:
         if self.par[x] == -1: return x
@@ -16,30 +16,25 @@ class UnionFind:
         rx, ry = self.root(x), self.root(y)
         if rx == ry: return False
         if self.rank[rx] < self.rank[ry]: rx, ry = ry, rx
-        self.rank[rx] += self.rank[ry]
         self.par[ry] = rx
+        self.rank[rx] += self.rank[ry]
         return True
-
-    def same(self, x, y: int) -> bool:
-        return self.root(x) == self.root(y)
 
 class Solution:
     def minCostConnectPoints(self, points: List[List[int]]) -> int:
-        res = 0
         n = len(points)
-        uf = UnionFind(n)
-
-        def dist(i, j: int) -> int:
-            return abs(points[i][0] - points[j][0]) + abs(points[i][1] - points[j][1])
-
-        edges = []
+        heap = []
         for i in range(n):
-            for j in range(i + 1, n):
-                edges.append((dist(i, j), i, j))
-        edges.sort()
-
-        for d, i, j in edges:
-            if uf.union(i, j): res += d
+            x, y = points[i]
+            for j in range(i+1, n):
+                x2, y2 = points[j]
+                cost = abs(x-x2) + abs(y-y2)
+                heappush(heap, (cost, i, j))
+        res = 0
+        uf = UnionFind(n)
+        while heap:
+            c, i, j = heappop(heap)
+            if uf.union(i, j): res += c
         return res
 
 print(Solution().minCostConnectPoints([[0,0],[2,2],[3,10],[5,2],[7,0]]))
