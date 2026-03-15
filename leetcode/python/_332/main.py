@@ -4,11 +4,10 @@ from collections import defaultdict
 
 class Solution:
     def findItinerary(self, tickets: List[List[str]]) -> List[str]:
-        res = []
-
         graph = defaultdict(list)
         for start, end in tickets: heappush(graph[start], end)
-
+        res = []
+        
         def dfs(node: str):
             while graph[node]:
                 next_node = heappop(graph[node])
