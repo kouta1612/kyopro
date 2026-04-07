@@ -10,10 +10,9 @@ res = []
 i, j = ns, nt
 while i > 0 and j > 0:
     if s[i-1] == t[j-1]:
-        res.append(s[i-1])
         i -= 1
         j -= 1
-        continue
-    if dp[i-1][j] > dp[i][j-1]: i -= 1
+        res.append(s[i])
+    elif dp[i-1][j] > dp[i][j-1]: i -= 1
     else: j -= 1
 print("".join(res[::-1]))
