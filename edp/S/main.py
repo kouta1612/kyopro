@@ -14,7 +14,7 @@ for i in range(N):
             digit = int(K[i])
             limit = digit if k == 0 else 9
             for x in range(limit+1):
-                nj, nk = (j+x)%D, 1 - (k == 0 and x == digit)
+                nj, nk = (j+x)%D, k == 1 or digit != x
                 dp[i+1][nj][nk] += dp[i][j][k]
                 dp[i+1][nj][nk] %= MOD
 
